@@ -1,0 +1,2 @@
+
+mkvirtualenv -p python3 -a . funinst
