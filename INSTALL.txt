@@ -1,2 +1,30 @@
 
 mkvirtualenv -p python3 -a . funinst
+
+selenium:
+---------
+    tutorial:
+    ---------
+        https://www.guru99.com/selenium-python.html
+
+
+    https://github.com/mozilla/geckodriver/releases
+
+    # firefox:
+    # robert firefox did not work for me ..
+    export GECKO_DRIVER_VERSION='v0.26.0'  # <----- adapt in needed
+    wget https://github.com/mozilla/geckodriver/releases/download/$GECKO_DRIVER_VERSION/geckodriver-$GECKO_DRIVER_VERSION-linux64.tar.gz
+    tar -xvzf geckodriver-$GECKO_DRIVER_VERSION-linux64.tar.gz
+    rm geckodriver-$GECKO_DRIVER_VERSION-linux64.tar.gz
+    chmod +x geckodriver
+    cp geckodriver /usr/local/bin/
+
+    # chrome
+    # adapt to chrome version, here for crome 78
+    https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_linux64.zip
+    unzip ..
+    sudo mv chromedriver /usr/local/bin/
+
+
+
+    /html/body/div/footer/div[1]/div/div[3]
