@@ -12,6 +12,90 @@ import getpass
 import psycopg2
 import psycopg2.extras
 
+GROUPS = {
+        "Student": "fsch_customer.group_fsch_student",
+        "Student Reinscription": "fsch_customer.group_fsch_student_reinscription",
+        "Mentor / Tutor": "fsch_customer.group_fsch_mentor_tutor",
+        "Assist / Dozent": "fsch_customer.group_fsch_assist_dozent",
+        "Dekan": "fsch_customer.group_fsch_dekan",
+        "Mitarbeiter": "fsch_customer.group_fsch_mitarbeiter",
+        "Sekretariat Studieng.": "fsch_customer.group_fsch_sekretariat",
+        "SK": "fsch_customer.group_fsch_sk",
+        "STZ-Leiter": "fsch_customer.group_fsch_stz_leiter",
+        "Manager": "fsch_customer.group_fsch_manager",
+        "KST-Leiter": "fsch_customer.group_fsch_kst_leiter",
+        "Director": "fsch_customer.group_fsch_director",
+        "Barkasse": "fsch_customer.group_fsch_kasse",
+        "Revision (Readonly Manager)": "fsch_customer.group_revision",
+        "Faculty Manager": "fsch_customer.group_fsch_faculty_manager",
+        "Mentorenabrechnungen für Assistenten": "fsch_customer.group_fsch_mentor_allowances_for_assist",
+}
+USERS = {
+    "student": "Student",
+    "student_re": "Student Reinscription",
+    "tutor": "Mentor / Tutor",
+    "dozent": "Assist / Dozent",
+    "dekan": "Dekan",
+    "mitarbeiter": "Mitarbeiter",
+    "sekratariat": "Sekretariat Studieng.",
+    "sk": "SK",
+    "stzleiter": "STZ-Leiter",
+    "manager": "Manager",
+    "kstleiter": "KST-Leiter",
+    "director": "Director",
+    "facultymanager": "Faculty Manager",
+    "group_fsch_kasse": "Barkasse",
+}
+STAFF = {
+    "1142": {
+        "login": "alexandra",
+        "name": "Steiner Alexandra",
+        "groups": [
+            "fsch_customer.group_fsch_kasse",
+            "fsch_customer.group_fsch_kst_leiter",
+        ],
+    },
+    "1140": {
+        "login": "matthias",
+        "name": "Kubat Matthias",
+        "groups": [
+            "fsch_customer.group_fsch_manager",
+            "fsch_customer.group_fsch_faculty_manager",
+            "fsch_customer.group_fsch_kst_leiter",
+        ],
+    },
+    "1699": {
+        "login": "celine",
+        "name": "	Pellissier Céline",
+        "groups": [
+            "fsch_customer.group_fsch_manager",
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+    },
+    "1533": {
+        "login": "pedro",
+        "name": "Gonzalez Sanchez Pedro Evaristo",
+        "groups": [
+            "fsch_customer.group_fsch_manager",
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+    },
+}
+SITE_ADDONS = [
+    "crm",
+    "stock",
+    "account",
+    "hr_payroll",
+    "hr",
+    "hr_expense",
+    "board",
+    "contacts",
+    "hr_holidays",
+    "mail",
+    "survey",
+    "calendar",
+]
+OWN_ADDONS = ["fsch_customer"]
 
 class bcolors:
     """
@@ -80,107 +164,25 @@ class FunidInstaller(object):
     opts = MyNamespace()
 
     # site_addons is the list of addons provided by odoo
-    _site_addons_list = [
-        "crm",
-        "stock",
-        "account",
-        "hr_payroll",
-        "hr",
-        "hr_expense",
-        "board",
-        "contacts",
-        "hr_holidays",
-        "mail",
-        "survey",
-        "calendar",
-    ]
+    _site_addons_list = SITE_ADDONS 
 
-    _users = {
-        "student": "Student",
-        "student_re": "Student Reinscription",
-        "tutor": "Mentor / Tutor",
-        "dozent": "Assist / Dozent",
-        "dekan": "Dekan",
-        "mitarbeiter": "Mitarbeiter",
-        "sekratariat": "Sekretariat Studieng.",
-        "sk": "SK",
-        "stzleiter": "STZ-Leiter",
-        "manager": "Manager",
-        "kstleiter": "KST-Leiter",
-        "director": "Director",
-        "facultymanager": "Faculty Manager",
-        "group_fsch_kasse": "Barkasse",
-    }
-
+    _users = USERS 
     @property
     def users(self):
         return self._users
 
-    _staff = {
-        "1142": {
-            "login": "alexandra",
-            "name": "Steiner Alexandra",
-            "groups": [
-                "fsch_customer.group_fsch_kasse",
-                "fsch_customer.group_fsch_kst_leiter",
-            ],
-        },
-        "1140": {
-            "login": "matthias",
-            "name": "Kubat Matthias",
-            "groups": [
-                "fsch_customer.group_fsch_manager",
-                "fsch_customer.group_fsch_faculty_manager",
-                "fsch_customer.group_fsch_kst_leiter",
-            ],
-        },
-        "1699": {
-            "login": "celine",
-            "name": "	Pellissier Céline",
-            "groups": [
-                "fsch_customer.group_fsch_manager",
-                "fsch_customer.group_fsch_mitarbeiter",
-            ],
-        },
-        "1533": {
-            "login": "pedro",
-            "name": "Gonzalez Sanchez Pedro Evaristo",
-            "groups": [
-                "fsch_customer.group_fsch_manager",
-                "fsch_customer.group_fsch_mitarbeiter",
-            ],
-        },
-    }
-
+    _staff = STAFF 
     @property
     def staff(self):
         return self._staff
 
-    _groups = {
-        "Student": "fsch_customer.group_fsch_student",
-        "Student Reinscription": "fsch_customer.group_fsch_student_reinscription",
-        "Mentor / Tutor": "fsch_customer.group_fsch_mentor_tutor",
-        "Assist / Dozent": "fsch_customer.group_fsch_assist_dozent",
-        "Dekan": "fsch_customer.group_fsch_dekan",
-        "Mitarbeiter": "fsch_customer.group_fsch_mitarbeiter",
-        "Sekretariat Studieng.": "fsch_customer.group_fsch_sekretariat",
-        "SK": "fsch_customer.group_fsch_sk",
-        "STZ-Leiter": "fsch_customer.group_fsch_stz_leiter",
-        "Manager": "fsch_customer.group_fsch_manager",
-        "KST-Leiter": "fsch_customer.group_fsch_kst_leiter",
-        "Director": "fsch_customer.group_fsch_director",
-        "Barkasse": "fsch_customer.group_fsch_kasse",
-        "Revision (Readonly Manager)": "fsch_customer.group_revision",
-        "Faculty Manager": "fsch_customer.group_fsch_faculty_manager",
-        "Mentorenabrechnungen für Assistenten": "fsch_customer.group_fsch_mentor_allowances_for_assist",
-    }
-
+    _groups = GROUPS
     @property
     def groups(self):
         return self._groups
 
     # own_addons is the list of addons provided by fernuni or OCA
-    _own_addons_list = ["fsch_customer"]
+    _own_addons_list = OWN_ADDONS
 
     @property
     def site_addons(self):
