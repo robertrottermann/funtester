@@ -49,7 +49,8 @@ USERS = {
 STAFF = {
     "1142": {
         "login": "alexandra",
-        "name": "Steiner Alexandra",
+        "last_name": "Steiner",
+        "name": "Alexandra",
         "groups": [
             "fsch_customer.group_fsch_kasse",
             "fsch_customer.group_fsch_kst_leiter",
@@ -57,16 +58,19 @@ STAFF = {
     },
     "1140": {
         "login": "matthias",
-        "name": "Kubat Matthias",
+        "last_name": "Kubat",
+        "name": "Matthias",
         "groups": [
             "fsch_customer.group_fsch_manager",
             "fsch_customer.group_fsch_faculty_manager",
             "fsch_customer.group_fsch_kst_leiter",
+            "fsch_customer.group_fsch_student",
         ],
     },
     "1699": {
         "login": "celine",
-        "name": "	Pellissier Céline",
+        "last_name": "Pellissier",
+        "name": "Céline",
         "groups": [
             "fsch_customer.group_fsch_manager",
             "fsch_customer.group_fsch_mitarbeiter",
@@ -74,7 +78,8 @@ STAFF = {
     },
     "1533": {
         "login": "pedro",
-        "name": "Gonzalez Sanchez Pedro Evaristo",
+        "last_name": "Gonzalez Sanchez",
+        "name": "Pedro Evaristo",
         "groups": [
             "fsch_customer.group_fsch_manager",
             "fsch_customer.group_fsch_mitarbeiter",
@@ -82,18 +87,40 @@ STAFF = {
     },
 }
 SITE_ADDONS = [
+    # "crm",
+    # "stock",
+    # "account",
+    # "hr_payroll",
+    # "hr",
+    # "hr_expense",
+    # "board",
+    # "contacts",
+    # "hr_holidays",
+    # "mail",
+    # "survey",
+    # "calendar",
+    # "l10n_ch",
+    "base",
     "crm",
-    "stock",
-    "account",
+    # "crm_voip",  # TODO: v13 migration
+    # "bt_report_webkit",  # TODO: v13 migration
+    "product",
+    # "bt_todo", # TODO: v13 migration
     "hr_payroll",
-    "hr",
-    "hr_expense",
-    "board",
-    "contacts",
+    "stock",
     "hr_holidays",
-    "mail",
     "survey",
-    "calendar",
+    "hr_expense",
+    # "l10n_ch_base_bank",
+    "analytic",
+
+    # "fsch_pre_migration",  # TODO: v13 migration
+    # "account_payment_order",  # TODO: v13 migration
+    # "bt_swissdec", # TODO: v13 migration
+    # "sett_hr", # TODO: v13 migration
+    "board",
+    "sale",
+
 ]
 OWN_ADDONS = ["fsch_customer"]
 
@@ -164,14 +191,14 @@ class FunidInstaller(object):
     opts = MyNamespace()
 
     # site_addons is the list of addons provided by odoo
-    _site_addons_list = SITE_ADDONS 
+    _site_addons_list = SITE_ADDONS
 
-    _users = USERS 
+    _users = USERS
     @property
     def users(self):
         return self._users
 
-    _staff = STAFF 
+    _staff = STAFF
     @property
     def staff(self):
         return self._staff
@@ -458,7 +485,7 @@ class FunidInstaller(object):
 
     mail_outgoing = {
         u"active": True,
-        u"name": u"mailhandler@afbs.ch",
+        u"name": u"mailhandler@o2oo.ch",
         u"sequence": 10,
         u"smtp_debug": False,
         u"smtp_encryption": u"starttls",
@@ -471,7 +498,7 @@ class FunidInstaller(object):
         u"active": True,
         u"attach": True,
         u"is_ssl": True,
-        u"name": u"mailhandler@afbs.ch",
+        u"name": u"mailhandler@o2oo.ch",
         u"object_id": False,
         u"original": False,
         u"password": u"Mailhandler$99",
@@ -552,7 +579,8 @@ class FunidInstaller(object):
             for login, user_info in list(users.items()):
                 user_data = {}
                 user_data["name"] = login
-                user_data["email"] = "%s@test.ch" % login
+                user_data["last_name"] = login
+                user_data["email"] = "%s@o2oo.ch" % login
                 user_data["login"] = login
                 user_data["tz"] = "Europe/Zurich"
                 user_data["new_password"] = "login"
@@ -580,7 +608,7 @@ class FunidInstaller(object):
             for login, user_info in list(staff.items()):
                 u_groups = user_info.pop("groups")
                 user_data = user_info
-                user_data["email"] = "%s@test.ch" % login
+                user_data["email"] = "%s@o2oo.ch" % login
                 user_data["tz"] = "Europe/Zurich"
                 user_data["new_password"] = "login"
                 # check if user exists
@@ -608,5 +636,5 @@ if __name__ == "__main__":
     print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
     installer.install_own_modules()
     installer.install_own_modules(what="own_addons")
-    installer.install_mail_handler()
+    # installer.install_mail_handler()
     installer.create_users()
