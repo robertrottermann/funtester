@@ -181,7 +181,7 @@ class FunidInstaller(object):
     rpc_host = "localhost"
     rpc_port = 8069
     rpc_user = "admin"
-    rpc_user_pw = "admin"
+    rpc_user_pw = "login"
     db_user = getpass.getuser()
     db_host = "localhost"
     db_user_pw = "admin"
@@ -629,12 +629,26 @@ class FunidInstaller(object):
                     group = odoo.env.ref(group_id)
                     group.write({"users": [(4, user_ids[0])]})
 
+    def fixup_partner(self):
+        # fix up demo partner
+        odoo = self.get_odoo()
+        partner_o = odoo.env['res.partner']
+        user_data = odoo.execute('res.partner', 'read', [])
+        print(user_data)        
+        for partner in partner_o.sudo().search([]):
+            first = partner.name
+            last  = partner.last_name
+            email = partner.email
+            if not last:
+                print(name, email)
+
 
 if __name__ == "__main__":
     installer = FunidInstaller()
     installer.get_odoo(verbose=True)
-    print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
-    installer.install_own_modules()
-    installer.install_own_modules(what="own_addons")
-    # installer.install_mail_handler()
-    installer.create_users()
+    # print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
+    # installer.install_own_modules()
+    # installer.install_own_modules(what="own_addons")
+    # # installer.install_mail_handler()
+    # installer.create_users()
+    installer.fixup_partner()
