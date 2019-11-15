@@ -55,6 +55,7 @@ STAFF = {
             "fsch_customer.group_fsch_kasse",
             "fsch_customer.group_fsch_kst_leiter",
         ],
+        "email_pw": 'Login$99',
     },
     "1140": {
         "login": "matthias",
@@ -85,6 +86,33 @@ STAFF = {
             "fsch_customer.group_fsch_mitarbeiter",
         ],
     },
+}
+MAIL_OUTGOING = {
+    u"active": True,
+    u"name": u"mailhandler@o2oo.ch",
+    u"sequence": 10,
+    u"smtp_debug": False,
+    u"smtp_encryption": u"starttls",
+    u"smtp_host": u"mail.redcor.ch",
+    u"smtp_pass": u"Mailhandler$99",
+    u"smtp_port": 25,
+    u"smtp_user": u"mailhandler@o2oo.ch",
+}
+MAIL_INCOMMING = {
+    u"active": True,
+    u"attach": True,
+    u"is_ssl": True,
+    u"name": u"mailhandler@o2oo.ch",
+    u"object_id": False,
+    u"original": False,
+    u"password": u"Mailhandler$99",
+    u"port": 993,
+    u"priority": 5,
+    # u'script': u'/mail/static/scripts/openerp_mailgate.py',
+    u"server": u"mail.redcor.ch",
+    u"state": "draft",
+    u"server_type": u"imap",
+    u"user": u"mailhandler@o2oo.ch",
 }
 SITE_ADDONS = [
     # "crm",
@@ -121,7 +149,6 @@ SITE_ADDONS = [
     "board",
     "sale",
     'l10n_ch',
-
 ]
 OWN_ADDONS = ["fsch_customer"]
 
@@ -484,33 +511,8 @@ class FunidInstaller(object):
                 )
                 print("*" * 80)
 
-    mail_outgoing = {
-        u"active": True,
-        u"name": u"mailhandler@o2oo.ch",
-        u"sequence": 10,
-        u"smtp_debug": False,
-        u"smtp_encryption": u"starttls",
-        u"smtp_host": u"mail.redcor.ch",
-        u"smtp_pass": u"Mailhandler$99",
-        u"smtp_port": 25,
-        u"smtp_user": u"mailhandler@o2oo.ch",
-    }
-    mail_incomming = {
-        u"active": True,
-        u"attach": True,
-        u"is_ssl": True,
-        u"name": u"mailhandler@o2oo.ch",
-        u"object_id": False,
-        u"original": False,
-        u"password": u"Mailhandler$99",
-        u"port": 993,
-        u"priority": 5,
-        # u'script': u'/mail/static/scripts/openerp_mailgate.py',
-        u"server": u"mail.redcor.ch",
-        u"state": "draft",
-        u"server_type": u"imap",
-        u"user": u"mailhandler@o2oo.ch",
-    }
+    mail_outgoing = MAIL_OUTGOING
+    mail_incomming = MAIL_INCOMMING
 
     def install_mail_handler(self, do_incoming=True):
         # odoo 13, flags when external mailservers are used
@@ -568,6 +570,13 @@ class FunidInstaller(object):
             o_server.create(o_data)
         print(o_data)
         print("*" * 80, bcolors.ENDC)
+
+        companies_o = odoo.env['res.company']
+        companies = companies_o.search([])
+        for company in companies:
+            c = companies_o.browse([company])
+            n = c.email.split('@')[0]
+            c.email = '%s@o2oo.ch' % n
 
     def create_users(self, force=False):
         odoo = self.get_odoo()
@@ -632,17 +641,18 @@ class FunidInstaller(object):
 
     def fixup_partner(self):
         # fix up demo partner
-        return
         odoo = self.get_odoo()
         partner_o = odoo.env['res.partner']
-        user_data = odoo.execute('res.partner', 'read', [])
-        print(user_data)
-        for partner in partner_o.sudo().search([]):
-            first = partner.name
-            last  = partner.last_name
-            email = partner.email
-            if not last:
-                print(name, email)
+        for partner_id in partner_o.search([]):
+            try:
+                partner = partner_o.browse([partner_id])
+                first = partner.name
+                last  = partner.last_name
+                email = partner.email
+                if not last:
+                    print(name, email)
+            except:
+                print('could not access partner with id: %s' % partner_id)
 
     def set_passwords(self, password='login', admin='admin'):
         installer.get_cursor()
@@ -656,7 +666,7 @@ class FunidInstaller(object):
         if admin != password:
             target_cursor.execute(t_sql % admin)
             t_connection.commit()
-            print("did set admin passwords to '%s' where login='admin'" % admin)
+            print("did set admin password to '%s' where login='admin'" % admin)
         t_connection.close()
         print('*' * 80 + bcolors.ENDC)
 
@@ -664,11 +674,11 @@ class FunidInstaller(object):
 
 if __name__ == "__main__":
     installer = FunidInstaller()
-    installer.get_odoo(verbose=True)
-    print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
-    installer.install_own_modules()
-    installer.install_own_modules(what="own_addons")
+    # installer.get_odoo(verbose=True)
+    # print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
+    # installer.install_own_modules()
+    # installer.install_own_modules(what="own_addons")
     # installer.install_mail_handler()
-    installer.create_users()
+    # installer.create_users()
     installer.fixup_partner()
-    installer.set_passwords()
+    # installer.set_passwords()
