@@ -120,6 +120,7 @@ SITE_ADDONS = [
     # "sett_hr", # TODO: v13 migration
     "board",
     "sale",
+    'l10n_ch',
 
 ]
 OWN_ADDONS = ["fsch_customer"]
@@ -631,10 +632,11 @@ class FunidInstaller(object):
 
     def fixup_partner(self):
         # fix up demo partner
+        return
         odoo = self.get_odoo()
         partner_o = odoo.env['res.partner']
         user_data = odoo.execute('res.partner', 'read', [])
-        print(user_data)        
+        print(user_data)
         for partner in partner_o.sudo().search([]):
             first = partner.name
             last  = partner.last_name
@@ -642,13 +644,31 @@ class FunidInstaller(object):
             if not last:
                 print(name, email)
 
+    def set_passwords(self, password='login', admin='admin'):
+        installer.get_cursor()
+        # create connection
+        target_cursor, t_connection = self.get_cursor(return_connection=True)
+        t_sql = "UPDATE res_users set password = '%s'"
+        target_cursor.execute(t_sql % password)
+        t_connection.commit()
+        print(bcolors.OKGREEN + '*' * 80)
+        print("did set all passwords to '%s'" % password)
+        if admin != password:
+            target_cursor.execute(t_sql % admin)
+            t_connection.commit()
+            print("did set admin passwords to '%s' where login='admin'" % admin)
+        t_connection.close()
+        print('*' * 80 + bcolors.ENDC)
+
+
 
 if __name__ == "__main__":
     installer = FunidInstaller()
     installer.get_odoo(verbose=True)
-    # print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
-    # installer.install_own_modules()
-    # installer.install_own_modules(what="own_addons")
-    # # installer.install_mail_handler()
-    # installer.create_users()
+    print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
+    installer.install_own_modules()
+    installer.install_own_modules(what="own_addons")
+    # installer.install_mail_handler()
+    installer.create_users()
     installer.fixup_partner()
+    installer.set_passwords()
