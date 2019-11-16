@@ -220,6 +220,15 @@ class FunidInstaller(object):
 
     # site_addons is the list of addons provided by odoo
     _site_addons_list = SITE_ADDONS
+    _mail_outgoing = MAIL_OUTGOING
+    @property
+    def mail_outgoing(self):
+        return self._mail_outgoing
+
+    _mail_incomming = MAIL_INCOMMING
+    @property
+    def mail_incomming(self):
+        return self._mail_incomming
 
     _users = USERS
     @property
@@ -455,6 +464,8 @@ class FunidInstaller(object):
         elif what == "own_addons":
             # addons declared in the own_addons are from fernuni or OCA
             req = self.own_addons
+        else:
+            req = what
 
         if req:
             installed = []
@@ -510,9 +521,6 @@ class FunidInstaller(object):
                     + ",".join(n_list)
                 )
                 print("*" * 80)
-
-    mail_outgoing = MAIL_OUTGOING
-    mail_incomming = MAIL_INCOMMING
 
     def install_mail_handler(self, do_incoming=True):
         # odoo 13, flags when external mailservers are used
@@ -670,15 +678,13 @@ class FunidInstaller(object):
         t_connection.close()
         print('*' * 80 + bcolors.ENDC)
 
-
-
 if __name__ == "__main__":
     installer = FunidInstaller()
-    # installer.get_odoo(verbose=True)
-    # print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
-    # installer.install_own_modules()
-    # installer.install_own_modules(what="own_addons")
-    # installer.install_mail_handler()
-    # installer.create_users()
+    installer.install_own_modules(what=['crm'])
+    print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
+    installer.install_own_modules(what="own_addons")
+    installer.install_own_modules()
+    installer.install_mail_handler()
+    installer.create_users()
     installer.fixup_partner()
-    # installer.set_passwords()
+    installer.set_passwords()
