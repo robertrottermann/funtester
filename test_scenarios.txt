@@ -1,0 +1,10 @@
+create user with permissions to handle studies:
+-----------------------------------------------
+1. login as admin
+2. create administrative user
+3. assign permissions:
+    School Management (Dekan/Employee)	Mitarbeiter
+    School Management (Others)	STZ-Leiter
+    School Management (Student)	Student <----- why ?????
+4. create user to be used as Student
+5. 

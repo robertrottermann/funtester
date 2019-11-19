@@ -1,5 +1,73 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# ----------------------------------------------------------------------------
+# creating trough odoo
+# ----------------------------------------------------------------------------
+vals = {'calendar_last_notif_ack': datetime.datetime(2019, 11, 16, 16, 59, 15),
+ 'category_id': [(6, 0, [])],
+ 'color': 0,
+ 'customer_rank': 0,
+ 'email': False,
+ 'image_1920': False,
+ 'invoice_warn': 'no-message',
+ 'is_company': False,
+ 'is_sekretariat_or_higher': False,
+ 'lang': 'en_US',
+ 'last_name': 'Moldenhauer',
+ 'last_semester': 0,
+ 'message_bounce': 0,
+ 'name': 'Rottermann Moldenhauer',
+ 'picking_warn': 'no-message',
+ 'property_account_payable_id': 13,
+ 'property_account_position_id': False,
+ 'property_account_receivable_id': 6,
+ 'property_payment_term_id': False,
+ 'property_stock_customer': 5,
+ 'property_stock_supplier': 4,
+ 'property_supplier_payment_term_id': False,
+ 'prospect': False,
+ 'sale_warn': 'no-message',
+ 'supplier_rank': 0,
+ 'trust': 'normal',
+ 'type': 'contact',
+ 'tz': 'Europe/Brussels'}
+
+vals_list = [{'calendar_last_notif_ack': datetime.datetime(2019, 11, 16, 17, 10, 51),
+  'category_id': [(6, 0, [])],
+  'color': 0,
+  'customer_rank': 0,
+  'email': False,
+  'image_1920': False,
+  'invoice_warn': 'no-message',
+  'is_company': False,
+  'is_sekretariat_or_higher': False,
+  'lang': 'en_US',
+  'last_name': 'Moldenhauer',
+  'last_semester': 0,
+  'message_bounce': 0,
+  'message_follower_ids': [(0,
+                            0,
+                            {'partner_id': 3,
+                             'res_model': 'res.partner',
+                             'subtype_ids': [(6, 0, [1])]})],
+  'name': 'Rottermann Moldenhauer',
+  'picking_warn': 'no-message',
+  'property_account_payable_id': 13,
+  'property_account_position_id': False,
+  'property_account_receivable_id': 6,
+  'property_payment_term_id': False,
+  'property_stock_customer': 5,
+  'property_stock_supplier': 4,
+  'property_supplier_payment_term_id': False,
+  'prospect': False,
+  'sale_warn': 'no-message',
+  'supplier_rank': 0,
+  'trust': 'normal',
+  'type': 'contact',
+  'tz': 'Europe/Brussels'}]
+# ----------------------------------------------------------------------------
+# end creating trough odoo
+# ----------------------------------------------------------------------------
 
 """
 A script, that install odoo 13 with some fernuni modules
@@ -55,7 +123,8 @@ STAFF = {
             "fsch_customer.group_fsch_kasse",
             "fsch_customer.group_fsch_kst_leiter",
         ],
-        "email_pw": 'Login$99',
+        # email
+        "password": 'Login$99',
     },
     "1140": {
         "login": "matthias",
@@ -67,6 +136,8 @@ STAFF = {
             "fsch_customer.group_fsch_kst_leiter",
             "fsch_customer.group_fsch_student",
         ],
+        # email
+        "password": 'Login$99',
     },
     "1699": {
         "login": "celine",
@@ -76,6 +147,8 @@ STAFF = {
             "fsch_customer.group_fsch_manager",
             "fsch_customer.group_fsch_mitarbeiter",
         ],
+        # email
+        "password": 'Login$99',
     },
     "1533": {
         "login": "pedro",
@@ -85,6 +158,8 @@ STAFF = {
             "fsch_customer.group_fsch_manager",
             "fsch_customer.group_fsch_mitarbeiter",
         ],
+        # email
+        "password": 'Login$99',
     },
 }
 MAIL_OUTGOING = {
@@ -682,9 +757,9 @@ if __name__ == "__main__":
     installer = FunidInstaller()
     installer.install_own_modules(what=['crm'])
     print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
+    installer.create_users()
     installer.install_own_modules(what="own_addons")
     installer.install_own_modules()
     installer.install_mail_handler()
-    installer.create_users()
-    installer.fixup_partner()
+    # installer.fixup_partner()
     installer.set_passwords()
