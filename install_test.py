@@ -1,73 +1,73 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# ----------------------------------------------------------------------------
-# creating trough odoo
-# ----------------------------------------------------------------------------
-vals = {'calendar_last_notif_ack': datetime.datetime(2019, 11, 16, 16, 59, 15),
- 'category_id': [(6, 0, [])],
- 'color': 0,
- 'customer_rank': 0,
- 'email': False,
- 'image_1920': False,
- 'invoice_warn': 'no-message',
- 'is_company': False,
- 'is_sekretariat_or_higher': False,
- 'lang': 'en_US',
- 'last_name': 'Moldenhauer',
- 'last_semester': 0,
- 'message_bounce': 0,
- 'name': 'Rottermann Moldenhauer',
- 'picking_warn': 'no-message',
- 'property_account_payable_id': 13,
- 'property_account_position_id': False,
- 'property_account_receivable_id': 6,
- 'property_payment_term_id': False,
- 'property_stock_customer': 5,
- 'property_stock_supplier': 4,
- 'property_supplier_payment_term_id': False,
- 'prospect': False,
- 'sale_warn': 'no-message',
- 'supplier_rank': 0,
- 'trust': 'normal',
- 'type': 'contact',
- 'tz': 'Europe/Brussels'}
+# # -*- coding: utf-8 -*-
+# # ----------------------------------------------------------------------------
+# # creating trough odoo
+# # ----------------------------------------------------------------------------
+# vals = {'calendar_last_notif_ack': datetime.datetime(2019, 11, 16, 16, 59, 15),
+#  'category_id': [(6, 0, [])],
+#  'color': 0,
+#  'customer_rank': 0,
+#  'email': False,
+#  'image_1920': False,
+#  'invoice_warn': 'no-message',
+#  'is_company': False,
+#  'is_sekretariat_or_higher': False,
+#  'lang': 'en_US',
+#  'last_name': 'Moldenhauer',
+#  'last_semester': 0,
+#  'message_bounce': 0,
+#  'name': 'Rottermann Moldenhauer',
+#  'picking_warn': 'no-message',
+#  'property_account_payable_id': 13,
+#  'property_account_position_id': False,
+#  'property_account_receivable_id': 6,
+#  'property_payment_term_id': False,
+#  'property_stock_customer': 5,
+#  'property_stock_supplier': 4,
+#  'property_supplier_payment_term_id': False,
+#  'prospect': False,
+#  'sale_warn': 'no-message',
+#  'supplier_rank': 0,
+#  'trust': 'normal',
+#  'type': 'contact',
+#  'tz': 'Europe/Brussels'}
 
-vals_list = [{'calendar_last_notif_ack': datetime.datetime(2019, 11, 16, 17, 10, 51),
-  'category_id': [(6, 0, [])],
-  'color': 0,
-  'customer_rank': 0,
-  'email': False,
-  'image_1920': False,
-  'invoice_warn': 'no-message',
-  'is_company': False,
-  'is_sekretariat_or_higher': False,
-  'lang': 'en_US',
-  'last_name': 'Moldenhauer',
-  'last_semester': 0,
-  'message_bounce': 0,
-  'message_follower_ids': [(0,
-                            0,
-                            {'partner_id': 3,
-                             'res_model': 'res.partner',
-                             'subtype_ids': [(6, 0, [1])]})],
-  'name': 'Rottermann Moldenhauer',
-  'picking_warn': 'no-message',
-  'property_account_payable_id': 13,
-  'property_account_position_id': False,
-  'property_account_receivable_id': 6,
-  'property_payment_term_id': False,
-  'property_stock_customer': 5,
-  'property_stock_supplier': 4,
-  'property_supplier_payment_term_id': False,
-  'prospect': False,
-  'sale_warn': 'no-message',
-  'supplier_rank': 0,
-  'trust': 'normal',
-  'type': 'contact',
-  'tz': 'Europe/Brussels'}]
-# ----------------------------------------------------------------------------
-# end creating trough odoo
-# ----------------------------------------------------------------------------
+# vals_list = [{'calendar_last_notif_ack': datetime.datetime(2019, 11, 16, 17, 10, 51),
+#   'category_id': [(6, 0, [])],
+#   'color': 0,
+#   'customer_rank': 0,
+#   'email': False,
+#   'image_1920': False,
+#   'invoice_warn': 'no-message',
+#   'is_company': False,
+#   'is_sekretariat_or_higher': False,
+#   'lang': 'en_US',
+#   'last_name': 'Moldenhauer',
+#   'last_semester': 0,
+#   'message_bounce': 0,
+#   'message_follower_ids': [(0,
+#                             0,
+#                             {'partner_id': 3,
+#                              'res_model': 'res.partner',
+#                              'subtype_ids': [(6, 0, [1])]})],
+#   'name': 'Rottermann Moldenhauer',
+#   'picking_warn': 'no-message',
+#   'property_account_payable_id': 13,
+#   'property_account_position_id': False,
+#   'property_account_receivable_id': 6,
+#   'property_payment_term_id': False,
+#   'property_stock_customer': 5,
+#   'property_stock_supplier': 4,
+#   'property_supplier_payment_term_id': False,
+#   'prospect': False,
+#   'sale_warn': 'no-message',
+#   'supplier_rank': 0,
+#   'trust': 'normal',
+#   'type': 'contact',
+#   'tz': 'Europe/Brussels'}]
+# # ----------------------------------------------------------------------------
+# # end creating trough odoo
+# # ----------------------------------------------------------------------------
 
 """
 A script, that install odoo 13 with some fernuni modules
@@ -661,7 +661,7 @@ class FunidInstaller(object):
             n = c.email.split('@')[0]
             c.email = '%s@o2oo.ch' % n
 
-    def create_users(self, force=False):
+    def create_users(self, force=False, strip_fields=[]):
         odoo = self.get_odoo()
         users_o = odoo.env["res.users"]
         users_ox = users_o.with_user(odoo.env.context, 1)
@@ -679,6 +679,8 @@ class FunidInstaller(object):
                 user_data["new_password"] = "login"
                 # check if user exists
                 user_ids = users_o.search([("login", "=", login)])
+                for field in strip_fields:
+                    user_data.pop(field, None)
                 if user_ids:
                     try:
                         user = users_o.browse(user_ids)
@@ -722,7 +724,7 @@ class FunidInstaller(object):
                     group = odoo.env.ref(group_id)
                     group.write({"users": [(4, user_ids[0])]})
 
-    def fixup_partner(self):
+    def fixup_partner(self): # osoete?
         # fix up demo partner
         odoo = self.get_odoo()
         partner_o = odoo.env['res.partner']
@@ -755,11 +757,11 @@ class FunidInstaller(object):
 
 if __name__ == "__main__":
     installer = FunidInstaller()
-    installer.install_own_modules(what=['crm'])
+    installer.install_own_modules()#what=['crm'])
     print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
-    installer.create_users()
     installer.install_own_modules(what="own_addons")
-    installer.install_own_modules()
+    installer.create_users()#strip_fields = ['last_name'])
+    # installer.install_own_modules()
     installer.install_mail_handler()
     # installer.fixup_partner()
     installer.set_passwords()
