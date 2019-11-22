@@ -70,7 +70,7 @@
 # # ----------------------------------------------------------------------------
 
 """
-A script, that install odoo 13 with some fernuni modules
+A script, that installs odoo 13 with some fernuni modules
 """
 import os, sys
 import urllib.request, urllib.error, urllib.parse
@@ -332,6 +332,9 @@ class FunidInstaller(object):
     @property
     def own_addons(self):
         return self._own_addons_list
+
+    def __init__(self, db_name = "fernuni13"):
+        self.db_name = db_name
 
     # ----------------------------------
     #  collects info on what modules are installed
@@ -725,7 +728,7 @@ class FunidInstaller(object):
                     group = odoo.env.ref(group_id)
                     group.write({"users": [(4, user_ids[0])]})
 
-    def fixup_partner(self): # osoete?
+    def fixup_partner(self): # obsolete?
         # fix up demo partner
         odoo = self.get_odoo()
         partner_o = odoo.env['res.partner']
@@ -741,6 +744,8 @@ class FunidInstaller(object):
                 print('could not access partner with id: %s' % partner_id)
 
     def set_passwords(self, password='login', admin='admin'):
+        # wrong message!!
+        # this sets all password to admin
         installer.get_cursor()
         # create connection
         target_cursor, t_connection = self.get_cursor(return_connection=True)
@@ -757,7 +762,11 @@ class FunidInstaller(object):
         print('*' * 80 + bcolors.ENDC)
 
 if __name__ == "__main__":
-    installer = FunidInstaller()
+    print(sys.argv)
+    db_name = "fernuni13"
+    if len(sys.argv) > 1:
+        db_name = sys.argv[1]
+    installer = FunidInstaller(db_name)
     installer.install_own_modules()#what=['crm'])
     print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
     installer.install_own_modules(what="own_addons")
