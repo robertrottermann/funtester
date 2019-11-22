@@ -1,1 +1,4 @@
 selenium
+psycopg2
+odoorpc
+

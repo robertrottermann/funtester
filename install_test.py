@@ -262,7 +262,7 @@ try:
     import odoorpc
 except ImportError:
     print(bcolors.WARNING + "please install odoorpc")
-    print("execute bin/pip install -r install/requirements.txt" + bcolors.ENDC)
+    print("execute pip install -r requirements.txt" + bcolors.ENDC)
     sys.exit()
 
 
