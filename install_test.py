@@ -135,6 +135,7 @@ STAFF = {
             "fsch_customer.group_fsch_faculty_manager",
             "fsch_customer.group_fsch_kst_leiter",
             "fsch_customer.group_fsch_student",
+            "fsch_customer.group_fsch_mitarbeiter",
         ],
         # email
         "password": 'Login$99',
