@@ -134,7 +134,7 @@ STAFF = {
             "fsch_customer.group_fsch_manager",
             "fsch_customer.group_fsch_faculty_manager",
             "fsch_customer.group_fsch_kst_leiter",
-            "fsch_customer.group_fsch_student",
+            #"fsch_customer.group_fsch_student",
             "fsch_customer.group_fsch_mitarbeiter",
         ],
         # email
@@ -190,6 +190,7 @@ MAIL_INCOMMING = {
     u"server_type": u"imap",
     u"user": u"mailhandler@o2oo.ch",
 }
+# SITE_ADDONS are the modules that we get from odoo core
 SITE_ADDONS = [
     # "crm",
     # "stock",
@@ -226,6 +227,8 @@ SITE_ADDONS = [
     "sale",
     'l10n_ch',
 ]
+# OWN_ADDONS are the modules that we handle our selfs in some
+# own (non odoo) repos
 OWN_ADDONS = ["fsch_customer"]
 
 class bcolors:
@@ -276,7 +279,7 @@ class MyNamespace(Namespace):
 
 
 class FunidInstaller(object):
-    """setup a fernuni installation se we can test it
+    """setup a fernuni installation so we can test it
     This means mostly install some modules and users
     and assign them roles
     """
@@ -337,7 +340,7 @@ class FunidInstaller(object):
         self.db_name = db_name
 
     # ----------------------------------
-    #  collects info on what modules are installed
+    # collects info on what modules are installed
     # or need to be installed
     # @req : list of required modules. If this is an empty list
     #         use any module
@@ -603,6 +606,7 @@ class FunidInstaller(object):
 
     def install_mail_handler(self, do_incoming=True):
         # odoo 13, flags when external mailservers are used
+        # however, it seems not possible to set that flag using odoo_rpc
         odoo = self.get_odoo()
         res_config_settings = odoo.env["res.config.settings"]
         try:
@@ -730,6 +734,8 @@ class FunidInstaller(object):
 
     def fixup_partner(self): # obsolete?
         # fix up demo partner
+        # does not really work, odoorpc does not handle sudo or with_user correctly
+        # we probably need to use plain odoo RPC
         odoo = self.get_odoo()
         partner_o = odoo.env['res.partner']
         for partner_id in partner_o.search([]):
