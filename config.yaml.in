@@ -1,0 +1,41 @@
+# BASE_DEFAULTS are the values erp-workbench needs
+# to find its data
+BASE_DEFAULTS:
+  # what is the db into which we install
+  db_name: 'fernuni13'
+  # on what host is odoo running
+  rpc_host: 'localhost'
+  # what port
+  rpc_port: 8069
+  # as what user are we loggin in
+  rpc_user: 'admin'
+  # that users password
+  pc_user_pw: 'admin'
+
+  # local_user_mail:
+  # sometimes you want to avoid sending mails to real user
+  # when you have copied a life server to your local environment
+  # this setting is only used when the redirect_email addon is installed
+  local_user_mail: 'info@company.com'
+
+  # where is the db running
+  db_host: 'localhost'
+  # db_user:
+  # this is the default data base user, its value can be overruled in the
+  # server description file in the servers.yaml file
+  db_user: 'robert'
+
+  # db_user_pw:
+  # this is the default password, if it is not defined in the
+  # server description file in the servers.yaml file
+  db_user_pw: 'admin'
+
+  # postgres_port:
+  # to be used to access the postgres db server in a non dockerized local installation
+  postgres_port: 5432
+
+  # local_base_addons:
+  # path to the odoo addons in a local installation
+  # %%(ODOO_INSTALL_HOME)s is only expanded by bin/dosetup_odoo.py
+  # in the site's project folder
+  local_base_addons:

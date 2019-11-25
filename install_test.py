@@ -1,74 +1,5 @@
 #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
-# # ----------------------------------------------------------------------------
-# # creating trough odoo
-# # ----------------------------------------------------------------------------
-# vals = {'calendar_last_notif_ack': datetime.datetime(2019, 11, 16, 16, 59, 15),
-#  'category_id': [(6, 0, [])],
-#  'color': 0,
-#  'customer_rank': 0,
-#  'email': False,
-#  'image_1920': False,
-#  'invoice_warn': 'no-message',
-#  'is_company': False,
-#  'is_sekretariat_or_higher': False,
-#  'lang': 'en_US',
-#  'last_name': 'Moldenhauer',
-#  'last_semester': 0,
-#  'message_bounce': 0,
-#  'name': 'Rottermann Moldenhauer',
-#  'picking_warn': 'no-message',
-#  'property_account_payable_id': 13,
-#  'property_account_position_id': False,
-#  'property_account_receivable_id': 6,
-#  'property_payment_term_id': False,
-#  'property_stock_customer': 5,
-#  'property_stock_supplier': 4,
-#  'property_supplier_payment_term_id': False,
-#  'prospect': False,
-#  'sale_warn': 'no-message',
-#  'supplier_rank': 0,
-#  'trust': 'normal',
-#  'type': 'contact',
-#  'tz': 'Europe/Brussels'}
-
-# vals_list = [{'calendar_last_notif_ack': datetime.datetime(2019, 11, 16, 17, 10, 51),
-#   'category_id': [(6, 0, [])],
-#   'color': 0,
-#   'customer_rank': 0,
-#   'email': False,
-#   'image_1920': False,
-#   'invoice_warn': 'no-message',
-#   'is_company': False,
-#   'is_sekretariat_or_higher': False,
-#   'lang': 'en_US',
-#   'last_name': 'Moldenhauer',
-#   'last_semester': 0,
-#   'message_bounce': 0,
-#   'message_follower_ids': [(0,
-#                             0,
-#                             {'partner_id': 3,
-#                              'res_model': 'res.partner',
-#                              'subtype_ids': [(6, 0, [1])]})],
-#   'name': 'Rottermann Moldenhauer',
-#   'picking_warn': 'no-message',
-#   'property_account_payable_id': 13,
-#   'property_account_position_id': False,
-#   'property_account_receivable_id': 6,
-#   'property_payment_term_id': False,
-#   'property_stock_customer': 5,
-#   'property_stock_supplier': 4,
-#   'property_supplier_payment_term_id': False,
-#   'prospect': False,
-#   'sale_warn': 'no-message',
-#   'supplier_rank': 0,
-#   'trust': 'normal',
-#   'type': 'contact',
-#   'tz': 'Europe/Brussels'}]
-# # ----------------------------------------------------------------------------
-# # end creating trough odoo
-# # ----------------------------------------------------------------------------
-
 """
 A script, that installs odoo 13 with some fernuni modules
 """
@@ -80,23 +11,24 @@ import getpass
 import psycopg2
 import psycopg2.extras
 
+BASE_PATH = os.path.split(os.path.realpath(__file__))[0]
 GROUPS = {
-        "Student": "fsch_customer.group_fsch_student",
-        "Student Reinscription": "fsch_customer.group_fsch_student_reinscription",
-        "Mentor / Tutor": "fsch_customer.group_fsch_mentor_tutor",
-        "Assist / Dozent": "fsch_customer.group_fsch_assist_dozent",
-        "Dekan": "fsch_customer.group_fsch_dekan",
-        "Mitarbeiter": "fsch_customer.group_fsch_mitarbeiter",
-        "Sekretariat Studieng.": "fsch_customer.group_fsch_sekretariat",
-        "SK": "fsch_customer.group_fsch_sk",
-        "STZ-Leiter": "fsch_customer.group_fsch_stz_leiter",
-        "Manager": "fsch_customer.group_fsch_manager",
-        "KST-Leiter": "fsch_customer.group_fsch_kst_leiter",
-        "Director": "fsch_customer.group_fsch_director",
-        "Barkasse": "fsch_customer.group_fsch_kasse",
-        "Revision (Readonly Manager)": "fsch_customer.group_revision",
-        "Faculty Manager": "fsch_customer.group_fsch_faculty_manager",
-        "Mentorenabrechnungen für Assistenten": "fsch_customer.group_fsch_mentor_allowances_for_assist",
+    "Student": "fsch_customer.group_fsch_student",
+    "Student Reinscription": "fsch_customer.group_fsch_student_reinscription",
+    "Mentor / Tutor": "fsch_customer.group_fsch_mentor_tutor",
+    "Assist / Dozent": "fsch_customer.group_fsch_assist_dozent",
+    "Dekan": "fsch_customer.group_fsch_dekan",
+    "Mitarbeiter": "fsch_customer.group_fsch_mitarbeiter",
+    "Sekretariat Studieng.": "fsch_customer.group_fsch_sekretariat",
+    "SK": "fsch_customer.group_fsch_sk",
+    "STZ-Leiter": "fsch_customer.group_fsch_stz_leiter",
+    "Manager": "fsch_customer.group_fsch_manager",
+    "KST-Leiter": "fsch_customer.group_fsch_kst_leiter",
+    "Director": "fsch_customer.group_fsch_director",
+    "Barkasse": "fsch_customer.group_fsch_kasse",
+    "Revision (Readonly Manager)": "fsch_customer.group_revision",
+    "Faculty Manager": "fsch_customer.group_fsch_faculty_manager",
+    "Mentorenabrechnungen für Assistenten": "fsch_customer.group_fsch_mentor_allowances_for_assist",
 }
 USERS = {
     "student": "Student",
@@ -124,7 +56,7 @@ STAFF = {
             "fsch_customer.group_fsch_kst_leiter",
         ],
         # email
-        "password": 'Login$99',
+        "password": "Login$99",
     },
     "1140": {
         "login": "matthias",
@@ -134,11 +66,11 @@ STAFF = {
             "fsch_customer.group_fsch_manager",
             "fsch_customer.group_fsch_faculty_manager",
             "fsch_customer.group_fsch_kst_leiter",
-            #"fsch_customer.group_fsch_student",
+            # "fsch_customer.group_fsch_student",
             "fsch_customer.group_fsch_mitarbeiter",
         ],
         # email
-        "password": 'Login$99',
+        "password": "Login$99",
     },
     "1699": {
         "login": "celine",
@@ -149,7 +81,7 @@ STAFF = {
             "fsch_customer.group_fsch_mitarbeiter",
         ],
         # email
-        "password": 'Login$99',
+        "password": "Login$99",
     },
     "1533": {
         "login": "pedro",
@@ -160,7 +92,7 @@ STAFF = {
             "fsch_customer.group_fsch_mitarbeiter",
         ],
         # email
-        "password": 'Login$99',
+        "password": "Login$99",
     },
 }
 MAIL_OUTGOING = {
@@ -218,18 +150,48 @@ SITE_ADDONS = [
     "hr_expense",
     # "l10n_ch_base_bank",
     "analytic",
-
     # "fsch_pre_migration",  # TODO: v13 migration
     # "account_payment_order",  # TODO: v13 migration
     # "bt_swissdec", # TODO: v13 migration
     # "sett_hr", # TODO: v13 migration
     "board",
     "sale",
-    'l10n_ch',
+    "l10n_ch",
 ]
 # OWN_ADDONS are the modules that we handle our selfs in some
 # own (non odoo) repos
 OWN_ADDONS = ["fsch_customer"]
+
+
+def get_config_from_yaml(which=['config']):
+    """[read config data from yaml files]
+    return dict with config data dicts
+    """
+    # the base info we need to access the various parts of erp-workbench
+    # it is in the config.yaml file in the erp-workbench config folder
+    from scripts.construct_defaults import check_and_update_base_defaults
+    construct_result = {}
+    result = {}
+    for y_info in (
+        ("config", "base_info.py"),
+    ):
+        y_name, file_name = y_info
+        if y_name not in which:
+            continue
+        config_yaml = "%s/config/%s.yaml" % (BASE_PATH, y_name)
+        if not os.path.exists(config_yaml):
+            in_file = "%s.in" % config_yaml
+            if not os.path.exists(in_file):
+                from shutil import copyfile
+                shutil.copyfile("%s/%s.yaml" % (BASE_PATH, y_name), in_file)
+        # build a list to be sent to check_and_update_base_defaults
+        yaml_dic[y_name] = (
+            y_name,
+            config_yaml,
+            "%s/config/config_data/%s" % (BASE_PATH, file_name),
+            "%s/%s.yaml.in" % (BASE_PATH, y_name),
+        )
+
 
 class bcolors:
     """
@@ -300,26 +262,31 @@ class FunidInstaller(object):
     # site_addons is the list of addons provided by odoo
     _site_addons_list = SITE_ADDONS
     _mail_outgoing = MAIL_OUTGOING
+
     @property
     def mail_outgoing(self):
         return self._mail_outgoing
 
     _mail_incomming = MAIL_INCOMMING
+
     @property
     def mail_incomming(self):
         return self._mail_incomming
 
     _users = USERS
+
     @property
     def users(self):
         return self._users
 
     _staff = STAFF
+
     @property
     def staff(self):
         return self._staff
 
     _groups = GROUPS
+
     @property
     def groups(self):
         return self._groups
@@ -336,7 +303,7 @@ class FunidInstaller(object):
     def own_addons(self):
         return self._own_addons_list
 
-    def __init__(self, db_name = "fernuni13"):
+    def __init__(self, db_name="fernuni13"):
         self.db_name = db_name
 
     # ----------------------------------
@@ -662,12 +629,12 @@ class FunidInstaller(object):
         print(o_data)
         print("*" * 80, bcolors.ENDC)
 
-        companies_o = odoo.env['res.company']
+        companies_o = odoo.env["res.company"]
         companies = companies_o.search([])
         for company in companies:
             c = companies_o.browse([company])
-            n = c.email.split('@')[0]
-            c.email = '%s@o2oo.ch' % n
+            n = c.email.split("@")[0]
+            c.email = "%s@o2oo.ch" % n
 
     def create_users(self, force=False, strip_fields=[]):
         odoo = self.get_odoo()
@@ -715,7 +682,7 @@ class FunidInstaller(object):
                 user_data["tz"] = "Europe/Zurich"
                 user_data["new_password"] = "login"
                 # check if user exists
-                user_ids = users_o.search([("login", "=", user_data['login'])])
+                user_ids = users_o.search([("login", "=", user_data["login"])])
                 if user_ids:
                     try:
                         user = users_o.browse(user_ids)
@@ -732,24 +699,24 @@ class FunidInstaller(object):
                     group = odoo.env.ref(group_id)
                     group.write({"users": [(4, user_ids[0])]})
 
-    def fixup_partner(self): # obsolete?
+    def fixup_partner(self):  # obsolete?
         # fix up demo partner
         # does not really work, odoorpc does not handle sudo or with_user correctly
         # we probably need to use plain odoo RPC
         odoo = self.get_odoo()
-        partner_o = odoo.env['res.partner']
+        partner_o = odoo.env["res.partner"]
         for partner_id in partner_o.search([]):
             try:
                 partner = partner_o.browse([partner_id])
                 first = partner.name
-                last  = partner.last_name
+                last = partner.last_name
                 email = partner.email
                 if not last:
                     print(name, email)
             except:
-                print('could not access partner with id: %s' % partner_id)
+                print("could not access partner with id: %s" % partner_id)
 
-    def set_passwords(self, password='login', admin='admin'):
+    def set_passwords(self, password="login", admin="admin"):
         # wrong message!!
         # this sets all password to admin
         installer.get_cursor()
@@ -758,14 +725,15 @@ class FunidInstaller(object):
         t_sql = "UPDATE res_users set password = '%s'"
         target_cursor.execute(t_sql % password)
         t_connection.commit()
-        print(bcolors.OKGREEN + '*' * 80)
+        print(bcolors.OKGREEN + "*" * 80)
         print("did set all passwords to '%s'" % password)
         if admin != password:
             target_cursor.execute(t_sql % admin)
             t_connection.commit()
             print("did set admin password to '%s' where login='admin'" % admin)
         t_connection.close()
-        print('*' * 80 + bcolors.ENDC)
+        print("*" * 80 + bcolors.ENDC)
+
 
 if __name__ == "__main__":
     print(sys.argv)
@@ -773,10 +741,10 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         db_name = sys.argv[1]
     installer = FunidInstaller(db_name)
-    installer.install_own_modules()#what=['crm'])
+    installer.install_own_modules()  # what=['crm'])
     print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
     installer.install_own_modules(what="own_addons")
-    installer.create_users()#strip_fields = ['last_name'])
+    installer.create_users()  # strip_fields = ['last_name'])
     # installer.install_own_modules()
     installer.install_mail_handler()
     # installer.fixup_partner()
