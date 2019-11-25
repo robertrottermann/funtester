@@ -1,4 +1,4 @@
-selenium
+#selenium
 psycopg2
 odoorpc
 
