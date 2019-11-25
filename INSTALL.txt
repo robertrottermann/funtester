@@ -10,7 +10,7 @@ then install the python modules:
 
     pip install -r requirements.txt
 
-before you can run the script there has an odoo running.
+before you can run the script there has to be an odoo running, with access to fernui modules.
 The name of the database is for the time hardcoded in the script and is:
 
     db_name = "fernuni13"

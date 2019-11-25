@@ -377,7 +377,7 @@ class FunidInstaller(object):
                         print(n, s, i)
 
     # ----------------------------------
-    # get_connection opens a connection to a database
+    # get_cursor opens a connection to a database
     def get_cursor(self, db_name=None, return_connection=None):
         """
         """

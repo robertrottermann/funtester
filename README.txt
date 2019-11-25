@@ -1,4 +1,9 @@
 
+install_test.py:
+----------------
+Configure an odoo13 site with a typical fernuni set of modules and users.
+
+
 tools:
 ------
     backup database:
