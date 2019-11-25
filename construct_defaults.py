@@ -57,9 +57,9 @@ def read_yaml_file(path, vals={}):
 def check_and_update_base_defaults(yaml_files, vals, results={}):
     """read a list of yaml files and construct python files that can be imported
     We have three elements involved in this process:
-    1. config/config_data/xx_info.py
+    1. config/xx_info.py
        this file has the actual data. If it is newer than the rest, it is taken
-    2. if config/config_data/xx_info.py does not exist or is not newer than
+    2. if config/xx_info.py does not exist or is not newer than
        config/xx.yaml, it is generated from this file.
        config/xx.yaml was copied from config/xx.yaml.in if it did not exist (in config/__init__.py)
 
@@ -127,7 +127,9 @@ def check_and_update_base_defaults(yaml_files, vals, results={}):
         if yaml_file_path_defaults and os.path.exists(yaml_file_path_defaults):
             yaml_data = read_yaml_file(yaml_file_path_defaults, vals)
         # red the real thing, update defaults
-        yaml_data.update(read_yaml_file(yaml_file_path, vals))
+        if vals:
+            # no use to replace values when there is nothing to replace them with
+            yaml_data.update(read_yaml_file(yaml_file_path, vals))
         new_line = "%s = %s\n"
         new_yaml_data = ""
         for k, v in yaml_data.items():

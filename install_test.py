@@ -163,6 +163,23 @@ SITE_ADDONS = [
 # own (non odoo) repos
 OWN_ADDONS = ["fsch_customer"]
 
+# -------------------------------------
+# messages
+# -------------------------------------
+ERP_NOT_RUNNING = """%s------------------------------------------------
+Site %%s seems not to run!
+------------------------------------------------%s
+""" % (
+    bcolors.FAIL,
+    bcolors.ENDC,
+)
+VALUES_CHANGED = """%s------------------------------------------------
+The config values have changed please check %%s
+------------------------------------------------%s
+""" % (
+    bcolors.WARNING,
+    bcolors.ENDC,
+)
 
 def get_config_from_yaml(which=['config']):
     """[read config data from yaml files]
@@ -182,14 +199,13 @@ def get_config_from_yaml(which=['config']):
         config_yaml = "%s/%s.yaml" % (BASE_PATH, y_name)
         if not os.path.exists(config_yaml):
             in_file = "%s.in" % config_yaml
-            if not os.path.exists(in_file):
-                from shutil import copyfile
-                copyfile("%s/%s.yaml" % (BASE_PATH, y_name), in_file)
+            from shutil import copyfile
+            copyfile("%s/%s.yaml.in" % (BASE_PATH, y_name), config_yaml)
         # build a list to be sent to check_and_update_base_defaults
         yaml_dic[y_name] = (
             y_name,
             config_yaml,
-            "%s/config/config_data/%s" % (BASE_PATH, file_name),
+            "%s/config/%s" % (BASE_PATH, file_name),
             "%s/%s.yaml.in" % (BASE_PATH, y_name),
         )
         vals = {
@@ -201,14 +217,14 @@ def get_config_from_yaml(which=['config']):
             #'SITE_DATA_DIR' : '%(site_data_dir)s',
             #'ERP_VERSION' : '%(erp_version)s',
         }
-        # from pprint import pformat
-        # print(pformat(yaml_dic))
+        # must_reload is not used 
         must_reload = check_and_update_base_defaults(
             yaml_dic.values(),
             vals,
             construct_result
-        )        
-        check_and_update_base_defaults(yaml_dic.values(), vals, results=result)
+        )
+        # return dictionary with the values
+        return must_reload
 
 # make sure we are in a virtualenv
 # robert: i usualy test in wingide
@@ -251,6 +267,8 @@ class FunidInstaller(object):
     db_host = "localhost"
     db_user_pw = "admin"
     postgres_port = 5432
+    
+    BASE_DEFAULTS = {}
 
     _odoo = None
     opts = MyNamespace()
@@ -300,7 +318,9 @@ class FunidInstaller(object):
         return self._own_addons_list
 
     def __init__(self, db_name="fernuni13"):
-        get_config_from_yaml()
+        must_restart = get_config_from_yaml()
+        if must_restart:
+            print()
         self.db_name = db_name
 
     # ----------------------------------
@@ -451,6 +471,9 @@ class FunidInstaller(object):
                     % (rpchost, rpcport, db_name, rpcuser, rpcpw)
                 )
                 print("make sure odoo is running at the given address" + bcolors.ENDC)
+        if not self.odoo:
+            print(ERP_NOT_RUNNING)
+            
         return self._odoo
 
     def install_languages(self, languages):
@@ -467,8 +490,6 @@ class FunidInstaller(object):
         languages = set(languages)
         odoo = self.get_odoo()
         if not odoo:
-            print("oddo is not running")
-            print("make sure odoo is running at the given address" + bcolors.ENDC)
             return
         langs = odoo.env["base.language.install"]
         result = {}

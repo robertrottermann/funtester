@@ -1,5 +1,6 @@
 # robert
 config/*
+*.yaml
 *.bak
 sites_list
 .vscode
