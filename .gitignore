@@ -1,3 +1,22 @@
+# robert
+config/*
+*.bak
+sites_list
+.vscode
+*.swp
+*.save
+tests/test_data/*
+tests/config/**
+config/*.yaml
+docker/docker-odoo-project/
+help/source/_build/
+*.wp*
+dumper/Dockerfile
+bin/pip
+bin/python
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

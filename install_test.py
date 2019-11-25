@@ -10,6 +10,7 @@ import argparse
 import getpass
 import psycopg2
 import psycopg2.extras
+from bcolors import bcolors
 
 BASE_PATH = os.path.split(os.path.realpath(__file__))[0]
 GROUPS = {
@@ -169,21 +170,21 @@ def get_config_from_yaml(which=['config']):
     """
     # the base info we need to access the various parts of erp-workbench
     # it is in the config.yaml file in the erp-workbench config folder
-    from scripts.construct_defaults import check_and_update_base_defaults
+    from construct_defaults import check_and_update_base_defaults
     construct_result = {}
-    result = {}
+    yaml_dic = {}
     for y_info in (
         ("config", "base_info.py"),
     ):
         y_name, file_name = y_info
         if y_name not in which:
             continue
-        config_yaml = "%s/config/%s.yaml" % (BASE_PATH, y_name)
+        config_yaml = "%s/%s.yaml" % (BASE_PATH, y_name)
         if not os.path.exists(config_yaml):
             in_file = "%s.in" % config_yaml
             if not os.path.exists(in_file):
                 from shutil import copyfile
-                shutil.copyfile("%s/%s.yaml" % (BASE_PATH, y_name), in_file)
+                copyfile("%s/%s.yaml" % (BASE_PATH, y_name), in_file)
         # build a list to be sent to check_and_update_base_defaults
         yaml_dic[y_name] = (
             y_name,
@@ -191,28 +192,23 @@ def get_config_from_yaml(which=['config']):
             "%s/config/config_data/%s" % (BASE_PATH, file_name),
             "%s/%s.yaml.in" % (BASE_PATH, y_name),
         )
-
-
-class bcolors:
-    """
-    allow to colour the bash output
-    """
-
-    HEADER = "\033[95m"
-    OKBLUE = "\033[94m"
-    OKGREEN = "\033[92m"
-    WARNING = "\033[93m"
-    FAIL = "\033[91m"
-    ENDC = "\033[0m"
-    BOLD = "\033[1m"
-    UNDERLINE = "\033[4m"
-    white = "\033[1;37m"
-    normal = "\033[0;00m"
-    red = "\033[1;31m"
-    blue = "\033[1;34m"
-    green = "\033[1;32m"
-    lightblue = "\033[0;34m"
-
+        vals = {
+            #'USER_HOME' : user_home,
+            #'BASE_PATH' : BASE_PATH,
+            #'ACT_USER'  : ACT_USER,
+            #'DB_USER'   : ACT_USER,
+            #'PROJECT_INSTALL': '%(inner_path)s',
+            #'SITE_DATA_DIR' : '%(site_data_dir)s',
+            #'ERP_VERSION' : '%(erp_version)s',
+        }
+        # from pprint import pformat
+        # print(pformat(yaml_dic))
+        must_reload = check_and_update_base_defaults(
+            yaml_dic.values(),
+            vals,
+            construct_result
+        )        
+        check_and_update_base_defaults(yaml_dic.values(), vals, results=result)
 
 # make sure we are in a virtualenv
 # robert: i usualy test in wingide
@@ -304,6 +300,7 @@ class FunidInstaller(object):
         return self._own_addons_list
 
     def __init__(self, db_name="fernuni13"):
+        get_config_from_yaml()
         self.db_name = db_name
 
     # ----------------------------------
@@ -575,6 +572,8 @@ class FunidInstaller(object):
         # odoo 13, flags when external mailservers are used
         # however, it seems not possible to set that flag using odoo_rpc
         odoo = self.get_odoo()
+        if not odoo:
+            return
         res_config_settings = odoo.env["res.config.settings"]
         try:
             try:
@@ -638,6 +637,8 @@ class FunidInstaller(object):
 
     def create_users(self, force=False, strip_fields=[]):
         odoo = self.get_odoo()
+        if not odoo:
+            return
         users_o = odoo.env["res.users"]
         users_ox = users_o.with_user(odoo.env.context, 1)
         users = self.users

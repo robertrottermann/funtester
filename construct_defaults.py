@@ -1,10 +1,9 @@
 import yaml
 from io import StringIO
 from pprint import pformat
-from scripts.bcolors import bcolors
+from bcolors import bcolors
 import os
 import shutil
-import templates
 
 """this module provides functionality to read and write yaml files
 """
@@ -63,10 +62,6 @@ def check_and_update_base_defaults(yaml_files, vals, results={}):
     2. if config/config_data/xx_info.py does not exist or is not newer than
        config/xx.yaml, it is generated from this file.
        config/xx.yaml was copied from config/xx.yaml.in if it did not exist (in config/__init__.py)
-    3. When config/config_data/xx_info.py is generated, default values are read from
-       templates/xx.yaml.
-       This is to make sure, that all the values needed exist, as the user could somehow have
-       deleted it when editing the config/xx.yaml file.
 
     Arguments:
         yaml_files {list of tuples} -- tuples with (
@@ -102,13 +97,13 @@ def check_and_update_base_defaults(yaml_files, vals, results={}):
             print(yaml_data)
             print(bcolors.ENDC)
             raise ValueError
-        if not os.path.exists(yaml_file_path):
-            # we copy the file from the template folder
-            # to the config folder
-            shutil.copyfile(
-                "%s/%s.yaml" % (templates.__path__[0], yaml_name),
-                yaml_file_path_defaults,
-            )
+        #if not os.path.exists(yaml_file_path):
+            ## we copy the file from the template folder
+            ## to the config folder
+            #shutil.copyfile(
+                #"%s/%s.yaml" % (templates.__path__[0], yaml_name),
+                #yaml_file_path_defaults,
+            #)
         # compare file dates
         # check if folder exists:
         if not os.path.exists(os.path.dirname(data_file_path)):
