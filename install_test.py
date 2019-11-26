@@ -5,8 +5,7 @@ A script, that installs odoo 13 with some fernuni modules
 """
 import os, sys
 import urllib.request, urllib.error, urllib.parse
-from argparse import ArgumentParser, Namespace
-import argparse
+from argparse import Namespace
 import getpass
 import psycopg2
 import psycopg2.extras
@@ -174,14 +173,15 @@ Site %%s seems not to run!
     bcolors.ENDC,
 )
 VALUES_CHANGED = """%s------------------------------------------------
-The config values have changed please check %%s
+The config values have changed please check the files in %%s/config/
+If wrong please adapt %%s/config.yaml
 ------------------------------------------------%s
 """ % (
     bcolors.WARNING,
     bcolors.ENDC,
 )
 
-def get_config_from_yaml(which=['config']):
+def get_config_from_yaml(which=['config'], result_dic={}):
     """[read config data from yaml files]
     return dict with config data dicts
     """
@@ -198,7 +198,7 @@ def get_config_from_yaml(which=['config']):
             continue
         config_yaml = "%s/%s.yaml" % (BASE_PATH, y_name)
         if not os.path.exists(config_yaml):
-            in_file = "%s.in" % config_yaml
+            #in_file = "%s.in" % config_yaml
             from shutil import copyfile
             copyfile("%s/%s.yaml.in" % (BASE_PATH, y_name), config_yaml)
         # build a list to be sent to check_and_update_base_defaults
@@ -217,12 +217,14 @@ def get_config_from_yaml(which=['config']):
             #'SITE_DATA_DIR' : '%(site_data_dir)s',
             #'ERP_VERSION' : '%(erp_version)s',
         }
-        # must_reload is not used 
+        # must_reload flags whether we need do restart
         must_reload = check_and_update_base_defaults(
             yaml_dic.values(),
             vals,
             construct_result
         )
+        # update the result dic, so the caller can access it 
+        result_dic.update(yaml_dic)
         # return dictionary with the values
         return must_reload
 
@@ -257,18 +259,8 @@ class FunidInstaller(object):
     This means mostly install some modules and users
     and assign them roles
     """
-
-    db_name = "fernuni13"
-    rpc_host = "localhost"
-    rpc_port = 8069
-    rpc_user = "admin"
-    rpc_user_pw = "login"
-    db_user = getpass.getuser()
-    db_host = "localhost"
-    db_user_pw = "admin"
-    postgres_port = 5432
     
-    BASE_DEFAULTS = {}
+    BASE_DEFAULTS = {} # will be set when yaml was loaded
 
     _odoo = None
     opts = MyNamespace()
@@ -316,12 +308,56 @@ class FunidInstaller(object):
     @property
     def own_addons(self):
         return self._own_addons_list
+    
+    # ---------------------------
+    # access to odoo and postgres
+    # ---------------------------
+    @property
+    def db_name(self):
+        return self.BASE_DEFAULTS.get('db_name', 'fernuni13')
+    # rpc_host: on what host is odoo running
+    @property
+    def rpc_host(self):
+        return self.BASE_DEFAULTS.get('rpc_host', '')
+    # rpc_port what port is odoo using
+    @property
+    def rpc_port(self):
+        return self.BASE_DEFAULTS.get('rpc_port', 8089)
+    # rpc_user: as what user do we access odoo
+    @property
+    def rpc_user(self):
+        return self.BASE_DEFAULTS.get('rpc_user', getpass.getuser())
+    # rpc_user_pw: what is the odoo uses pw
+    @property
+    def rpc_user_pw(self):
+        return self.BASE_DEFAULTS.get('rpc_user_pw', 'admin')
+    # db_user: as what user are we accessing postgres
+    @property
+    def db_user(self):
+        return self.BASE_DEFAULTS.get('db_user', getpass.getuser())
+    # db_user_pw: what is the postgrs users pw
+    @property
+    def db_user_pw(self):
+        return self.BASE_DEFAULTS.get('db_user_pw', 'admin')
+    # db_host: on what host is postgres running
+    @property
+    def db_host(self):
+        return self.BASE_DEFAULTS.get('db_host', 'localhost')
+    # postgres_port: at what post is postgres running
+    @property
+    def postgres_port(self):
+        return self.BASE_DEFAULTS.get('postgres_port', 5432)
+    
 
-    def __init__(self, db_name="fernuni13"):
-        must_restart = get_config_from_yaml()
+    def __init__(self):
+        result_dic = {}
+        must_restart = get_config_from_yaml(result_dic=result_dic) # will return list of updated configs
+                                                                   # result_dic will have data from yaml files
         if must_restart:
-            print()
-        self.db_name = db_name
+            print(VALUES_CHANGED % (BASE_PATH, BASE_PATH))
+            sys.exit()
+        from config.base_info import BASE_DEFAULTS
+        self.BASE_DEFAULTS = BASE_DEFAULTS
 
     # ----------------------------------
     # collects info on what modules are installed
@@ -333,7 +369,7 @@ class FunidInstaller(object):
     def collect_info(
         self, cursor, req, installed, uninstalled, to_upgrade, all_list=[], apps=[]
     ):
-        opts = self.opts
+        #opts = self.opts
         s = "select * from ir_module_module"
         cursor.execute(s)
         rows = cursor.fetchall()
@@ -413,6 +449,7 @@ class FunidInstaller(object):
                 print(bcolors.WARNING + "please install odoorpc")
                 print("execute pip install -r install/requirements.txt" + bcolors.ENDC)
                 return
+            odoo = None
             try:
                 if verbose:
                     print("*" * 80)
@@ -451,8 +488,6 @@ class FunidInstaller(object):
                     % (rpchost, rpcport, db_name, rpcuser, rpcpw)
                     + bcolors.ENDC
                 )
-                if verbose:
-                    return odoo
                 return
             except urllib.error.URLError:
                 print(
@@ -471,7 +506,7 @@ class FunidInstaller(object):
                     % (rpchost, rpcport, db_name, rpcuser, rpcpw)
                 )
                 print("make sure odoo is running at the given address" + bcolors.ENDC)
-        if not self.odoo:
+        if not self._odoo:
             print(ERP_NOT_RUNNING)
             
         return self._odoo
@@ -661,7 +696,7 @@ class FunidInstaller(object):
         if not odoo:
             return
         users_o = odoo.env["res.users"]
-        users_ox = users_o.with_user(odoo.env.context, 1)
+        users_ox = users_o.with_user(odoo.env.context, 1) #???
         users = self.users
         groups = self.groups
         # groups_o = odoo.env['res.groups']
@@ -730,7 +765,6 @@ class FunidInstaller(object):
         for partner_id in partner_o.search([]):
             try:
                 partner = partner_o.browse([partner_id])
-                first = partner.name
                 last = partner.last_name
                 email = partner.email
                 if not last:
@@ -745,6 +779,7 @@ class FunidInstaller(object):
         # create connection
         target_cursor, t_connection = self.get_cursor(return_connection=True)
         t_sql = "UPDATE res_users set password = '%s'"
+        t_sql_a = "UPDATE res_users set password = '%s' wher login=admin"
         target_cursor.execute(t_sql % password)
         t_connection.commit()
         print(bcolors.OKGREEN + "*" * 80)
@@ -762,7 +797,7 @@ if __name__ == "__main__":
     db_name = "fernuni13"
     if len(sys.argv) > 1:
         db_name = sys.argv[1]
-    installer = FunidInstaller(db_name)
+    installer = FunidInstaller()
     installer.install_own_modules()  # what=['crm'])
     print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
     installer.install_own_modules(what="own_addons")
