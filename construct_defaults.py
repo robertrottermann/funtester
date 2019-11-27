@@ -106,6 +106,8 @@ def check_and_update_base_defaults(yaml_files, vals, results={}):
             #)
         # compare file dates
         # check if folder exists:
+        # flag what local yaml to update
+        yaml_file_path_to_load = yaml_file_path_defaults
         if not os.path.exists(os.path.dirname(data_file_path)):
             os.makedirs(os.path.dirname(data_file_path))
             with open("%s/__init__.py" % os.path.dirname(data_file_path), "w") as f:
@@ -120,12 +122,13 @@ def check_and_update_base_defaults(yaml_files, vals, results={}):
             # print('data file: %s, yaml_file:%s' % (datetime.fromtimestamp(os.path.getmtime(data_file_path)).strftime('%Y-%m-%d %H:%M:%S'), datetime.fromtimestamp(os.path.getmtime(yaml_file_path)).strftime('%Y-%m-%d %H:%M:%S')))
             # we have to flag, that we did not load this module
             results[yaml_file_path] = {}
+            yaml_file_path_to_load = yaml_file_path
         else:
             continue
         # read defaults
         yaml_data = {}
-        if yaml_file_path_defaults and os.path.exists(yaml_file_path_defaults):
-            yaml_data = read_yaml_file(yaml_file_path_defaults, vals)
+        if yaml_file_path_to_load and os.path.exists(yaml_file_path_to_load):
+            yaml_data = read_yaml_file(yaml_file_path_to_load, vals)
         # red the real thing, update defaults
         if vals:
             # no use to replace values when there is nothing to replace them with

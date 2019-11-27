@@ -223,7 +223,7 @@ def get_config_from_yaml(which=['config'], result_dic={}):
             vals,
             construct_result
         )
-        # update the result dic, so the caller can access it 
+        # update the result dic, so the caller can access it
         result_dic.update(yaml_dic)
         # return dictionary with the values
         return must_reload
@@ -233,8 +233,8 @@ def get_config_from_yaml(which=['config'], result_dic={}):
 if not os.environ.get("VIRTUAL_ENV") and not os.environ.get("WINGDB_ACTIVE"):
     print(bcolors.WARNING)
     print("not running in a virtualenv")
-    print("activate the worbench environment executing:")
-    print("workon workbench or somthing similar")
+    print("activate a virtual environment executing:")
+    print("workon workbench or something similar")
     print(bcolors.ENDC)
     sys.exit()
 
@@ -259,7 +259,7 @@ class FunidInstaller(object):
     This means mostly install some modules and users
     and assign them roles
     """
-    
+
     BASE_DEFAULTS = {} # will be set when yaml was loaded
 
     _odoo = None
@@ -308,7 +308,7 @@ class FunidInstaller(object):
     @property
     def own_addons(self):
         return self._own_addons_list
-    
+
     # ---------------------------
     # access to odoo and postgres
     # ---------------------------
@@ -347,7 +347,7 @@ class FunidInstaller(object):
     @property
     def postgres_port(self):
         return self.BASE_DEFAULTS.get('postgres_port', 5432)
-    
+
 
     def __init__(self):
         result_dic = {}
@@ -508,7 +508,7 @@ class FunidInstaller(object):
                 print("make sure odoo is running at the given address" + bcolors.ENDC)
         if not self._odoo:
             print(ERP_NOT_RUNNING)
-            
+
         return self._odoo
 
     def install_languages(self, languages):
