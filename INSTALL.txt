@@ -1,7 +1,6 @@
 
 INSTALL.txt
 -----------
-
 cd to the folder where install_test.py is located and create a virtual environment
 
     mkvirtualenv -p python3 -a . funinst
@@ -11,9 +10,21 @@ then install the python modules:
     pip install -r requirements.txt
 
 before you can run the script there has to be an odoo running, with access to fernui modules.
-The name of the database is for the time hardcoded in the script and is:
 
-    db_name = "fernuni13"
+Configuration:
+--------------
+install_test.py is configured py yaml files.
+They are generated when install_test.py is run for the first tim from *.yaml.in templates.
+The values defined in the yaml files are the written to config/xxx.py and imported into
+install_test.py.
+
+    - config.yaml --> config/base_info.py
+        this file defines access parameters for odoo and
+        the postgres db.
+        Also the name of the odoo site to configure is defined her.
+
+Each time you change a yaml file, its corresponding config/.. file is recreated,
+and install_test.py has to be restarted.
 
 
 selenium:
