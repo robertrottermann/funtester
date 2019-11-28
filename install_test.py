@@ -181,25 +181,26 @@ If wrong please adapt %%s/config.yaml
     bcolors.ENDC,
 )
 
-def get_config_from_yaml(which=['config'], result_dic={}):
+
+def get_config_from_yaml(which=["config"], result_dic={}):
     """[read config data from yaml files]
     return dict with config data dicts
     """
     # the base info we need to access the various parts of erp-workbench
     # it is in the config.yaml file in the erp-workbench config folder
     from construct_defaults import check_and_update_base_defaults
+
     construct_result = {}
     yaml_dic = {}
-    for y_info in (
-        ("config", "base_info.py"),
-    ):
+    for y_info in (("config", "base_info.py"),):
         y_name, file_name = y_info
         if y_name not in which:
             continue
         config_yaml = "%s/%s.yaml" % (BASE_PATH, y_name)
         if not os.path.exists(config_yaml):
-            #in_file = "%s.in" % config_yaml
+            # in_file = "%s.in" % config_yaml
             from shutil import copyfile
+
             copyfile("%s/%s.yaml.in" % (BASE_PATH, y_name), config_yaml)
         # build a list to be sent to check_and_update_base_defaults
         yaml_dic[y_name] = (
@@ -219,14 +220,13 @@ def get_config_from_yaml(which=['config'], result_dic={}):
         }
         # must_reload flags whether we need do restart
         must_reload = check_and_update_base_defaults(
-            yaml_dic.values(),
-            vals,
-            construct_result
+            yaml_dic.values(), vals, construct_result
         )
         # update the result dic, so the caller can access it
         result_dic.update(yaml_dic)
         # return dictionary with the values
         return must_reload
+
 
 # make sure we are in a virtualenv
 # robert: i usualy test in wingide
@@ -260,7 +260,7 @@ class FunidInstaller(object):
     and assign them roles
     """
 
-    BASE_DEFAULTS = {} # will be set when yaml was loaded
+    BASE_DEFAULTS = {}  # will be set when yaml was loaded
 
     _odoo = None
     opts = MyNamespace()
@@ -314,49 +314,59 @@ class FunidInstaller(object):
     # ---------------------------
     @property
     def db_name(self):
-        return self.BASE_DEFAULTS.get('db_name', 'fernuni13')
+        return self.BASE_DEFAULTS.get("db_name", "fernuni13")
+
     # rpc_host: on what host is odoo running
     @property
     def rpc_host(self):
-        return self.BASE_DEFAULTS.get('rpc_host', '')
+        return self.BASE_DEFAULTS.get("rpc_host", "")
+
     # rpc_port what port is odoo using
     @property
     def rpc_port(self):
-        return self.BASE_DEFAULTS.get('rpc_port', 8089)
+        return self.BASE_DEFAULTS.get("rpc_port", 8089)
+
     # rpc_user: as what user do we access odoo
     @property
     def rpc_user(self):
-        return self.BASE_DEFAULTS.get('rpc_user', getpass.getuser())
+        return self.BASE_DEFAULTS.get("rpc_user", getpass.getuser())
+
     # rpc_user_pw: what is the odoo uses pw
     @property
     def rpc_user_pw(self):
-        return self.BASE_DEFAULTS.get('rpc_user_pw', 'admin')
+        return self.BASE_DEFAULTS.get("rpc_user_pw", "admin")
+
     # db_user: as what user are we accessing postgres
     @property
     def db_user(self):
-        return self.BASE_DEFAULTS.get('db_user', getpass.getuser())
+        return self.BASE_DEFAULTS.get("db_user", getpass.getuser())
+
     # db_user_pw: what is the postgrs users pw
     @property
     def db_user_pw(self):
-        return self.BASE_DEFAULTS.get('db_user_pw', 'admin')
+        return self.BASE_DEFAULTS.get("db_user_pw", "admin")
+
     # db_host: on what host is postgres running
     @property
     def db_host(self):
-        return self.BASE_DEFAULTS.get('db_host', 'localhost')
+        return self.BASE_DEFAULTS.get("db_host", "localhost")
+
     # postgres_port: at what post is postgres running
     @property
     def postgres_port(self):
-        return self.BASE_DEFAULTS.get('postgres_port', 5432)
-
+        return self.BASE_DEFAULTS.get("postgres_port", 5432)
 
     def __init__(self):
         result_dic = {}
-        must_restart = get_config_from_yaml(result_dic=result_dic) # will return list of updated configs
-                                                                   # result_dic will have data from yaml files
+        must_restart = get_config_from_yaml(
+            result_dic=result_dic
+        )  # will return list of updated configs
+        # result_dic will have data from yaml files
         if must_restart:
             print(VALUES_CHANGED % (BASE_PATH, BASE_PATH))
             sys.exit()
         from config.base_info import BASE_DEFAULTS
+
         self.BASE_DEFAULTS = BASE_DEFAULTS
 
     # ----------------------------------
@@ -369,7 +379,7 @@ class FunidInstaller(object):
     def collect_info(
         self, cursor, req, installed, uninstalled, to_upgrade, all_list=[], apps=[]
     ):
-        #opts = self.opts
+        # opts = self.opts
         s = "select * from ir_module_module"
         cursor.execute(s)
         rows = cursor.fetchall()
@@ -702,7 +712,7 @@ class FunidInstaller(object):
         if not odoo:
             return
         users_o = odoo.env["res.users"]
-        users_ox = users_o.with_user(odoo.env.context, 1) #???
+        users_ox = users_o.with_user(odoo.env.context, 1)  # ???
         users = self.users
         groups = self.groups
         # groups_o = odoo.env['res.groups']

@@ -97,13 +97,13 @@ def check_and_update_base_defaults(yaml_files, vals, results={}):
             print(yaml_data)
             print(bcolors.ENDC)
             raise ValueError
-        #if not os.path.exists(yaml_file_path):
-            ## we copy the file from the template folder
-            ## to the config folder
-            #shutil.copyfile(
-                #"%s/%s.yaml" % (templates.__path__[0], yaml_name),
-                #yaml_file_path_defaults,
-            #)
+        # if not os.path.exists(yaml_file_path):
+        ## we copy the file from the template folder
+        ## to the config folder
+        # shutil.copyfile(
+        # "%s/%s.yaml" % (templates.__path__[0], yaml_name),
+        # yaml_file_path_defaults,
+        # )
         # compare file dates
         # check if folder exists:
         # flag what local yaml to update

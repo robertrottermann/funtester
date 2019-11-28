@@ -7,6 +7,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 
+
 class FirstOne(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
@@ -22,21 +23,33 @@ class FirstOne(unittest.TestCase):
         driver.find_element_by_id("login").send_keys("admin")
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("admin")
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Password'])[1]/following::button[1]").click()
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Register'])[1]/following::div[4]").click()
+        driver.find_element_by_xpath(
+            "(.//*[normalize-space(text()) and normalize-space(.)='Password'])[1]/following::button[1]"
+        ).click()
+        driver.find_element_by_xpath(
+            "(.//*[normalize-space(text()) and normalize-space(.)='Register'])[1]/following::div[4]"
+        ).click()
         driver.find_element_by_link_text("Study Course").click()
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Configuration'])[1]/following::span[1]").click()
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Become Superuser'])[1]/following::span[1]").click()
+        driver.find_element_by_xpath(
+            "(.//*[normalize-space(text()) and normalize-space(.)='Configuration'])[1]/following::span[1]"
+        ).click()
+        driver.find_element_by_xpath(
+            "(.//*[normalize-space(text()) and normalize-space(.)='Become Superuser'])[1]/following::span[1]"
+        ).click()
         driver.find_element_by_link_text("Log out").click()
 
     def is_element_present(self, how, what):
-        try: self.driver.find_element(by=how, value=what)
-        except NoSuchElementException as e: return False
+        try:
+            self.driver.find_element(by=how, value=what)
+        except NoSuchElementException as e:
+            return False
         return True
 
     def is_alert_present(self):
-        try: self.driver.switch_to_alert()
-        except NoAlertPresentException as e: return False
+        try:
+            self.driver.switch_to_alert()
+        except NoAlertPresentException as e:
+            return False
         return True
 
     def close_alert_and_get_its_text(self):
@@ -48,11 +61,13 @@ class FirstOne(unittest.TestCase):
             else:
                 alert.dismiss()
             return alert_text
-        finally: self.accept_next_alert = True
+        finally:
+            self.accept_next_alert = True
 
     def tearDown(self):
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
+
 
 if __name__ == "__main__":
     unittest.main()
