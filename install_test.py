@@ -445,8 +445,8 @@ class FunidInstaller(object):
             return cursor_d, conn
         return cursor_d
 
-    def get_odoo(self, no_db=False, verbose=False):
-        if not self._odoo:
+    def get_odoo(self, no_db=False, verbose=False, login=[]):
+        if not self._odoo or login:
             """
             get_module_obj logs into odoo and then
             returns an object with which we can manage the list of modules
@@ -457,8 +457,14 @@ class FunidInstaller(object):
             db_name = self.db_name
             rpchost = self.rpc_host
             rpcport = self.rpc_port
-            rpcuser = self.rpc_user
-            rpcpw = self.rpc_user_pw
+            if login:
+                rpcuser = login[0]
+            else:
+                rpcuser = self.rpc_user
+            if login:
+                rpcpw = login[1]
+            else:
+                rpcpw = self.rpc_user_pw
             try:
                 import odoorpc
             except ImportError:
@@ -811,6 +817,43 @@ class FunidInstaller(object):
         t_connection.close()
         print("*" * 80 + bcolors.ENDC)
 
+    def create_objects(self, which=[], login=[]):
+        # create fernuni objects from sample_data.py
+        from sample_data import sample_data, create_sequence
+        if login:
+            odoo = self.get_odoo(login=login)
+        else:
+            odoo = self.get_odoo()
+        for object_name in create_sequence:
+            object_data = sample_data[object_name]
+            print (object_name)
+            if not which or object_name in which:
+                oobjs = odoo.env[object_data['module']]
+                search = object_data.get("search")
+                vals_list = object_data["vals_list"]
+                if search:
+                    new_vals_list = []
+                    for c_item in vals_list:                        
+                        # we construct a search 
+                        filt = []
+                        for s_item in search:
+                            val = c_item.get(s_item)
+                            if not val:
+                                # if the filter value is not part of the dataset to create
+                                # there is no use to to look for an objekt
+                                filt = []
+                                break
+                            filt.append((s_item, '=', val))
+                        if filt:
+                            found = oobjs.search(filt)
+                            if found:
+                                break
+                        # not found, so create it
+                        new_vals_list.append(c_item)
+                    vals_list = new_vals_list
+                if vals_list:
+                    oobjs.create(object_data["vals_list"])
+
 
 if __name__ == "__main__":
     print(sys.argv)
@@ -818,11 +861,12 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         db_name = sys.argv[1]
     installer = FunidInstaller()
-    installer.install_own_modules()  # what=['crm'])
-    print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
-    installer.install_own_modules(what="own_addons")
-    installer.create_users()  # strip_fields = ['last_name'])
-    # installer.install_own_modules()
-    installer.install_mail_handler()
-    # installer.fixup_partner()
-    installer.set_passwords()
+    # installer.install_own_modules()  # what=['crm'])
+    # print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
+    # installer.install_own_modules(what="own_addons")
+    # installer.create_users()  # strip_fields = ['last_name'])
+    # # installer.install_own_modules()
+    # installer.install_mail_handler()
+    # # installer.fixup_partner()
+    # installer.set_passwords()
+    installer.create_objects(login=['matthias', 'login'])

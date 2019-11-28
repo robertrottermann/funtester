@@ -66,7 +66,17 @@
 # # ----------------------------------------------------------------------------
 # # end creating trough odoo
 # # ----------------------------------------------------------------------------
-
+create_sequence = [
+  "student",
+  "semester",
+  "price_event",
+  "university",
+  "study_center",
+  "grade",
+  "reason_exmatriculation",
+  "studies",
+  "kohorte",
+]
 sample_data = {
     "student": {
         "module": "res.partner",
@@ -294,6 +304,7 @@ sample_data = {
     },
     "semester": {
         "module": "semester",
+        "search" : ["year", "type"], # do not create, when object is found using these elems
         # creating a semester()
         "vals_list": [
             {
@@ -455,7 +466,7 @@ sample_data = {
     },
     # -------->>>>>>>>>>> Missing Create: Cost Center
     # -------- Create: Study Center
-    "study.center": {
+    "study_center": {
         "module": "study.center",
         "vals_list": [
             {
@@ -496,7 +507,7 @@ sample_data = {
         "vals_list": [{"active": True, "bfs_grade_code": 25, "name": "Master"}],
     },
     # -------- Create: Reason Exmatriculation
-    "reason.exmatriculation": {
+    "reason_exmatriculation": {
         "module": "reason.exmatriculation",
         "vals_list": [
             {
