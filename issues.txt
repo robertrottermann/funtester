@@ -1,0 +1,15 @@
+department:
+-----------
+Missing fields:
+    Website color
+    Department icon
+
+studies:
+--------
+when creating new studies from dropdown menu:
+    student semester -> new -> studies
+    AttributeError: 'studies' object has no attribute 'rebuild_name'
+
+Semester:
+---------
+    when editing existing semester year 2020 is displayed as   2,020  
