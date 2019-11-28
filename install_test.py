@@ -420,9 +420,15 @@ class FunidInstaller(object):
         try:
             conn = psycopg2.connect(conn_string)
         except psycopg2.OperationalError:
-            if postgres_port:
-                conn_string += " port=%s" % postgres_port
-                conn = psycopg2.connect(conn_string)
+            try:
+                if postgres_port:
+                    conn_string += " port=%s" % postgres_port
+                    conn = psycopg2.connect(conn_string)
+            except psycopg2.OperationalError:
+                print(ERP_NOT_RUNNING % db_name)
+                return
+        except:
+            return
 
         cursor_d = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         if return_connection:
@@ -777,7 +783,11 @@ class FunidInstaller(object):
         # this sets all password to admin
         installer.get_cursor()
         # create connection
-        target_cursor, t_connection = self.get_cursor(return_connection=True)
+        try:
+            target_cursor, t_connection = self.get_cursor(return_connection=True)
+        except TypeError:
+            # site is probaly not running
+            return
         t_sql = "UPDATE res_users set password = '%s'"
         t_sql_a = "UPDATE res_users set password = '%s' wher login=admin"
         target_cursor.execute(t_sql % password)
