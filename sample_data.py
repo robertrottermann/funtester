@@ -461,7 +461,7 @@ sample_data = {
             {
                 "active": True,
                 "name": "Universitäre Fernstudien Schweiz",
-                "price_event_unknown_student_id": 43,
+                "price_event_unknown_student_id": ('product.product', [('name', 'Teilnahme Präsenzveranstaltung')]), #43,
                 "pud": False,
                 "puf": False,
             }
@@ -486,7 +486,7 @@ sample_data = {
                 "phone": "+41 840 840 820",
                 "secretary_user_id": False,
                 "short_name": "Forschung und Entwicklung",
-                "user_id": 24,
+                "user_id": ('res.users', [('login', 'manuela')]), #24,
                 "webseite": "http://fernuni.ch/ueber-uns/organisation/standorte/pfaeffikon-sz/",
             }
         ],
@@ -566,7 +566,7 @@ sample_data = {
                 "nom_du_diplome": False,
                 "notes": False,
                 "part_time": False,
-                "partner_id": 70,
+                "partner_id": ('res.partner', [('name', 'Student'), ('last_name', 'Fleissig')]), #70,
                 "permission_date": False,
                 "permission_remark": False,
                 "pieces_manquantes_inscription": False,

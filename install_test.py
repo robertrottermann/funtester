@@ -72,6 +72,16 @@ STAFF = {
         # email
         "password": "Login$99",
     },
+    "1195": {
+        "login": "manuela",
+        "last_name": "Kummer",
+        "name": "Manuela",
+        "groups": [
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+        # email
+        "password": "Login$99",
+    },
     "1699": {
         "login": "celine",
         "last_name": "Pellissier",
@@ -83,6 +93,7 @@ STAFF = {
         # email
         "password": "Login$99",
     },
+
     "1533": {
         "login": "pedro",
         "last_name": "Gonzalez Sanchez",
@@ -817,6 +828,20 @@ class FunidInstaller(object):
         t_connection.close()
         print("*" * 80 + bcolors.ENDC)
 
+    def _get_object(self, odoo, domain_info):
+        """
+        return id of object loocked up using domain_info
+        ('product.product', [('name', 'Teilnahme Präsenzveranstaltung')])
+        """
+        oobjs = odoo.env[domain_info[0]]
+        filt = []
+        for s_item in domain_info[1]:
+            filt.append((s_item[0], '=', s_item[1]))
+        result = oobjs.search(filt)[0]
+        if isinstance(result, int):
+            return result
+        xx # create error
+
     def create_objects(self, which=[], login=[]):
         # create fernuni objects from sample_data.py
         from sample_data import sample_data, create_sequence
@@ -832,6 +857,11 @@ class FunidInstaller(object):
                 oobjs = odoo.env[module]
                 search = object_data.get("search")
                 vals_list = object_data["vals_list"]
+                # loock up linked ids
+                for vals_dic in vals_list:
+                    for k,v in vals_dic.items():
+                        if isinstance(v, tuple):
+                            vals_dic[k] = self._get_object(odoo, v)
                 if search:
                     new_vals_list = []
                     for c_item in vals_list:
@@ -901,7 +931,7 @@ if __name__ == "__main__":
         action="store",
         dest="steps",
         default="all",
-        help="what steps to process. steps are separated by coma, nospace. Default all",
+        help="what steps to process. steps are separated by comma, nospace!. Default all",
     )
     opts = parser.parse_args()
     main(opts)
