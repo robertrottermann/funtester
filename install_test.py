@@ -72,6 +72,29 @@ STAFF = {
         # email
         "password": "Login$99",
     },
+    "1147": {
+        "login": "evelyn",
+        "last_name": "Winter",
+        "name": "Evelyn",
+        "groups": [
+            "fsch_customer.group_fsch_manager",
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+        # email
+        "password": "Login$99",
+    },
+    "1153": {
+        "login": "nicole",
+        "last_name": "Ruffieux",
+        "name": "Nicole",
+        "groups": [
+            "fsch_customer.group_fsch_sekretariat",
+            "fsch_customer.group_fsch_mitarbeiter",
+            "fsch_customer.group_fsch_assist_dozent",
+        ],
+        # email
+        "password": "Login$99",
+    },
     "1195": {
         "login": "manuela",
         "last_name": "Kummer",
@@ -183,6 +206,27 @@ Site %%s seems not to run!
     bcolors.FAIL,
     bcolors.ENDC,
 )
+ERP_NOT_RUNNING_PW = """%s------------------------------------------------
+Site %%s seems not to run!
+Or it was not possible to login as
+user: %%s
+using pw: %%s
+------------------------------------------------%s
+""" % (
+    bcolors.FAIL,
+    bcolors.ENDC,
+)
+COULD_NOT_FIND_OBJECT = """%s------------------------------------------------
+The search for an object in
+model: %%s
+with search condition: %%s
+did not yield in a result.
+Please check sample_data.py
+------------------------------------------------%s
+""" % (
+    bcolors.FAIL,
+    bcolors.ENDC,
+)
 VALUES_CHANGED = """%s------------------------------------------------
 The config values have changed please check the files in %%s/config/
 If wrong please adapt %%s/config.yaml
@@ -191,8 +235,24 @@ If wrong please adapt %%s/config.yaml
     bcolors.WARNING,
     bcolors.ENDC,
 )
-
-
+MODULE_NOT_FOUND = """%s------------------------------------------------
+File %%s
+for module %%s
+not found
+------------------------------------------------%s
+""" % (
+    bcolors.FAIL,
+    bcolors.ENDC,
+)
+MODULE_DATA_CHANGED = """%s------------------------------------------------
+Some odoo modules have been patched with data from
+patches.py
+Please restart odoo!
+------------------------------------------------%s
+""" % (
+    bcolors.WARNING,
+    bcolors.ENDC,
+)
 def get_config_from_yaml(which=["config"], result_dic={}):
     """[read config data from yaml files]
     return dict with config data dicts
@@ -456,8 +516,8 @@ class FunidInstaller(object):
             return cursor_d, conn
         return cursor_d
 
-    def get_odoo(self, no_db=False, verbose=False, login=[]):
-        if not self._odoo or login:
+    def get_odoo(self, no_db=False, verbose=False, login=[], force=False):
+        if not self._odoo or login or force:
             """
             get_module_obj logs into odoo and then
             returns an object with which we can manage the list of modules
@@ -808,7 +868,6 @@ class FunidInstaller(object):
     def set_passwords(self, password="login", admin="admin"):
         # wrong message!!
         # this sets all password to admin
-        installer.get_cursor()
         # create connection
         try:
             target_cursor, t_connection = self.get_cursor(return_connection=True)
@@ -837,18 +896,27 @@ class FunidInstaller(object):
         filt = []
         for s_item in domain_info[1]:
             filt.append((s_item[0], '=', s_item[1]))
-        result = oobjs.search(filt)[0]
+        result = oobjs.search(filt)
+        if result:
+            result = result[0]
         if isinstance(result, int):
             return result
-        xx # create error
+        return
 
     def create_objects(self, which=[], login=[]):
-        # create fernuni objects from sample_data.py
+        # create fernuni objects from 889.py
         from sample_data import sample_data, create_sequence
         if login:
             odoo = self.get_odoo(login=login)
         else:
             odoo = self.get_odoo()
+        if not odoo:
+            if login:
+                print(ERP_NOT_RUNNING_PW % (self.db_name,login[0], login[1]))
+            else:
+                print(ERP_NOT_RUNNING_PW % (self.db_name, self.rpc_user, self.rpc_user_pw))
+            return
+
         for object_name in create_sequence:
             object_data = sample_data[object_name]
             print (object_name)
@@ -858,10 +926,17 @@ class FunidInstaller(object):
                 search = object_data.get("search")
                 vals_list = object_data["vals_list"]
                 # loock up linked ids
+                counter = -1
                 for vals_dic in vals_list:
+                    counter += 1
                     for k,v in vals_dic.items():
                         if isinstance(v, tuple):
-                            vals_dic[k] = self._get_object(odoo, v)
+                            new_val = self._get_object(odoo, v)
+                            if new_val:
+                                vals_dic[k] = new_val
+                            else:
+                                print(COULD_NOT_FIND_OBJECT % (module, str(v)))
+                                vals_list.pop(counter) # can I do that ??
                 if search:
                     new_vals_list = []
                     for c_item in vals_list:
@@ -885,8 +960,38 @@ class FunidInstaller(object):
                 if vals_list:
                     oobjs.create(vals_list)
 
+    def patch_fernuni(self):
+        # create fernuni objects from sample_data.py
+        from fernuni_patches import fernuni_patches
+        mpath = self.BASE_DEFAULTS.get('fernuni_module_path')
+        must_exit = False
+        for module, patch_list in fernuni_patches.items():
+            for patch in patch_list:
+                fpath = '%s/%s/%s' % (mpath, module, patch[0])
+                if not os.path.exists(fpath):
+                    print(MODULE_NOT_FOUND % (fpath, module))
+                    return
+                # open the file as text and check whether the patch line is already there
+                with open(fpath) as f:
+                    f_data = f.read()
+                    f.close()
+                if f_data.find(patch[1]) > 0:
+                    continue
+                # add the line
+                f_data += ('\n%s' % patch[1])
+                with open(fpath, 'w') as f:
+                    f.write(f_data)
+                    f.close()
+                must_exit = True
+            if must_exit:
+                print(MODULE_DATA_CHANGED)
+                sys.exit()
+
+
+
+
 def main(opts):
-    steps = ['all]']
+    steps = ['all']
     if opts.steps:
         if not opts.steps == 'all':
             steps = opts.steps.split(',')
@@ -907,6 +1012,8 @@ def main(opts):
     # installer.fixup_partner()
     if 'all' in steps or 'passwd' in steps:
         installer.set_passwords()
+    if 'all' in steps or 'patches' in steps:
+        installer.patch_fernuni()
     if 'all' in steps or 'objects' in steps:
         installer.create_objects(login=['matthias', 'login'])
 
@@ -919,6 +1026,7 @@ Possible steps are:
     mail    # install mailhandler (pointing to one of roberts servers)
     passwd  # set passwords
     objects # create fernuni objects
+    patches # add patches found in patches.py to the fernuni modules
 
     by default all steps are run!
 """

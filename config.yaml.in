@@ -1,13 +1,19 @@
-# BASE_DEFAULTS are the values erp-workbench needs
+# BASE_DEFAULTS are the values install_test.py needs to find its values
 # to find its data
 BASE_DEFAULTS:
+  # where are the fernuni modules
+  fernuni_module_path: '/home/robert/projects/fernuni13/fernuni13/fernuni'
+
   # what is the db into which we install
   db_name: 'fernuni13'
+
   # on what host is odoo running
   rpc_host: 'localhost'
   # what port
+
   rpc_port: 8069
   # as what user are we loggin in
+
   rpc_user: 'admin'
   # that users password
   pc_user_pw: 'admin'
