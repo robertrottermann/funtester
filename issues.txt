@@ -13,3 +13,52 @@ when creating new studies from dropdown menu:
 Semester:
 ---------
     when editing existing semester year 2020 is displayed as   2,020  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------
+diff --git a/fsch_customer/security/ir.model.access.csv b/fsch_customer/security/ir.model.access.csv
+index b151f66e9..147bc7ab6 100644
+--- a/fsch_customer/security/ir.model.access.csv
++++ b/fsch_customer/security/ir.model.access.csv
+@@ -627,3 +627,7 @@ access_account_invoice_mitarbeiter,account.move,account.model_account_move,fsch_
+ access_account_invoice_sekretariat,account.move,account.model_account_move,fsch_customer.group_fsch_sekretariat,1,1,1,1
+ access_account_invoice_sk,account.move,account.model_account_move,fsch_customer.group_fsch_sk,1,1,1,0
+ access_account_invoice_stz_leiter,account.move,account.model_account_move,fsch_customer.group_fsch_stz_leiter,1,1,1,0
++
++
++
++access_ir_module_category_manager,ir.module.category manager,base.model_ir_module_category,fsch_customer.group_fsch_manager,1,1,1,1
+\ No newline at end of file
+(fernuni13) robert@mozart:~/projects/fernuni13/fernuni13/fernuni$ git diff fsch_customer/view/res_partner_ext_view.xml
+diff --git a/fsch_customer/view/res_partner_ext_view.xml b/fsch_customer/view/res_partner_ext_view.xml
+index cbbf9bb55..e7189db24 100644
+--- a/fsch_customer/view/res_partner_ext_view.xml
++++ b/fsch_customer/view/res_partner_ext_view.xml
+@@ -652,10 +652,10 @@
+                     <attribute name="readonly">1</attribute>
+                 </field>
+                 <field name="name" position="attributes">
+-                    <attribute name="readonly">1</attribute>
++                    <attribute name="readonly">0</attribute>
+                 </field>
+                 <field name="last_name" position="attributes">
+-                    <attribute name="readonly">1</attribute>
++                    <attribute name="readonly">0</attribute>
+                 </field>
+                 <field name="email" position="attributes">
+                     <attribute name="readonly">1</attribute>

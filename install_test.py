@@ -5,7 +5,7 @@ A script, that installs odoo 13 with some fernuni modules
 """
 import os, sys
 import urllib.request, urllib.error, urllib.parse
-from argparse import Namespace
+from argparse import Namespace, ArgumentParser
 import getpass
 import psycopg2
 import psycopg2.extras
@@ -805,13 +805,13 @@ class FunidInstaller(object):
             # site is probaly not running
             return
         t_sql = "UPDATE res_users set password = '%s'"
-        t_sql_a = "UPDATE res_users set password = '%s' wher login=admin"
+        t_sql_a = "UPDATE res_users set password = '%s' where login='admin'"
         target_cursor.execute(t_sql % password)
         t_connection.commit()
         print(bcolors.OKGREEN + "*" * 80)
         print("did set all passwords to '%s'" % password)
         if admin != password:
-            target_cursor.execute(t_sql % admin)
+            target_cursor.execute(t_sql_a % admin)
             t_connection.commit()
             print("did set admin password to '%s' where login='admin'" % admin)
         t_connection.close()
@@ -854,19 +854,53 @@ class FunidInstaller(object):
                 if vals_list:
                     oobjs.create(object_data["vals_list"])
 
+def main(opts):
+    steps = ['all]']
+    if opts.steps:
+        if not opts.steps == 'all':
+            steps = opts.steps.split(',')
 
-if __name__ == "__main__":
-    print(sys.argv)
-    db_name = "fernuni13"
-    if len(sys.argv) > 1:
-        db_name = sys.argv[1]
+    print(steps)
     installer = FunidInstaller()
-    # installer.install_own_modules()  # what=['crm'])
-    # print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
-    # installer.install_own_modules(what="own_addons")
-    # installer.create_users()  # strip_fields = ['last_name'])
-    # # installer.install_own_modules()
-    # installer.install_mail_handler()
-    # # installer.fixup_partner()
-    # installer.set_passwords()
-    installer.create_objects(login=['matthias', 'login'])
+    if 'all' in steps or 'modules' in steps:
+        installer.install_own_modules()  # what=['crm'])
+    if 'all' in steps or 'lang' in steps:
+        print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
+    if 'all' in steps or 'fernuni' in steps:
+        installer.install_own_modules(what="own_addons")
+    if 'all' in steps or 'users' in steps:
+        installer.create_users()  # strip_fields = ['last_name'])
+    # installer.install_own_modules()
+    if 'all' in steps or 'mail' in steps:
+        installer.install_mail_handler()
+    # installer.fixup_partner()
+    if 'all' in steps or 'passwd' in steps:
+        installer.set_passwords()
+    if 'all' in steps or 'objects' in steps:
+        installer.create_objects(login=['matthias', 'login'])
+
+USAGE = """install_test.py -h for help on usage
+Possible steps are:
+    modules # install odoo modules
+    fernuni # install fernuni modules lik fsch_customer
+    lang    # install languages
+    users   # create users and assign permissions
+    mail    # install mailhandler (pointing to one of roberts servers)
+    passwd  # set passwords
+    objects # create fernuni objects
+
+    by default all steps are run!
+"""
+if __name__ == "__main__":
+    usage = USAGE #"install_test.py -h for help on usage"
+    parser = ArgumentParser(usage=usage)
+    parser.add_argument(
+        "-s",
+        "--steps",
+        action="store",
+        dest="steps",
+        default="all",
+        help="what steps to process. steps are separated by coma, nospace. Default all",
+    )
+    opts = parser.parse_args()
+    main(opts)
