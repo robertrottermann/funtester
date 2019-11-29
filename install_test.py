@@ -155,7 +155,7 @@ SITE_ADDONS = [
     # "bt_swissdec", # TODO: v13 migration
     # "sett_hr", # TODO: v13 migration
     "board",
-    "sale",
+    "sale_management",
     "l10n_ch",
 ]
 # OWN_ADDONS are the modules that we handle our selfs in some
@@ -828,13 +828,14 @@ class FunidInstaller(object):
             object_data = sample_data[object_name]
             print (object_name)
             if not which or object_name in which:
-                oobjs = odoo.env[object_data['module']]
+                module = object_data['module']
+                oobjs = odoo.env[module]
                 search = object_data.get("search")
                 vals_list = object_data["vals_list"]
                 if search:
                     new_vals_list = []
-                    for c_item in vals_list:                        
-                        # we construct a search 
+                    for c_item in vals_list:
+                        # we construct a search
                         filt = []
                         for s_item in search:
                             val = c_item.get(s_item)
@@ -847,12 +848,12 @@ class FunidInstaller(object):
                         if filt:
                             found = oobjs.search(filt)
                             if found:
-                                break
+                                continue
                         # not found, so create it
                         new_vals_list.append(c_item)
                     vals_list = new_vals_list
                 if vals_list:
-                    oobjs.create(object_data["vals_list"])
+                    oobjs.create(vals_list)
 
 def main(opts):
     steps = ['all]']

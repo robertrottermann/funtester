@@ -82,6 +82,7 @@ sample_data = {
         "module": "res.partner",
         # creating a student:
         # self ->res.partner()
+        "search" : ["name", "last_name"], # do not create, when object is found using these elements
         "vals_list": [
             {
                 "__last_update": False,
@@ -304,7 +305,7 @@ sample_data = {
     },
     "semester": {
         "module": "semester",
-        "search" : ["year", "type"], # do not create, when object is found using these elems
+        "search" : ["year", "type"], # do not create, when object is found using these elements
         # creating a semester()
         "vals_list": [
             {
@@ -327,6 +328,7 @@ sample_data = {
     # self product.product()
     "price_event": {
         "module": "product.product",
+        "search" : ["name",], # do not create, when object is found using these elements
         "vals_list": [
             {
                 "__last_update": False,
@@ -359,7 +361,7 @@ sample_data = {
                 "service_type": "manual",
                 "supplier_taxes_id": [[6, False, [2]]],
                 "taxes_id": [[6, False, []]],
-                "tic_category_id": False,
+                #"tic_category_id": False,
                 "tracking": "none",
                 "type": "service",
                 "uom_id": 1,
@@ -400,7 +402,7 @@ sample_data = {
                 "service_type": "manual",
                 "supplier_taxes_id": [[6, False, [2]]],
                 "taxes_id": [[6, False, []]],
-                "tic_category_id": False,
+                #"tic_category_id": False,
                 "tracking": "none",
                 "type": "service",
                 "uom_id": 1,
@@ -441,7 +443,7 @@ sample_data = {
                 "service_type": "manual",
                 "supplier_taxes_id": [[6, False, [2]]],
                 "taxes_id": [[6, False, []]],
-                "tic_category_id": False,
+                #"tic_category_id": False,
                 "tracking": "none",
                 "type": "service",
                 "uom_id": 1,
@@ -454,6 +456,7 @@ sample_data = {
     # -------- creation of university
     "university": {
         "module": "university",
+        "search" : ["name",], # do not create, when object is found using these elements
         "vals_list": [
             {
                 "active": True,
@@ -468,6 +471,7 @@ sample_data = {
     # -------- Create: Study Center
     "study_center": {
         "module": "study.center",
+        "search" : ["name",], # do not create, when object is found using these elements
         "vals_list": [
             {
                 "active": True,
@@ -490,6 +494,7 @@ sample_data = {
     # -------->>>>>>>>>>> Create: Create: Department
     "department": {
         "module": "department",
+        "search" : ["name",], # do not create, when object is found using these elements
         "vals_list": [
             {
                 "active": True,
@@ -504,11 +509,13 @@ sample_data = {
     # -------- Create: Grade
     "grade": {
         "module": "grade",
+        "search" : ["name",], # do not create, when object is found using these elements
         "vals_list": [{"active": True, "bfs_grade_code": 25, "name": "Master"}],
     },
     # -------- Create: Reason Exmatriculation
     "reason_exmatriculation": {
         "module": "reason.exmatriculation",
+        "search" : ["name",], # do not create, when object is found using these elements
         "vals_list": [
             {
                 "calc_predicate_final_grade": False,
@@ -522,6 +529,7 @@ sample_data = {
     # -------- Create: studies
     "studies": {
         "module": "studies",
+        "search" : ["partner_id",], # do not create, when object is found using these elements
         "vals_list": [
             {
                 "abandon": False,
