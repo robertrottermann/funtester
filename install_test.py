@@ -925,7 +925,7 @@ class FunidInstaller(object):
                 # only create objects according to running step
                 if object_data.get('step', 'first_run') != step:
                     continue
-                print (object_name)
+                print (step, object_name)
                 module = object_data['module']
                 running_odoo = None
                 use_login = object_data.get('login')
@@ -1018,6 +1018,8 @@ class FunidInstaller(object):
         for data_set in object_links:
             # so we first have to collect the fields
             # left field
+            l_id = -1
+            r_id = -1
             db = data_set[0][0]
             l_field = data_set[0][1]
             r_field = data_set[0][2]
@@ -1029,22 +1031,25 @@ class FunidInstaller(object):
             r_ids = odoo.env[r_data[0]].search([(r_data[1], '=', r_data[2])])
             if r_ids:
                 r_id = r_ids[0]
-            # construct search to check if link exists
-            sql_search = "select * from %s where %s=%s and %s=%s" % (db, l_field,l_id, r_field, r_id)
-            cursor.execute(sql_search)
-            rows = cursor.fetchall()
-            if rows:
-                continue
-            # does not exist, create them
-            sql_insert = 'insert into  %s (%s, %s) values (%s, %s)' % (db, l_field, r_field, l_id, r_id)
-            cursor.execute(sql_insert)
-            connection.commit()
+            if l_id > -1 and r_id > -1:
+                # construct search to check if link exists
+                sql_search = "select * from %s where %s=%s and %s=%s" % (db, l_field,l_id, r_field, r_id)
+                cursor.execute(sql_search)
+                rows = cursor.fetchall()
+                if rows:
+                    continue
+                # does not exist, create them
+                sql_insert = 'insert into  %s (%s, %s) values (%s, %s)' % (db, l_field, r_field, l_id, r_id)
+                cursor.execute(sql_insert)
+                connection.commit()
 
 def main(opts):
     steps = ['all']
     if opts.steps:
         if not opts.steps == 'all':
             steps = opts.steps.split(',')
+    if opts.simple:
+        steps = ['modules', 'lang']
 
     print(steps)
     installer = FunidInstaller()
@@ -1097,6 +1102,14 @@ if __name__ == "__main__":
         dest="steps",
         default="all",
         help="what steps to process. steps are separated by comma, nospace!. Default all",
+    )
+    parser.add_argument(
+        "-S",
+        "--simple",
+        action="store_true",
+        dest="simple",
+        default=False,
+        help="Simple install. Only install odoo-Modules and languages",
     )
     opts = parser.parse_args()
     main(opts)
