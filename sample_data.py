@@ -686,6 +686,8 @@ sample_data = {
     # create account.analytic.account
     'account_analytic_account' : {
         "module": "account.analytic.account",
+        "search" : ["code",],
+        "login" : "admin",
         "vals_list" : [{'active': True,
         'code': 'BPSYd',
         'company_id': 1,

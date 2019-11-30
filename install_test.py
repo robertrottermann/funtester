@@ -922,6 +922,14 @@ class FunidInstaller(object):
             print (object_name)
             if not which or object_name in which:
                 module = object_data['module']
+                running_odoo = None
+                use_login = object_data.get('login')
+                if use_login:
+                    running_odoo = odoo
+                    pw = 'login'
+                    if use_login == 'admin':
+                        pw = 'admin'
+                    odoo = self.get_odoo(login=[use_login,pw])
                 oobjs = odoo.env[module]
                 search = object_data.get("search")
                 vals_list = object_data["vals_list"]
@@ -959,6 +967,8 @@ class FunidInstaller(object):
                     vals_list = new_vals_list
                 if vals_list:
                     oobjs.create(vals_list)
+                if running_odoo:
+                    odoo = running_odoo
 
     def patch_fernuni(self):
         # create fernuni objects from sample_data.py
