@@ -31,6 +31,7 @@ GROUPS = {
     "Mentorenabrechnungen für Assistenten": "fsch_customer.group_fsch_mentor_allowances_for_assist",
 }
 USERS = {
+    #"prospect" : "prospect",
     "student": "Student",
     "student_re": "Student Reinscription",
     "tutor": "Mentor / Tutor",
@@ -46,6 +47,11 @@ USERS = {
     "facultymanager": "Faculty Manager",
     "group_fsch_kasse": "Barkasse",
 }
+# what flags we set for the contacts created for the users
+# CONTACT_FLAGS = {
+#     "mitarbeiter" : ['employee', 'customer', ]
+#     "student" : ['student', 'customer', ]
+# }
 STAFF = {
     "1142": {
         "login": "alexandra",
