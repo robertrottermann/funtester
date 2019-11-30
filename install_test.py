@@ -248,6 +248,8 @@ MODULE_DATA_CHANGED = """%s------------------------------------------------
 Some odoo modules have been patched with data from
 patches.py
 Please restart odoo!
+and reinstall %%s
+This can be done by rerunning install_test -s fernuni
 ------------------------------------------------%s
 """ % (
     bcolors.WARNING,
@@ -903,7 +905,7 @@ class FunidInstaller(object):
             return result
         return
 
-    def create_objects(self, which=[], login=[]):
+    def create_objects(self, which=[], login=[], step='first_run'):
         # create fernuni objects from 889.py
         from sample_data import sample_data, create_sequence
         if login:
@@ -919,8 +921,11 @@ class FunidInstaller(object):
 
         for object_name in create_sequence:
             object_data = sample_data[object_name]
-            print (object_name)
             if not which or object_name in which:
+                # only create objects according to running step
+                if object_data.get('step', 'first_run') != step:
+                    continue
+                print (object_name)
                 module = object_data['module']
                 running_odoo = None
                 use_login = object_data.get('login')
@@ -974,7 +979,7 @@ class FunidInstaller(object):
         # create fernuni objects from sample_data.py
         from fernuni_patches import fernuni_patches
         mpath = self.BASE_DEFAULTS.get('fernuni_module_path')
-        must_exit = False
+        must_exit = []
         for module, patch_list in fernuni_patches.items():
             for patch in patch_list:
                 fpath = '%s/%s/%s' % (mpath, module, patch[0])
@@ -992,13 +997,48 @@ class FunidInstaller(object):
                 with open(fpath, 'w') as f:
                     f.write(f_data)
                     f.close()
-                must_exit = True
+                must_exit.append(module)
             if must_exit:
-                print(MODULE_DATA_CHANGED)
+                print(MODULE_DATA_CHANGED % str(must_exit))
                 sys.exit()
 
-
-
+    def link_objects(self,login=[]):
+        # link ojects
+        from sample_data import object_links
+        # a link is something like:
+        #    database                 left field                        right field
+        # [['res_users_study_course', 'res_user_id'                     'study_course_id']
+        #                             module      key     value         module         key             value
+        #                            ['res.user','login', 'matthias'], ['study.course','certificate', 'Bachelor of Science in Psychology']]
+        odoo = self.get_odoo(login=login)
+        if not odoo:
+            print(ERP_NOT_RUNNING % self.db_name)
+            return
+        cursor, connection = self.get_cursor(return_connection=True)
+        for data_set in object_links:
+            # so we first have to collect the fields
+            # left field
+            db = data_set[0][0]
+            l_field = data_set[0][1]
+            r_field = data_set[0][2]
+            l_data = data_set[1]
+            l_ids = odoo.env[l_data[0]].search([(l_data[1], '=', l_data[2])])
+            if l_ids:
+                l_id = l_ids[0]
+            r_data = data_set[2]
+            r_ids = odoo.env[r_data[0]].search([(r_data[1], '=', r_data[2])])
+            if r_ids:
+                r_id = r_ids[0]
+            # construct search to check if link exists
+            sql_search = "select * from %s where %s=%s and %s=%s" % (db, l_field,l_id, r_field, r_id)
+            cursor.execute(sql_search)
+            rows = cursor.fetchall()
+            if rows:
+                continue
+            # does not exist, create them
+            sql_insert = 'insert into  %s (%s, %s) values (%s, %s)' % (db, l_field, r_field, l_id, r_id)
+            cursor.execute(sql_insert)
+            connection.commit()
 
 def main(opts):
     steps = ['all']
@@ -1026,17 +1066,24 @@ def main(opts):
         installer.patch_fernuni()
     if 'all' in steps or 'objects' in steps:
         installer.create_objects(login=['matthias', 'login'])
+    if 'all' in steps or 'links' in steps:
+        installer.link_objects(login=['matthias', 'login'])
+    if 'all' in steps or 'second_run' in steps:
+        installer.create_objects(login=['matthias', 'login'], step='second_run')
+
 
 USAGE = """install_test.py -h for help on usage
 Possible steps are:
-    modules # install odoo modules
-    fernuni # install fernuni modules lik fsch_customer
-    lang    # install languages
-    users   # create users and assign permissions
-    mail    # install mailhandler (pointing to one of roberts servers)
-    passwd  # set passwords
-    objects # create fernuni objects
-    patches # add patches found in patches.py to the fernuni modules
+    modules     # install odoo modules
+    fernuni     # install fernuni modules lik fsch_customer
+    lang        # install languages
+    users       # create users and assign permissions
+    mail        # install mailhandler (pointing to one of roberts servers)
+    passwd      # set passwords
+    objects     # create fernuni objects
+    patches     # add patches found in patches.py to the fernuni modules
+    links       # link objects -> sample_data.object_links
+    second_run  # create objects after links have been created
 
     by default all steps are run!
 """

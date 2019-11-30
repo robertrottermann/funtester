@@ -79,6 +79,15 @@ create_sequence = [
   "studies",
   "kohorte",
 ]
+# object_links links are a list of object pairs that should be linked
+# structure of each entry:
+# [database, left_side, right_side]
+object_links = [
+    # kohorte needs user and study course linked
+    # fields: res_user_id, study_course_id
+    [['res_users_study_course', 'res_users_id','study_course_id'],
+        ['res.users','login', 'matthias'], ['study.course','certificate', 'Bachelor of Science in Psychology']]
+]
 sample_data = {
     "student": {
         "module": "res.partner",
@@ -681,6 +690,7 @@ sample_data = {
     # -------- Create: kohorte
     "kohorte": {
         "module": "kohorte",
+        "step"  : "second_run",
         "vals_list": [{"name": "K28", "semester_id": 1, "study_course_id": 1}],
     },
     # create account.analytic.account
