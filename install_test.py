@@ -201,7 +201,7 @@ SITE_ADDONS = [
     "survey",
     "hr_expense",
     # "l10n_ch_base_bank",
-    "analytic",
+    # -> "analytic",
     # "fsch_pre_migration",  # TODO: v13 migration
     # "account_payment_order",  # TODO: v13 migration
     # "bt_swissdec", # TODO: v13 migration
@@ -212,7 +212,14 @@ SITE_ADDONS = [
 ]
 # OWN_ADDONS are the modules that we handle our selfs in some
 # own (non odoo) repos
-OWN_ADDONS = ["fsch_customer"]
+OWN_ADDONS = [
+    "fsch_customer",
+    "fsch_sso",
+    "fsch_accounting",
+    "fsch_survey_edudl",
+    "funid_report_base",
+    "funid_customer",
+]
 
 # -------------------------------------
 # messages
