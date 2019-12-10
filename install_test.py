@@ -13,6 +13,7 @@ from bcolors import bcolors
 
 BASE_PATH = os.path.split(os.path.realpath(__file__))[0]
 GROUPS = {
+    "prospect" : "",
     "Student": "fsch_customer.group_fsch_student",
     "Student Reinscription": "fsch_customer.group_fsch_student_reinscription",
     "Mentor / Tutor": "fsch_customer.group_fsch_mentor_tutor",
@@ -31,7 +32,7 @@ GROUPS = {
     "Mentorenabrechnungen für Assistenten": "fsch_customer.group_fsch_mentor_allowances_for_assist",
 }
 USERS = {
-    #"prospect" : "prospect",
+    "prospect" : "prospect",
     "student": "Student",
     "student_re": "Student Reinscription",
     "tutor": "Mentor / Tutor",
@@ -47,11 +48,22 @@ USERS = {
     "facultymanager": "Faculty Manager",
     "group_fsch_kasse": "Barkasse",
 }
+CONTACTS = {
+   "prospect" : "prospect", 
+}
 # what flags we set for the contacts created for the users
-# CONTACT_FLAGS = {
-#     "mitarbeiter" : ['employee', 'customer', ]
-#     "student" : ['student', 'customer', ]
-# }
+CONTACT_FLAGS = {
+    "prospect" : ["prospect", 'customer', ],
+    "mitarbeiter" : ['employee', 'customer', ],
+    "student" : ['student', 'customer', ],
+    "tutor" : ['teacher', 'customer', ],
+    "tutor" : ['function_id', ("function", [("name", "Dozent/in",)])],
+    # # funktion teacher:
+    # # this is a link of a funktion object ot a field function_1
+    # [['res_users_study_course', 'res_users_id','study_course_id'],
+    #     ['res.partner','name', 'tutor'], ['function','name', 'Dozent/in']]
+
+}
 STAFF = {
     "1142": {
         "login": "alexandra",
@@ -829,8 +841,9 @@ class FunidInstaller(object):
 
                 # get groups to be assigned
                 group_id = groups[user_info]
-                group = odoo.env.ref(group_id)
-                group.write({"users": [(4, user_ids[0])]})
+                if group_id:
+                    group = odoo.env.ref(group_id)
+                    group.write({"users": [(4, user_ids[0])]})
         staff = self.staff
         if staff:
             for login, user_info in list(staff.items()):
@@ -924,7 +937,7 @@ class FunidInstaller(object):
             else:
                 print(ERP_NOT_RUNNING_PW % (self.db_name, self.rpc_user, self.rpc_user_pw))
             return
-
+        #from pdb import set_trace;set_trace()
         for object_name in create_sequence:
             object_data = sample_data[object_name]
             if not which or object_name in which:

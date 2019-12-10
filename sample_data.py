@@ -16,6 +16,7 @@ create_sequence = [
   "department",
   "study_course",
   "studies",
+  "function",
   "kohorte",
 ]
 # object_links links are a list of object pairs that should be linked
@@ -252,6 +253,11 @@ sample_data = {
                 "zip": False,
             },
         ],
+    },
+    "function": {
+        "module": "function",
+        "search" : ["name",], # do not create, when object is found using these elements
+        "vals_list": [{'active': True, 'name': 'Dozent/in'}]
     },
     "semester": {
         "module": "semester",
