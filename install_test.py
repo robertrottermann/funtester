@@ -1093,8 +1093,8 @@ def main(opts):
     # installer.fixup_partner()
     if 'all' in steps or 'passwd' in steps:
         installer.set_passwords()
-    if 'all' in steps or 'patches' in steps:
-        installer.patch_fernuni()
+    # if 'all' in steps or 'patches' in steps:
+    #     installer.patch_fernuni()
     if 'all' in steps or 'objects' in steps:
         installer.create_objects(login=['matthias', 'login'])
     if 'all' in steps or 'links' in steps:
