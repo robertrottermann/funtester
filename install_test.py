@@ -219,6 +219,8 @@ OWN_ADDONS = [
     "fsch_survey_edudl",
     "funid_report_base",
     "funid_customer",
+    "funid_reporting",
+    "funid_registration",
 ]
 
 # -------------------------------------
@@ -1072,6 +1074,26 @@ class FunidInstaller(object):
                 cursor.execute(sql_insert)
                 connection.commit()
 
+    def config_setter(self, login=[]):
+        """update the config settings for the main company
+        
+        Keyword Arguments:
+            login {list} -- login and passwird if not actual user (default: {[]})
+        """
+        from config_settings import c_settings
+        odoo = self.get_odoo(login=login)
+        if not odoo:
+            print(ERP_NOT_RUNNING % self.db_name)
+            return
+        for object_data in c_settings:
+            module = object_data['module']
+            oobjs = odoo.env[module]
+            vals_list = object_data["vals_list"]
+            key = vals_list[0].get('key')
+            if key and oobjs.search([('key', '=', key)]):
+                continue
+            oobjs.create(vals_list)
+
 def main(opts):
     steps = ['all']
     if opts.steps:
@@ -1104,6 +1126,8 @@ def main(opts):
         installer.link_objects(login=['matthias', 'login'])
     if 'all' in steps or 'second_run' in steps:
         installer.create_objects(login=['matthias', 'login'], step='second_run')
+    if 'config' in steps:
+        installer.config_setter(login=['admin', 'admin'])
 
 
 USAGE = """install_test.py -h for help on usage
@@ -1118,8 +1142,9 @@ Possible steps are:
     patches     # add patches found in patches.py to the fernuni modules
     links       # link objects -> sample_data.object_links
     second_run  # create objects after links have been created
+    config      # apply setting found in config_settings.py. This is not set automatically using all
 
-    by default all steps are run!
+    by default all steps are run but config!
 """
 if __name__ == "__main__":
     usage = USAGE #"install_test.py -h for help on usage"
