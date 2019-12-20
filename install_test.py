@@ -49,7 +49,7 @@ USERS = {
     "group_fsch_kasse": "Barkasse",
 }
 CONTACTS = {
-   "prospect" : "prospect", 
+   "prospect" : "prospect",
 }
 # what flags we set for the contacts created for the users
 CONTACT_FLAGS = {
@@ -997,7 +997,10 @@ class FunidInstaller(object):
                         new_vals_list.append(c_item)
                     vals_list = new_vals_list
                 if vals_list:
-                    oobjs.create(vals_list)
+                    try:
+                        oobjs.create(vals_list)
+                    except:
+                        print('--------> could not create object:', object_name)
                 if running_odoo:
                     odoo = running_odoo
 
