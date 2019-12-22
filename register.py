@@ -1,22 +1,31 @@
 import requests
 
-base_url = "http://localhost:8069/registration_en"
-params = {
-'HTTP_MAIL' : 'student',
-'HTTP_SWISSEDUID' : '77',
-'HTTP_GIVENNAME' : 'Student',
-'HTTP_SURNAME' : 'Fleissig',
-'HTTP_HOST' : 'localhost',
-'HTTP_GENDER' : 'male',
-'HTTP_DATEOFBIRTH' : '10.05.99',
-'HTTP_TELEPHONENUMBER' : '031 333 10 20',
-'HTTP_HOMEPOSTALADDRESS' : 'Sickingerstr 3, 3014, Bern',
-'HTTP_HOMEPHONE' : '031 333 36 03',
-'HTTP_MOBILE' : '079 222 42 07',
+base_url = "http://127.0.0.1:8069/registration_en"
+headers = {
+    'MAIL' : 'student2',
+    'SWISSEDUID' : '777',
+    'GIVENNAME' : 'Student2',
+    'SURNAME' : 'Fleissig2',
+    'HOST' : 'fernuni.ch',
+    'GENDER' : 'male',
+    'DATEOFBIRTH' : '10-05-1999',
+    'TELEPHONENUMBER' : '031 333 10 20',
+    'HOMEPOSTALADDRESS' : 'Sickingerstr 3$3014$3013 Bern$Switzerland',
+    'HOMEPHONE' : '031 333 36 03',
+    'MOBILE' : '079 222 42 07',
+    'Content-Type': 'application/text/html;',
 }
-headers = {'Content-Type': 'application/text/html;'}
+params = {}
+#headers = {'Content-Type': 'application/text/html;'}
 r = requests.get(base_url, params=params, headers=headers)
 #r = requests.post(base_url,  headers=headers)
 print(r.url)
 print(r.status_code)
 
+
+
+
+# request.session.authenticate(
+#     request.session.db, user.login, 
+#     '$pbkdf2-sha512$25000$8H4vBQCgFILQOgdgLIUQwg$YjdrAi/MMddKpv4NAfr7Jd2MwiBJi.11wZcumuvNJMy0Pf4R3TjB0fUWCa.o9ow8SGUQYdvXyiNDoyozw1JRBA'
+# )
