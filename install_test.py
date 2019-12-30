@@ -1,19 +1,17 @@
 #!/usr/bin/env python
-# # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 A script, that installs odoo 13 with some fernuni modules
 """
 import os, sys
 import urllib.request, urllib.error, urllib.parse
-from argparse import Namespace, ArgumentParser
-import getpass
-import psycopg2
-import psycopg2.extras
+from argparse import ArgumentParser
 from bcolors import bcolors
+from odoo_handler import OdooHandler, get_objects
+from messages import *
 
-BASE_PATH = os.path.split(os.path.realpath(__file__))[0]
 GROUPS = {
-    "prospect" : "",
+    "prospect": "",
     "Student": "fsch_customer.group_fsch_student",
     "Student Reinscription": "fsch_customer.group_fsch_student_reinscription",
     "Mentor / Tutor": "fsch_customer.group_fsch_mentor_tutor",
@@ -32,7 +30,7 @@ GROUPS = {
     "Mentorenabrechnungen für Assistenten": "fsch_customer.group_fsch_mentor_allowances_for_assist",
 }
 USERS = {
-    "prospect" : "prospect",
+    "prospect": "prospect",
     "student": "Student",
     "student_re": "Student Reinscription",
     "tutor": "Mentor / Tutor",
@@ -48,21 +46,18 @@ USERS = {
     "facultymanager": "Faculty Manager",
     "group_fsch_kasse": "Barkasse",
 }
-CONTACTS = {
-   "prospect" : "prospect",
-}
+CONTACTS = {"prospect": "prospect"}
 # what flags we set for the contacts created for the users
 CONTACT_FLAGS = {
-    "prospect" : ["prospect", 'customer', ],
-    "mitarbeiter" : ['employee', 'customer', ],
-    "student" : ['student', 'customer', ],
-    "tutor" : ['teacher', 'customer', ],
-    "tutor" : ['function_id', ("function", [("name", "Dozent/in",)])],
+    "prospect": ["prospect", "customer"],
+    "mitarbeiter": ["employee", "customer"],
+    "student": ["student", "customer"],
+    "tutor": ["teacher", "customer"],
+    "tutor": ["function_id", ("function", [("name", "Dozent/in")])],
     # # funktion teacher:
     # # this is a link of a funktion object ot a field function_1
     # [['res_users_study_course', 'res_users_id','study_course_id'],
     #     ['res.partner','name', 'tutor'], ['function','name', 'Dozent/in']]
-
 }
 STAFF = {
     "1142": {
@@ -72,6 +67,18 @@ STAFF = {
         "groups": [
             "fsch_customer.group_fsch_kasse",
             "fsch_customer.group_fsch_kst_leiter",
+        ],
+        # email
+        "password": "Login$99",
+    },
+    "1558": {
+        "login": "malin",
+        "last_name": "De Boni",
+        "name": "Malin",
+        "groups": [
+            "fsch_customer.group_fsch_sekretariat",
+            # "fsch_customer.group_fsch_student",
+            "fsch_customer.group_fsch_mitarbeiter",
         ],
         # email
         "password": "Login$99",
@@ -101,6 +108,17 @@ STAFF = {
         # email
         "password": "Login$99",
     },
+    "1128": {
+        "login": "karin",
+        "last_name": "Zedan-Saxer",
+        "name": "Karin",
+        "groups": [
+            "fsch_customer.group_fsch_sekretariat",
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+        # email
+        "password": "Login$99",
+    },
     "1153": {
         "login": "nicole",
         "last_name": "Ruffieux",
@@ -117,9 +135,7 @@ STAFF = {
         "login": "manuela",
         "last_name": "Kummer",
         "name": "Manuela",
-        "groups": [
-            "fsch_customer.group_fsch_mitarbeiter",
-        ],
+        "groups": ["fsch_customer.group_fsch_mitarbeiter"],
         # email
         "password": "Login$99",
     },
@@ -134,7 +150,6 @@ STAFF = {
         # email
         "password": "Login$99",
     },
-
     "1533": {
         "login": "pedro",
         "last_name": "Gonzalez Sanchez",
@@ -222,112 +237,6 @@ OWN_ADDONS = [
     "funid_reporting",
     "funid_registration",
 ]
-
-# -------------------------------------
-# messages
-# -------------------------------------
-ERP_NOT_RUNNING = """%s------------------------------------------------
-Site %%s seems not to run!
-------------------------------------------------%s
-""" % (
-    bcolors.FAIL,
-    bcolors.ENDC,
-)
-ERP_NOT_RUNNING_PW = """%s------------------------------------------------
-Site %%s seems not to run!
-Or it was not possible to login as
-user: %%s
-using pw: %%s
-------------------------------------------------%s
-""" % (
-    bcolors.FAIL,
-    bcolors.ENDC,
-)
-COULD_NOT_FIND_OBJECT = """%s------------------------------------------------
-The search for an object in
-model: %%s
-with search condition: %%s
-did not yield in a result.
-Please check sample_data.py
-------------------------------------------------%s
-""" % (
-    bcolors.FAIL,
-    bcolors.ENDC,
-)
-VALUES_CHANGED = """%s------------------------------------------------
-The config values have changed please check the files in %%s/config/
-If wrong please adapt %%s/config.yaml
-------------------------------------------------%s
-""" % (
-    bcolors.WARNING,
-    bcolors.ENDC,
-)
-MODULE_NOT_FOUND = """%s------------------------------------------------
-File %%s
-for module %%s
-not found
-------------------------------------------------%s
-""" % (
-    bcolors.FAIL,
-    bcolors.ENDC,
-)
-MODULE_DATA_CHANGED = """%s------------------------------------------------
-Some odoo modules have been patched with data from
-patches.py
-Please restart odoo!
-and reinstall %%s
-This can be done by rerunning install_test -s fernuni
-------------------------------------------------%s
-""" % (
-    bcolors.WARNING,
-    bcolors.ENDC,
-)
-def get_config_from_yaml(which=["config"], result_dic={}):
-    """[read config data from yaml files]
-    return dict with config data dicts
-    """
-    # the base info we need to access the various parts of erp-workbench
-    # it is in the config.yaml file in the erp-workbench config folder
-    from construct_defaults import check_and_update_base_defaults
-
-    construct_result = {}
-    yaml_dic = {}
-    for y_info in (("config", "base_info.py"),):
-        y_name, file_name = y_info
-        if y_name not in which:
-            continue
-        config_yaml = "%s/%s.yaml" % (BASE_PATH, y_name)
-        if not os.path.exists(config_yaml):
-            # in_file = "%s.in" % config_yaml
-            from shutil import copyfile
-
-            copyfile("%s/%s.yaml.in" % (BASE_PATH, y_name), config_yaml)
-        # build a list to be sent to check_and_update_base_defaults
-        yaml_dic[y_name] = (
-            y_name,
-            config_yaml,
-            "%s/config/%s" % (BASE_PATH, file_name),
-            "%s/%s.yaml.in" % (BASE_PATH, y_name),
-        )
-        vals = {
-            #'USER_HOME' : user_home,
-            #'BASE_PATH' : BASE_PATH,
-            #'ACT_USER'  : ACT_USER,
-            #'DB_USER'   : ACT_USER,
-            #'PROJECT_INSTALL': '%(inner_path)s',
-            #'SITE_DATA_DIR' : '%(site_data_dir)s',
-            #'ERP_VERSION' : '%(erp_version)s',
-        }
-        # must_reload flags whether we need do restart
-        must_reload = check_and_update_base_defaults(
-            yaml_dic.values(), vals, construct_result
-        )
-        # update the result dic, so the caller can access it
-        result_dic.update(yaml_dic)
-        # return dictionary with the values
-        return must_reload
-
-
 # make sure we are in a virtualenv
 # robert: i usualy test in wingide
 if not os.environ.get("VIRTUAL_ENV") and not os.environ.get("WINGDB_ACTIVE"):
@@ -346,24 +255,11 @@ except ImportError:
     sys.exit()
 
 
-class MyNamespace(Namespace):
-    # we need a namespace that just ignores unknow options
-    def __getattr__(self, key):
-        if key in self.__dict__.keys():
-            return self.__dict__[key]
-        return None
-
-
-class FunidInstaller(object):
+class FunidInstaller(OdooHandler):
     """setup a fernuni installation so we can test it
     This means mostly install some modules and users
     and assign them roles
     """
-
-    BASE_DEFAULTS = {}  # will be set when yaml was loaded
-
-    _odoo = None
-    opts = MyNamespace()
 
     # site_addons is the list of addons provided by odoo
     _site_addons_list = SITE_ADDONS
@@ -409,66 +305,6 @@ class FunidInstaller(object):
     def own_addons(self):
         return self._own_addons_list
 
-    # ---------------------------
-    # access to odoo and postgres
-    # ---------------------------
-    @property
-    def db_name(self):
-        return self.BASE_DEFAULTS.get("db_name", "fernuni13")
-
-    # rpc_host: on what host is odoo running
-    @property
-    def rpc_host(self):
-        return self.BASE_DEFAULTS.get("rpc_host", "")
-
-    # rpc_port what port is odoo using
-    @property
-    def rpc_port(self):
-        return self.BASE_DEFAULTS.get("rpc_port", 8089)
-
-    # rpc_user: as what user do we access odoo
-    @property
-    def rpc_user(self):
-        return self.BASE_DEFAULTS.get("rpc_user", getpass.getuser())
-
-    # rpc_user_pw: what is the odoo uses pw
-    @property
-    def rpc_user_pw(self):
-        return self.BASE_DEFAULTS.get("rpc_user_pw", "admin")
-
-    # db_user: as what user are we accessing postgres
-    @property
-    def db_user(self):
-        return self.BASE_DEFAULTS.get("db_user", getpass.getuser())
-
-    # db_user_pw: what is the postgrs users pw
-    @property
-    def db_user_pw(self):
-        return self.BASE_DEFAULTS.get("db_user_pw", "admin")
-
-    # db_host: on what host is postgres running
-    @property
-    def db_host(self):
-        return self.BASE_DEFAULTS.get("db_host", "localhost")
-
-    # postgres_port: at what post is postgres running
-    @property
-    def postgres_port(self):
-        return self.BASE_DEFAULTS.get("postgres_port", 5432)
-
-    def __init__(self):
-        result_dic = {}
-        must_restart = get_config_from_yaml(
-            result_dic=result_dic
-        )  # will return list of updated configs
-        # result_dic will have data from yaml files
-        if must_restart:
-            print(VALUES_CHANGED % (BASE_PATH, BASE_PATH))
-            sys.exit()
-        from config.base_info import BASE_DEFAULTS
-
-        self.BASE_DEFAULTS = BASE_DEFAULTS
-
     # ----------------------------------
     # collects info on what modules are installed
     # or need to be installed
@@ -506,133 +342,6 @@ class FunidInstaller(object):
                     if not s == "uninstallable":
                         print(n, s, i)
 
-    # ----------------------------------
-    # get_cursor opens a connection to a database
-    def get_cursor(self, db_name=None, return_connection=None):
-        """
-        """
-        dbuser = self.db_user
-        dbhost = self.db_host
-        dbpw = self.db_user_pw
-        postgres_port = self.postgres_port
-        if not db_name:
-            db_name = self.db_name
-
-        if dbpw:
-            conn_string = "dbname='%s' user='%s' host='%s' password='%s'" % (
-                db_name,
-                dbuser,
-                dbhost,
-                dbpw,
-            )
-        else:
-            conn_string = "dbname='%s' user=%s host='%s'" % (db_name, dbuser, dbhost)
-        try:
-            conn = psycopg2.connect(conn_string)
-        except psycopg2.OperationalError:
-            try:
-                if postgres_port:
-                    conn_string += " port=%s" % postgres_port
-                    conn = psycopg2.connect(conn_string)
-            except psycopg2.OperationalError:
-                print(ERP_NOT_RUNNING % db_name)
-                return
-        except:
-            return
-
-        cursor_d = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        if return_connection:
-            return cursor_d, conn
-        return cursor_d
-
-    def get_odoo(self, no_db=False, verbose=False, login=[], force=False):
-        if not self._odoo or login or force:
-            """
-            get_module_obj logs into odoo and then
-            returns an object with which we can manage the list of modules
-            bail out if we can not log into a running odoo site
-
-            """
-            verbose = verbose or self.opts.verbose
-            db_name = self.db_name
-            rpchost = self.rpc_host
-            rpcport = self.rpc_port
-            if login:
-                rpcuser = login[0]
-            else:
-                rpcuser = self.rpc_user
-            if login:
-                rpcpw = login[1]
-            else:
-                rpcpw = self.rpc_user_pw
-            try:
-                import odoorpc
-            except ImportError:
-                print(bcolors.WARNING + "please install odoorpc")
-                print("execute pip install -r install/requirements.txt" + bcolors.ENDC)
-                return
-            odoo = None
-            try:
-                if verbose:
-                    print("*" * 80)
-                    print("about to open connection to:")
-                    print("host:%s, port:%s, timeout: %s" % (rpchost, rpcport, 1200))
-                if not db_name:
-                    print(bcolors.FAIL)
-                    print("*" * 80)
-                    print("hoppalla no database defined")
-                    print(bcolors.ENDC)
-                    return
-                odoo = odoorpc.ODOO(rpchost, port=rpcport, timeout=1200)
-                if not no_db:
-                    if verbose:
-                        print("about to login:")
-                        print(
-                            "dbname:%s, rpcuser:%s, rpcpw: %s"
-                            % (db_name, rpcuser, rpcpw)
-                        )
-                        print("*" * 80)
-                    try:
-                        odoo.login(db_name, rpcuser, rpcpw)
-                    except:
-                        if verbose:
-                            print("login failed, will retry with pw admin:")
-                            print(
-                                "dbname:%s, rpcuser:%s, rpcpw: admin"
-                                % (db_name, rpcuser)
-                            )
-                            print("*" * 80)
-                        odoo.login(db_name, rpcuser, "admin")
-            except odoorpc.error.RPCError:
-                print(
-                    bcolors.FAIL
-                    + "could not login to running odoo server host: %s:%s, db: %s, user: %s, pw: %s"
-                    % (rpchost, rpcport, db_name, rpcuser, rpcpw)
-                    + bcolors.ENDC
-                )
-                return
-            except urllib.error.URLError:
-                print(
-                    bcolors.FAIL
-                    + "could not login to odoo server host: %s:%s, db: %s, user: %s, pw: %s"
-                    % (rpchost, rpcport, db_name, rpcuser, rpcpw)
-                )
-                print("connection was refused")
-                print("make sure odoo is running at the given address" + bcolors.ENDC)
-                return
-            self._odoo = odoo
-            if not self._odoo:
-                print(
-                    bcolors.FAIL
-                    + "For what ever reason I could not login to odoo server host: %s:%s, db: %s, user: %s, pw: %s"
-                    % (rpchost, rpcport, db_name, rpcuser, rpcpw)
-                )
-                print("make sure odoo is running at the given address" + bcolors.ENDC)
-        if not self._odoo:
-            print(ERP_NOT_RUNNING)
-
-        return self._odoo
-
     def install_languages(self, languages):
         """
         install all languages in the target
@@ -660,16 +369,6 @@ class FunidInstaller(object):
                 lang_obj.load_lang(code)
             result[code] = langs.search([("lang", "=", code)])
         return result
-
-    def get_module_obj(self):
-        """
-            get the ir.module.module
-        """
-        odoo = self.get_odoo()
-        if not odoo:
-            return
-        module_obj = odoo.env["ir.module.module"]
-        return module_obj
 
     # ----------------------------------
     # install odoo modules
@@ -919,13 +618,13 @@ class FunidInstaller(object):
 
     def _get_object(self, odoo, domain_info):
         """
-        return id of object loocked up using domain_info
+        return id of object looked up using domain_info
         ('product.product', [('name', 'Teilnahme Präsenzveranstaltung')])
         """
         oobjs = odoo.env[domain_info[0]]
         filt = []
         for s_item in domain_info[1]:
-            filt.append((s_item[0], '=', s_item[1]))
+            filt.append((s_item[0], "=", s_item[1]))
         result = oobjs.search(filt)
         if result:
             result = result[0]
@@ -933,36 +632,56 @@ class FunidInstaller(object):
             return result
         return
 
-    def create_objects(self, which=[], login=[], step='first_run'):
-        # create fernuni objects from 889.py
-        from sample_data import sample_data, create_sequence
+    # def _replace_place_holder(self):
+    # """before the second run, we have to replace the place_holders we constructed
+    # loading the sample data
+    # """
+    # from tools import DATA_POOL
+    # for v_name, val in DATA_POOL.items():
+    ## each val is constructed: DATA_POOL[val_name] = {'retval' : retval, 'method' : method}
+    # e_str = val['method']
+    # params = val['params']
+    # globals()[v_name] = eval(e_str)(*params, self=self)
+
+    def create_objects(self, which=[], login=[], step="first_run"):
+        # create fernuni objects
+        # since
+        if step == "first_run":
+            from sample_data import sample_data, create_sequence
+        elif step == "second_run":
+            from sample_data import create_sequence
+            from sample_data_second_run import sample_data
         if login:
             odoo = self.get_odoo(login=login)
         else:
             odoo = self.get_odoo()
         if not odoo:
             if login:
-                print(ERP_NOT_RUNNING_PW % (self.db_name,login[0], login[1]))
+                print(ERP_NOT_RUNNING_PW % (self.db_name, login[0], login[1]))
             else:
-                print(ERP_NOT_RUNNING_PW % (self.db_name, self.rpc_user, self.rpc_user_pw))
+                print(
+                    ERP_NOT_RUNNING_PW % (self.db_name, self.rpc_user, self.rpc_user_pw)
+                )
             return
-        #from pdb import set_trace;set_trace()
         for object_name in create_sequence:
-            object_data = sample_data[object_name]
+            object_data = sample_data.get(object_name)
+            if not object_data:
+                # in the second run most elements of sequence are allready handeled
+                continue
             if not which or object_name in which:
                 # only create objects according to running step
-                if object_data.get('step', 'first_run') != step:
+                if object_data.get("step", "first_run") != step:
                     continue
-                print (step, object_name)
-                module = object_data['module']
+                print(step, object_name)
+                module = object_data["module"]
                 running_odoo = None
-                use_login = object_data.get('login')
+                use_login = object_data.get("login")
                 if use_login:
                     running_odoo = odoo
-                    pw = 'login'
-                    if use_login == 'admin':
-                        pw = 'admin'
-                    odoo = self.get_odoo(login=[use_login,pw])
+                    pw = "login"
+                    if use_login == "admin":
+                        pw = "admin"
+                    odoo = self.get_odoo(login=[use_login, pw])
                 oobjs = odoo.env[module]
                 search = object_data.get("search")
                 vals_list = object_data["vals_list"]
@@ -970,14 +689,14 @@ class FunidInstaller(object):
                 counter = -1
                 for vals_dic in vals_list:
                     counter += 1
-                    for k,v in vals_dic.items():
+                    for k, v in vals_dic.items():
                         if isinstance(v, tuple):
                             new_val = self._get_object(odoo, v)
                             if new_val:
                                 vals_dic[k] = new_val
                             else:
                                 print(COULD_NOT_FIND_OBJECT % (module, str(v)))
-                                vals_list.pop(counter) # can I do that ??
+                                vals_list.pop(counter)  # can I do that ??
                 if search:
                     new_vals_list = []
                     for c_item in vals_list:
@@ -990,7 +709,7 @@ class FunidInstaller(object):
                                 # there is no use to to look for an objekt
                                 filt = []
                                 break
-                            filt.append((s_item, '=', val))
+                            filt.append((s_item, "=", val))
                         if filt:
                             found = oobjs.search(filt)
                             if found:
@@ -1001,19 +720,23 @@ class FunidInstaller(object):
                 if vals_list:
                     try:
                         oobjs.create(vals_list)
-                    except:
-                        print('--------> could not create object:', object_name)
+                    except Exception as e:
+                        print("--------> could not create object:", object_name)
+                        if opts.verbose:
+                            print(HOPPALA_AN_ERROR % str(e))
+
                 if running_odoo:
                     odoo = running_odoo
 
     def patch_fernuni(self):
         # create fernuni objects from sample_data.py
         from fernuni_patches import fernuni_patches
-        mpath = self.BASE_DEFAULTS.get('fernuni_module_path')
+
+        mpath = self.BASE_DEFAULTS.get("fernuni_module_path")
         must_exit = []
         for module, patch_list in fernuni_patches.items():
             for patch in patch_list:
-                fpath = '%s/%s/%s' % (mpath, module, patch[0])
+                fpath = "%s/%s/%s" % (mpath, module, patch[0])
                 if not os.path.exists(fpath):
                     print(MODULE_NOT_FOUND % (fpath, module))
                     return
@@ -1024,8 +747,8 @@ class FunidInstaller(object):
                 if f_data.find(patch[1]) > 0:
                     continue
                 # add the line
-                f_data += ('\n%s' % patch[1])
-                with open(fpath, 'w') as f:
+                f_data += "\n%s" % patch[1]
+                with open(fpath, "w") as f:
                     f.write(f_data)
                     f.close()
                 must_exit.append(module)
@@ -1033,9 +756,10 @@ class FunidInstaller(object):
                 print(MODULE_DATA_CHANGED % str(must_exit))
                 sys.exit()
 
-    def link_objects(self,login=[]):
+    def link_objects(self, login=[]):
         # link ojects
         from sample_data import object_links
+
         # a link is something like:
         #    database                 left field                        right field
         # [['res_users_study_course', 'res_user_id'                     'study_course_id']
@@ -1055,79 +779,72 @@ class FunidInstaller(object):
             l_field = data_set[0][1]
             r_field = data_set[0][2]
             l_data = data_set[1]
-            l_ids = odoo.env[l_data[0]].search([(l_data[1], '=', l_data[2])])
+            l_ids = odoo.env[l_data[0]].search([(l_data[1], "=", l_data[2])])
             if l_ids:
                 l_id = l_ids[0]
             r_data = data_set[2]
-            r_ids = odoo.env[r_data[0]].search([(r_data[1], '=', r_data[2])])
+            r_ids = odoo.env[r_data[0]].search([(r_data[1], "=", r_data[2])])
             if r_ids:
                 r_id = r_ids[0]
             if l_id > -1 and r_id > -1:
                 # construct search to check if link exists
-                sql_search = "select * from %s where %s=%s and %s=%s" % (db, l_field,l_id, r_field, r_id)
+                sql_search = "select * from %s where %s=%s and %s=%s" % (
+                    db,
+                    l_field,
+                    l_id,
+                    r_field,
+                    r_id,
+                )
                 cursor.execute(sql_search)
                 rows = cursor.fetchall()
                 if rows:
                     continue
                 # does not exist, create them
-                sql_insert = 'insert into  %s (%s, %s) values (%s, %s)' % (db, l_field, r_field, l_id, r_id)
+                sql_insert = "insert into  %s (%s, %s) values (%s, %s)" % (
+                    db,
+                    l_field,
+                    r_field,
+                    l_id,
+                    r_id,
+                )
                 cursor.execute(sql_insert)
                 connection.commit()
 
-    def config_setter(self, login=[]):
-        """update the config settings for the main company
-        
-        Keyword Arguments:
-            login {list} -- login and passwird if not actual user (default: {[]})
-        """
-        from config_settings import c_settings
-        odoo = self.get_odoo(login=login)
-        if not odoo:
-            print(ERP_NOT_RUNNING % self.db_name)
-            return
-        for object_data in c_settings:
-            module = object_data['module']
-            oobjs = odoo.env[module]
-            vals_list = object_data["vals_list"]
-            key = vals_list[0].get('key')
-            if key and oobjs.search([('key', '=', key)]):
-                continue
-            oobjs.create(vals_list)
 
 def main(opts):
-    steps = ['all']
+    steps = ["all"]
     if opts.steps:
-        if not opts.steps == 'all':
-            steps = opts.steps.split(',')
+        if not opts.steps == "all":
+            steps = opts.steps.split(",")
     if opts.simple:
-        steps = ['modules', 'lang']
+        steps = ["modules", "lang"]
 
     print(steps)
     installer = FunidInstaller()
-    if 'all' in steps or 'modules' in steps:
+    if "all" in steps or "modules" in steps:
         installer.install_own_modules()  # what=['crm'])
-    if 'all' in steps or 'lang' in steps:
+    if "all" in steps or "lang" in steps:
         print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
-    if 'all' in steps or 'fernuni' in steps:
+    if "all" in steps or "fernuni" in steps:
         installer.install_own_modules(what="own_addons")
-    if 'all' in steps or 'users' in steps:
+    if "all" in steps or "users" in steps:
         installer.create_users()  # strip_fields = ['last_name'])
     # installer.install_own_modules()
-    if 'all' in steps or 'mail' in steps:
+    if "all" in steps or "mail" in steps:
         installer.install_mail_handler()
     # installer.fixup_partner()
-    if 'all' in steps or 'passwd' in steps:
+    if "all" in steps or "passwd" in steps:
         installer.set_passwords()
     # if 'all' in steps or 'patches' in steps:
     #     installer.patch_fernuni()
-    if 'all' in steps or 'objects' in steps:
-        installer.create_objects(login=['matthias', 'login'])
-    if 'all' in steps or 'links' in steps:
-        installer.link_objects(login=['matthias', 'login'])
-    if 'all' in steps or 'second_run' in steps:
-        installer.create_objects(login=['matthias', 'login'], step='second_run')
-    if 'config' in steps:
-        installer.config_setter(login=['admin', 'admin'])
+    if "all" in steps or "objects" in steps:
+        installer.create_objects(login=["matthias", "login"])
+    if "all" in steps or "links" in steps:
+        installer.link_objects(login=["matthias", "login"])
+    if "all" in steps or "second_run" in steps:
+        installer.create_objects(login=["matthias", "login"], step="second_run")
+    if "config" in steps:
+        installer.config_setter(login=["admin", "admin"])
 
 
 USAGE = """install_test.py -h for help on usage
@@ -1147,7 +864,7 @@ Possible steps are:
     by default all steps are run but config!
 """
 if __name__ == "__main__":
-    usage = USAGE #"install_test.py -h for help on usage"
+    usage = USAGE  # "install_test.py -h for help on usage"
     parser = ArgumentParser(usage=usage)
     parser.add_argument(
         "-s",
@@ -1164,6 +881,14 @@ if __name__ == "__main__":
         dest="simple",
         default=False,
         help="Simple install. Only install odoo-Modules and languages",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        dest="verbose",
+        default=False,
+        help="be verbose, default = False",
     )
     opts = parser.parse_args()
     main(opts)

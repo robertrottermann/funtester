@@ -12,7 +12,7 @@ when creating new studies from dropdown menu:
 
 Semester:
 ---------
-    when editing existing semester year 2020 is displayed as   2,020  
+    when editing existing semester year 2020 is displayed as   2,020
 
 
 
@@ -62,3 +62,19 @@ index cbbf9bb55..e7189db24 100644
                  </field>
                  <field name="email" position="attributes">
                      <attribute name="readonly">1</attribute>
+
+
+-----------------------------
+when creating module data and adding kohorte->study line:
+Traceback:
+Error: TypeError: 'float' object is unsubscriptable
+    at Object.py.PY_getItem (http://localhost:8069/web/content/374-b318fd0/web.assets_backend.js:127:73)
+    at Object.py.evaluate (http://localhost:8069/web/content/374-b318fd0/web.assets_backend.js:214:74)
+    at Object.py.evaluate (http://localhost:8069/web/content/374-b318fd0/web.assets_backend.js:213:111)
+    at Object.py.evaluate (http://localhost:8069/web/content/374-b318fd0/web.assets_backend.js:215:99)
+    at Object.py.eval (http://localhost:8069/web/content/374-b318fd0/web.assets_backend.js:220:284)
+    at http://localhost:8069/web/content/374-b318fd0/web.assets_backend.js:362:136
+    at Function._.each._.forEach (http://localhost:8069/web/content/373-24775c2/web.assets_common.js:108:558)
+    at _.<computed> [as each] (http://localhost:8069/web/content/373-24775c2/web.assets_common.js:165:526)
+    at eval_domains (http://localhost:8069/web/content/374-b318fd0/web.assets_backend.js:361:265)
+    at Object.pyeval [as eval] (http://localhost:8069/web/content/374-b318fd0/web.assets_backend.js:377:24)

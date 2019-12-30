@@ -1,23 +1,31 @@
+#!/usr/bin/env python
+# # -*- coding: utf-8 -*-
+from odoo_handler import get_objects
 # ------------------------------------
 # sample sample_data
 # ------------------------------------
 
-# objects need to created in sequence as they migth refere to 
+# objects need to created in sequence as they migth refere to
 # formerly created ones
 create_sequence = [
-  "student",
-  "semester",
-  "price_event",
-  "university",
-  "study_center",
-  "grade",
-  "reason_exmatriculation",
-  "account_analytic_account",
-  "department",
-  "study_course",
-  "studies",
-  "function",
-  "kohorte",
+    "student",
+    "semester",
+    "price_event",
+    "university",
+    "study_center",
+    "grade",
+    "reason_exmatriculation",
+    "account_analytic_account",
+    "department",
+    "study_course",
+    "study_section",
+    "studies",
+    "function",
+    "module",
+    "module_data",
+    "kohorte",
+    "location",
+    "room",
 ]
 # object_links links are a list of object pairs that should be linked
 # structure of each entry:
@@ -25,15 +33,59 @@ create_sequence = [
 object_links = [
     # kohorte needs user and study course linked
     # fields: res_user_id, study_course_id
-    [['res_users_study_course', 'res_users_id','study_course_id'],
-        ['res.users','login', 'matthias'], ['study.course','certificate', 'Bachelor of Science in Psychology']]
+    [
+        ["res_users_study_course", "res_users_id", "study_course_id"],
+        ["res.users", "login", "matthias"],
+        ["study.course", "certificate", "Bachelor of Science in Psychology"],
+    ]
 ]
 sample_data = {
+    "location" : {
+        "module" : "location",
+        "search": ["short_name"],
+        "vals_list": [{
+            'active': True,
+            'address': 'Muesmattstrasse 29, 3012 Bern',
+            'location_plan': False,
+            'name': 'Pädagogische Hochschule Bern, Institut Sekundarstufe I',
+            'responsable_reservation_extern': False,
+            'responsable_room_extern': False,
+            'short_name': 'PHBE IS1'
+        }]
+    },
+    "room" : {
+        "module" : "room",
+        "search": [],
+        "vals_list": [{'active': True,
+            'location_id': ("location", [("short_name", "PHBE IS1")]),
+            'name': 'Hörraum 004',
+            'number_seats': 65,
+            'remarks': 'Beamer, OHP',
+            'room_plan': False,
+            'room_plan_fname': False
+        }]
+    },
+      "study_section" : {
+        "module" : "study.section",
+        "search": ["study_course_id", 'number'],
+        "vals_list": [{
+            'active': True,
+            'ects_credits': 40,
+            'from_semester': 1,
+            'name': '1. Teil',
+            'number': 1,
+            'study_course_id': ("study.course", [("certificate", "Bachelor of Science in Psychology")]),
+            'to_semester': 2
+        }]
+    },
     "student": {
         "module": "res.partner",
         # creating a student:
         # self ->res.partner()
-        "search" : ["name", "last_name"], # do not create, when object is found using these elements
+        "search": [
+            "name",
+            "last_name",
+        ],  # do not create, when object is found using these elements
         "vals_list": [
             {
                 "__last_update": False,
@@ -256,26 +308,87 @@ sample_data = {
     },
     "function": {
         "module": "function",
-        "search" : ["name",], # do not create, when object is found using these elements
-        "vals_list": [{'active': True, 'name': 'Dozent/in'}]
+        "search": ["name"],  # do not create, when object is found using these elements
+        "vals_list": [{"active": True, "name": "Dozent/in"}],
+    },
+    "module": {
+        "module" : "module",
+        "search": [
+            "module_number", "module_code"
+        ],  # do not create, when object is found using these elements
+        "vals_list": [
+            {
+                "active": True,
+                "hide_online": False,
+                "lang": False,
+                "module_code": "EINF",
+                "module_number": "M01",
+                "module_visible_report": False,
+                "name": "Einführung in die Psychologie",
+                "short_name": "Einführung in die Psychologie",
+                "study_course_ids": [[6, False, get_objects("study.course", login=["matthias", "login"])]],
+            },
+            {
+                "active": True,
+                "hide_online": False,
+                "lang": False,
+                "module_code": "STAAT",
+                "module_number": "M03",
+                "module_visible_report": False,
+                "name": "Allgemeine Staatslehre",
+                "short_name": "Allgemeine Staatslehre",
+                "study_course_ids": [[6, False, get_objects("study.course", login=["matthias", "login"])]],
+            },
+        ],
     },
     "semester": {
         "module": "semester",
-        "search" : ["year", "type"], # do not create, when object is found using these elements
+        "search": [
+            "year",
+            "type",
+        ],  # do not create, when object is found using these elements
         # creating a semester()
         "vals_list": [
             {
                 "active": True,
-                "name": "Sommersemester 2020",
-                "short_name": "SS20",
-                "type": "2",
+                "name": "Spring term 2019",
+                "short_name": "FS19",
+                "type": "1", # spring
+                "year": 2019,
+            },
+            {
+                "active": True,
+                "name": "Spring term 2020",
+                "short_name": "FS20",
+                "type": "1", # spring
+                "year": 2020,
+            },
+            {
+                "active": True,
+                "name": "Summersemester 2020",
+                "short_name": "HS20",
+                "type": "2",  # summer
+                "year": 2020,
+            },
+            {
+                "active": True,
+                "name": "Herbstsemester 2019",
+                "short_name": "HS19",
+                "type": "3",  # autumn
+                "year": 2019,
+            },
+            {
+                "active": True,
+                "name": "Spring term 2021",
+                "short_name": "FS21",
+                "type": "1",  # spring
                 "year": 2020,
             },
             {
                 "active": True,
                 "name": "Wintersemester 2021",
-                "short_name": "ws2021",
-                "type": "4",
+                "short_name": "WS21",
+                "type": "4",  # winter
                 "year": 2021,
             },
         ],
@@ -284,7 +397,7 @@ sample_data = {
     # self product.product()
     "price_event": {
         "module": "product.product",
-        "search" : ["name",], # do not create, when object is found using these elements
+        "search": ["name"],  # do not create, when object is found using these elements
         "vals_list": [
             {
                 "__last_update": False,
@@ -317,7 +430,7 @@ sample_data = {
                 "service_type": "manual",
                 "supplier_taxes_id": [[6, False, [2]]],
                 "taxes_id": [[6, False, []]],
-                #"tic_category_id": False,
+                # "tic_category_id": False,
                 "tracking": "none",
                 "type": "service",
                 "uom_id": 1,
@@ -358,7 +471,7 @@ sample_data = {
                 "service_type": "manual",
                 "supplier_taxes_id": [[6, False, [2]]],
                 "taxes_id": [[6, False, []]],
-                #"tic_category_id": False,
+                # "tic_category_id": False,
                 "tracking": "none",
                 "type": "service",
                 "uom_id": 1,
@@ -399,7 +512,7 @@ sample_data = {
                 "service_type": "manual",
                 "supplier_taxes_id": [[6, False, [2]]],
                 "taxes_id": [[6, False, []]],
-                #"tic_category_id": False,
+                # "tic_category_id": False,
                 "tracking": "none",
                 "type": "service",
                 "uom_id": 1,
@@ -412,12 +525,15 @@ sample_data = {
     # -------- creation of university
     "university": {
         "module": "university",
-        "search" : ["name",], # do not create, when object is found using these elements
+        "search": ["name"],  # do not create, when object is found using these elements
         "vals_list": [
             {
                 "active": True,
                 "name": "Universitäre Fernstudien Schweiz",
-                "price_event_unknown_student_id": ('product.product', [('name', 'Teilnahme Präsenzveranstaltung')]), #43,
+                "price_event_unknown_student_id": (
+                    "product.product",
+                    [("name", "Teilnahme Präsenzveranstaltung")],
+                ),  # 43,
                 "pud": False,
                 "puf": False,
             }
@@ -427,7 +543,7 @@ sample_data = {
     # -------- Create: Study Center
     "study_center": {
         "module": "study.center",
-        "search" : ["name",], # do not create, when object is found using these elements
+        "search": ["name"],  # do not create, when object is found using these elements
         "vals_list": [
             {
                 "active": True,
@@ -442,7 +558,7 @@ sample_data = {
                 "phone": "+41 840 840 820",
                 "secretary_user_id": False,
                 "short_name": "Forschung und Entwicklung",
-                "user_id": ('res.users', [('login', 'manuela')]), #24,
+                "user_id": ("res.users", [("login", "manuela")]),  # 24,
                 "webseite": "http://fernuni.ch/ueber-uns/organisation/standorte/pfaeffikon-sz/",
             },
             {
@@ -458,101 +574,106 @@ sample_data = {
                 "phone": "+41 840 840 820",
                 "secretary_user_id": False,
                 "short_name": "Pfäffikon",
-                "user_id": ('res.users', [('login', 'evelyn')]), #24,
+                "user_id": ("res.users", [("login", "evelyn")]),  # 24,
                 "webseite": "http://fernuni.ch/ueber-uns/organisation/standorte/pfaeffikon-sz/",
-            }
+            },
         ],
     },
     # -------- Create: Study course
     "study_course": {
         "module": "study.course",
-        "search" : ["certificate",], # do not create, when object is found using these elements
-        "vals_list": [{'access_further_studies_de': False,
-            'access_further_studies_en': False,
-            'access_further_studies_fr': False,
-            'access_requirements_de': False,
-            'access_requirements_en': False,
-            'access_requirements_fr': False,
-            'active': True,
-            'additional_documents_online_registration': False,
-            'bfs_number': 0,
-            'blocking_semester_ids': [[6, False, []]],
-            'canadian_credits': 0,
-            'certificate': 'Bachelor of Science in Psychology',
-            'compensation': False,
-            'coordination': False,
-            'cost_center': 1,
-            'date_of_introduction_session': False,
-            'dekan': False,
-            'department_id': ('department', [('name', 'Rechtswissenschaften')]),
-            'ects': 180,
-            'english': False,
-            'final_degree_short_name': 'B Sc',
-            'french': False,
-            'german': False,
-            'grade_id': ('grade', [('name', 'Master')]),
-            'guest': False,
-            'ignore_sis_import': False,
-            'introduction_session_place': False,
-            'is_dekansalaryrelevant': True,
-            'iuv_group': False,
-            'language_de': False,
-            'language_en': False,
-            'language_fr': False,
-            'level_qualification_de': False,
-            'level_qualification_en': False,
-            'level_qualification_fr': False,
-            'main_de': False,
-            'main_en': False,
-            'main_fr': False,
-            'max_failed_tries': False,
-            'max_study_duration': 0,
-            'mode_study_de': False,
-            'mode_study_en': False,
-            'mode_study_fr': False,
-            'modules_students': True,
-            'moodle_general_courses': False,
-            'name': 'Bachelor of Science in Psychology',
-            'offical_length_worlkload_de': False,
-            'offical_length_worlkload_en': False,
-            'offical_length_worlkload_fr': False,
-            'price_application': False,
-            'price_holiday': False,
-            'price_module': False,
-            'price_program': False,
-            'professional_status_de': False,
-            'professional_status_en': False,
-            'professional_status_fr': False,
-            'programme_requirements_de': False,
-            'programme_requirements_en': False,
-            'programme_requirements_fr': False,
-            'remarks': False,
-            'semesters_full_time': 0,
-            'semesters_part_time': 0,
-            'short_name': 'B Sc in Psychology',
-            'student_resources_type_ids': [[6, False, []]],
-            'study_center_id': ('study.center', [('name', 'Pfäffikon')]),
-            'study_course_code': 'BSCPSYd',
-            'study_course_mail': 'studentservices@fernuni.ch',
-            'study_course_phone': '0840 840 820',
-            'study_course_url': False,
-            'study_goal': 'Bachelor of Science',
-            'subject_study': 'Psychologie',
-            'training_course': False,
-            'university_id': 1,
-            'visible_online_registration': True,
-            'weiterbildung': False,
-            'workgroup_ids': [[6, False, []]]}]
-,
+        "search": [
+            "certificate"
+        ],  # do not create, when object is found using these elements
+        "vals_list": [
+            {
+                "access_further_studies_de": False,
+                "access_further_studies_en": False,
+                "access_further_studies_fr": False,
+                "access_requirements_de": False,
+                "access_requirements_en": False,
+                "access_requirements_fr": False,
+                "active": True,
+                "additional_documents_online_registration": False,
+                "bfs_number": 0,
+                "blocking_semester_ids": [[6, False, []]],
+                "canadian_credits": 0,
+                "certificate": "Bachelor of Science in Psychology",
+                "compensation": False,
+                "coordination": False,
+                "cost_center": 1,
+                "date_of_introduction_session": False,
+                "dekan": False,
+                "department_id": ("department", [("name", "Rechtswissenschaften")]),
+                "ects": 180,
+                "english": False,
+                "final_degree_short_name": "B Sc",
+                "french": False,
+                "german": False,
+                "grade_id": ("grade", [("name", "Master")]),
+                "guest": False,
+                "ignore_sis_import": False,
+                "introduction_session_place": False,
+                "is_dekansalaryrelevant": True,
+                "iuv_group": False,
+                "language_de": False,
+                "language_en": False,
+                "language_fr": False,
+                "level_qualification_de": False,
+                "level_qualification_en": False,
+                "level_qualification_fr": False,
+                "main_de": False,
+                "main_en": False,
+                "main_fr": False,
+                "max_failed_tries": False,
+                "max_study_duration": 0,
+                "mode_study_de": False,
+                "mode_study_en": False,
+                "mode_study_fr": False,
+                "modules_students": True,
+                "moodle_general_courses": False,
+                "name": "Bachelor of Science in Psychology",
+                "offical_length_worlkload_de": False,
+                "offical_length_worlkload_en": False,
+                "offical_length_worlkload_fr": False,
+                "price_application": False,
+                "price_holiday": False,
+                "price_module": False,
+                "price_program": False,
+                "professional_status_de": False,
+                "professional_status_en": False,
+                "professional_status_fr": False,
+                "programme_requirements_de": False,
+                "programme_requirements_en": False,
+                "programme_requirements_fr": False,
+                "remarks": False,
+                "semesters_full_time": 0,
+                "semesters_part_time": 0,
+                "short_name": "B Sc in Psychology",
+                "student_resources_type_ids": [[6, False, []]],
+                "study_center_id": ("study.center", [("name", "Pfäffikon")]),
+                "study_course_code": "BSCPSYd",
+                "study_course_mail": "studentservices@fernuni.ch",
+                "study_course_phone": "0840 840 820",
+                "study_course_url": False,
+                "study_goal": "Bachelor of Science",
+                "subject_study": "Psychologie",
+                "training_course": False,
+                "university_id": 1,
+                "visible_online_registration": True,
+                "weiterbildung": False,
+                "workgroup_ids": [[6, False, []]],
+            }
+        ],
     },
     # -------->>>>>>>>>>> Create: Create: Department
     "department": {
         "module": "department",
-        "search" : ["name",], # do not create, when object is found using these elements
+        "search": ["name"],  # do not create, when object is found using these elements
         "vals_list": [
             {
                 "active": True,
-                "faculty_manager_id": 62,
+                "faculty_manager_id": ("res.users", [("login", "malin")]),  # 62,
                 "french": False,
                 "german": True,
                 "name": "Rechtswissenschaften",
@@ -563,16 +684,16 @@ sample_data = {
     # -------- Create: Grade
     "grade": {
         "module": "grade",
-        "search" : ["name",], # do not create, when object is found using these elements
+        "search": ["name"],  # do not create, when object is found using these elements
         "vals_list": [
             {"active": True, "bfs_grade_code": 25, "name": "Master"},
-            {'active': True, 'bfs_grade_code': 15, 'name': 'Bachelor'}
+            {"active": True, "bfs_grade_code": 15, "name": "Bachelor"},
         ],
     },
     # -------- Create: Reason Exmatriculation
     "reason_exmatriculation": {
         "module": "reason.exmatriculation",
-        "search" : ["name",], # do not create, when object is found using these elements
+        "search": ["name"],  # do not create, when object is found using these elements
         "vals_list": [
             {
                 "calc_predicate_final_grade": False,
@@ -586,7 +707,9 @@ sample_data = {
     # -------- Create: studies
     "studies": {
         "module": "studies",
-        "search" : ["partner_id",], # do not create, when object is found using these elements
+        "search": [
+            "partner_id"
+        ],  # do not create, when object is found using these elements
         "vals_list": [
             {
                 "abandon": False,
@@ -623,7 +746,10 @@ sample_data = {
                 "nom_du_diplome": False,
                 "notes": False,
                 "part_time": False,
-                "partner_id": ('res.partner', [('name', 'Student'), ('last_name', 'Fleissig')]), #70,
+                "partner_id": (
+                    "res.partner",
+                    [("name", "Student"), ("last_name", "Fleissig")],
+                ),  # 70,
                 "permission_date": False,
                 "permission_remark": False,
                 "pieces_manquantes_inscription": False,
@@ -648,28 +774,52 @@ sample_data = {
             }
         ],
     },
-    # -------- Create: kohorte
-    "kohorte": {
-        "module": "kohorte",
-        "step"  : "second_run",
-        "vals_list": [{"name": "K28", "semester_id": 1, "study_course_id": ('study.course', [('certificate', 'Bachelor of Science in Psychology')])}],
-    },
     # create account.analytic.account
-    'account_analytic_account' : {
+    "account_analytic_account": {
         "module": "account.analytic.account",
-        "search" : ["code",],
-        "login" : "admin",
-        "vals_list" : [{'active': True,
-        'code': 'BPSYd',
-        'company_id': 1,
-        'group_id': False,
-        'message_attachment_count': 0,
-        'message_follower_ids': [(0,
-                                    0,
-                                    {'partner_id': 22,
-                                    'res_model': 'account.analytic.account',
-                                    'subtype_ids': [(6, 0, [1])]})],
-        'name': 'Bachelor Psychologie d',
-        'partner_id': False}]
-    }
+        "search": ["code"],
+        "login": "admin",
+        "vals_list": [
+            {
+                "active": True,
+                "code": "BPSYd",
+                "company_id": 1,
+                "group_id": False,
+                "message_attachment_count": 0,
+                "message_follower_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "partner_id": get_objects("res.users", filt=[("login", "karin")], login=['admin', 'admin']),
+                            "res_model": "account.analytic.account",
+                            "subtype_ids": [(6, 0, [1])],
+                        },
+                    )
+                ],
+                "name": "Bachelor Psychologie d",
+                "partner_id": False,
+            },
+            {
+                "active": True,
+                "code": "BLAWd",
+                "company_id": 1,
+                "group_id": False,
+                "message_attachment_count": 0,
+                "message_follower_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "partner_id": get_objects("res.users", filt=[("login", "nicole")], login=['admin', 'admin']),
+                            "res_model": "account.analytic.account",
+                            "subtype_ids": [(6, 0, [1])],
+                        },
+                    )
+                ],
+                "name": "Bachelor Law d",
+                "partner_id": False,
+            }
+        ],
+    },
 }
