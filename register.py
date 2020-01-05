@@ -1,12 +1,15 @@
+# https://realpython.com/python-requests/
 import requests
 
 base_url = "http://127.0.0.1:8069/registration_en"
+base_url = "http://localhost:8069/registration_en"
 headers = {
-    "MAIL": "student4",
+    "MAIL": "robert@redcor.ch",
     "SWISSEDUID": "77378",
     "GIVENNAME": "Student4",
     "SURNAME": "Fleissig4",
-    "HOST": "fernuni.ch",
+#    "HOST": "fernuni.ch",
+    "HOST": "unidistance.ch",
     "GENDER": "male",
     "DATEOFBIRTH": "10-05-1999",
     "TELEPHONENUMBER": "031 333 10 20",

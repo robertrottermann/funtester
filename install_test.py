@@ -604,7 +604,7 @@ class FunidInstaller(OdooHandler):
             # site is probaly not running
             return
         t_sql = "UPDATE res_users set password = '%s'"
-        t_sql_a = "UPDATE res_users set password = '%s' where login='admin'"
+        t_sql_a = "UPDATE res_users set password = '%s' where login='admin' or id=1"
         target_cursor.execute(t_sql % password)
         t_connection.commit()
         print(bcolors.OKGREEN + "*" * 80)
@@ -643,14 +643,19 @@ class FunidInstaller(OdooHandler):
     # params = val['params']
     # globals()[v_name] = eval(e_str)(*params, self=self)
 
-    def create_objects(self, which=[], login=[], step="first_run"):
+    def create_objects(self, which=[], login=[], step="first_run", opts=None):
         # create fernuni objects
-        # since
+        from sample_data import create_sequence, create_sequence_2
+        # if we are in single object mode, we can not rely on the step
+        if opts and opts.single_object:
+            if opts.single_object in create_sequence_2:
+                step = "second_run"
         if step == "first_run":
-            from sample_data import sample_data, create_sequence
+            from sample_data import sample_data
         elif step == "second_run":
-            from sample_data import create_sequence
             from sample_data_second_run import sample_data
+        if opts and opts.single_object:
+            create_sequence = [opts.single_object]
         if login:
             odoo = self.get_odoo(login=login)
         else:
@@ -722,7 +727,7 @@ class FunidInstaller(OdooHandler):
                         oobjs.create(vals_list)
                     except Exception as e:
                         print("--------> could not create object:", object_name)
-                        if opts.verbose:
+                        if opts and opts.verbose:
                             print(HOPPALA_AN_ERROR % str(e))
 
                 if running_odoo:
@@ -818,6 +823,8 @@ def main(opts):
             steps = opts.steps.split(",")
     if opts.simple:
         steps = ["modules", "lang"]
+    if opts.single_object:
+        steps = ["objects"]
 
     print(steps)
     installer = FunidInstaller()
@@ -838,12 +845,14 @@ def main(opts):
     # if 'all' in steps or 'patches' in steps:
     #     installer.patch_fernuni()
     if "all" in steps or "objects" in steps:
-        installer.create_objects(login=["matthias", "login"])
+        installer.create_objects(login=["matthias", "login"], opts=opts)
     if "all" in steps or "links" in steps:
         installer.link_objects(login=["matthias", "login"])
     if "all" in steps or "second_run" in steps:
-        installer.create_objects(login=["matthias", "login"], step="second_run")
+        installer.create_objects(login=["matthias", "login"], step="second_run", opts=opts)
     if "config" in steps:
+        installer.config_setter(login=["admin", "admin"])
+    if "single_object" in steps:
         installer.config_setter(login=["admin", "admin"])
 
 
@@ -873,6 +882,13 @@ if __name__ == "__main__":
         dest="steps",
         default="all",
         help="what steps to process. steps are separated by comma, nospace!. Default all",
+    )
+    parser.add_argument(
+        "-ss",
+        "--single_object",
+        action="store",
+        dest="single_object",
+        help="only install a single object like studies or semester",
     )
     parser.add_argument(
         "-S",

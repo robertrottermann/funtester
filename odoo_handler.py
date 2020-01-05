@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import odoorpc
 import getpass
 import psycopg2
 import psycopg2.extras
@@ -27,7 +28,7 @@ def _construct_filter(filt):
     return new_filt
 
 
-def get_objects(module, what=["id"], filt=[], login=[], verbose=False):
+def get_objects(module, what=["id"], filt=[], login=[], as_list=True, verbose=False):
     """get list of objects of a given type
 
     Arguments:
@@ -39,9 +40,12 @@ def get_objects(module, what=["id"], filt=[], login=[], verbose=False):
         verbose {bool} -- ..
     """
     result = []
-    # get_objects migth be called in an eval(xxx) situation
+    # get_objects might be called in an eval(xxx) situation
     # where we want to use the actual environment with an odoo set
     handler = OdooHandler()
+    #if login and login[0] == 'admin':
+        #login[0] = 'superadmin'
+    
     odoo = handler.get_odoo(login=login)
     if not odoo:
         return
@@ -49,15 +53,28 @@ def get_objects(module, what=["id"], filt=[], login=[], verbose=False):
     m = env[module]
     if filt:
         filt = _construct_filter(filt)
-    objs = m.search(filt)
-    for obj in m.browse(objs):
-        res = ()
-        if len(what) > 1:
-            for e in what:
-                res += obj.get(e)
-            result.append(res)
+    objs = []
+    try:
+        objs = m.search(filt)
+        if what != ["id"]:
+             # if we need more then ids, we must collect   
+            for obj in m.browse(objs):
+                res = ()
+                if len(what) > 1:
+                    for e in what:
+                        res += obj.get(e)
+                    result.append(res)
+                else:
+                    result.append(getattr(obj, what[0]))
         else:
-            result.append(getattr(obj, what[0]))
+            result = objs
+    except odoorpc.error.RPCError as e:
+        if verbose:
+            print(bcolors.FAIL + "an error occured")
+            print(str(e) + bcolors.ENDC)
+
+    if not as_list and result:
+        result = result[0]
     if verbose:
         print(module, result)
     return result
@@ -167,7 +184,7 @@ class OdooHandler(object):
             return cursor_d, conn
         return cursor_d
 
-    def get_odoo(self, no_db=False, verbose=False, login=[], force=False):
+    def get_odoo(self, no_db=False, verbose=False, login=[], force=False, simple=False):
         if not self._odoo or login or force:
             """
             get_module_obj logs into odoo and then
@@ -193,6 +210,7 @@ class OdooHandler(object):
                 print(bcolors.WARNING + "please install odoorpc")
                 print("execute pip install -r install/requirements.txt" + bcolors.ENDC)
                 return
+                    
             odoo = None
             try:
                 if verbose:
@@ -215,8 +233,18 @@ class OdooHandler(object):
                         )
                         print("*" * 80)
                     try:
-                        odoo.login(db_name, rpcuser, rpcpw)
-                    except:
+                        if rpcuser == 'admin' and not simple:
+                            odoo.login_sudo(db_name, rpcuser, rpcpw) #'admin', 'admin')
+                        else:
+                            odoo.login(db_name, rpcuser, rpcpw)
+                    except AttributeError as e:
+                        print(bcolors.FAIL)
+                        print('*' * 80)
+                        print(str(e))
+                        print("maybe you need to install roberts fork of odoorpc")
+                        print("from: git@github.com:robertrottermann/odoorpc.git")
+                        print(bcolors.ENDC)
+                    except Exception as e:
                         if verbose:
                             print("login failed, will retry with pw admin:")
                             print(
@@ -224,7 +252,7 @@ class OdooHandler(object):
                                 % (db_name, rpcuser)
                             )
                             print("*" * 80)
-                        odoo.login(db_name, rpcuser, "admin")
+                        odoo.login_sudo(db_name, rpcuser, "admin")
             except odoorpc.error.RPCError:
                 print(
                     bcolors.FAIL
@@ -280,7 +308,8 @@ class OdooHandler(object):
         """
             get the ir.module.module
         """
-        odoo = self.get_odoo()
+        # for some reason "ir.module.module" can not be accessed as superuser
+        odoo = self.get_odoo(simple=True)
         if not odoo:
             return
         module_obj = odoo.env["ir.module.module"]

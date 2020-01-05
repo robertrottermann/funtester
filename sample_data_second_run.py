@@ -22,37 +22,48 @@ sample_data = {
                 "dependency_ids": [[6, False, []]],
                 "description": False,
                 "dummy": False,
-                "ect_credist": 0,
+                "ect_credist": 10,
                 "enable_module": False,
                 "group": "2",
                 "guest": False,
                 "kohorte_ids": [[6, False, []]],
                 "learning_outcomes": False,
                 "message_attachment_count": 0,
-                "module_code": False,
+                "module_code": 'STAAT',
                 "module_id": 1,
-                "module_number": False,
-                "modules_students": False,
+                "module_number": 'M03',
+                "modules_students": True,
                 "moodle_id": 0,
                 "name": "Allgemeine Staatslehre",
                 "publish_on_website": False,
                 "repetition": "3",
                 "requirements": False,
                 "semester": False,
-                "semester_id": 1,
+                "semester_id": ("semester", [("short_name", "FS20")]),
                 "short_name": "Allgemeine Staatslehre",
-                # at import time, we do not know yet the values of the study course ids
-                # we construct an placehoder value, of which the real value is only set before the second run
                 "study_course_ids": [
                     [6, False, get_objects("study.course", login=["matthias", "login"])]
                 ],
-                "study_section_id": 1,
+                "study_section_id": 1, # SUCHEN!!
                 "survey_cas_question_ids": [[6, False, []]],
                 "survey_specific_question_ids": [[6, False, []]],
                 "teaching_material": False,
-                "type": False,
+                "type": '1', # Wat is that
                 "type_of_exam": "exam",
                 "validation_state": "not_validated",
+                # "main_cost_accounts_ids": [
+                #     [6, False, get_objects(
+                #         "account.analytic.account",
+                #         as_list=False,
+                #         filt=[("code", "BPSYd")],
+                #         login=["admin", "admin"],
+                #         verbose=True
+                #     )],
+                # ],#"main_cost_accounts_ids"
+                # 'main_cost_accounts_ids': [[0,
+                #              'virtual_380',
+                #              {'account_analytic_account_id': 10,
+                #               'percent': 100}]],
             }
         ],
     },

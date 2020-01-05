@@ -27,6 +27,11 @@ create_sequence = [
     "location",
     "room",
 ]
+# modules handled in second run
+create_sequence_2 = [
+    "module_data",
+    "kohorte",
+]
 # object_links links are a list of object pairs that should be linked
 # structure of each entry:
 # [database, left_side, right_side]
@@ -365,6 +370,13 @@ sample_data = {
             },
             {
                 "active": True,
+                "name": "Spring term 2021",
+                "short_name": "FS21",
+                "type": "1",  # spring
+                "year": 2021,
+            },
+            {
+                "active": True,
                 "name": "Summersemester 2020",
                 "short_name": "HS20",
                 "type": "2",  # summer
@@ -376,13 +388,6 @@ sample_data = {
                 "short_name": "HS19",
                 "type": "3",  # autumn
                 "year": 2019,
-            },
-            {
-                "active": True,
-                "name": "Spring term 2021",
-                "short_name": "FS21",
-                "type": "1",  # spring
-                "year": 2020,
             },
             {
                 "active": True,
@@ -601,7 +606,7 @@ sample_data = {
                 "certificate": "Bachelor of Science in Psychology",
                 "compensation": False,
                 "coordination": False,
-                "cost_center": 1,
+                "cost_center":("account.analytic.account", [("code", "BPSYd")]), #1,
                 "date_of_introduction_session": False,
                 "dekan": False,
                 "department_id": ("department", [("name", "Rechtswissenschaften")]),
@@ -722,10 +727,10 @@ sample_data = {
                 "created_moodle_account": False,
                 "credit_application_available": False,
                 "date": False,
-                "date_end": 2,
+                "date_end": ("semester", [("short_name", "FS20")]),
                 "date_envoi_diplome": False,
                 "date_reception_diplome": False,
-                "date_start": 1,
+                "date_start": ("semester", [("short_name", "FS19")]),
                 "decision": False,
                 "diplome": False,
                 "disqualification": False,
@@ -791,7 +796,12 @@ sample_data = {
                         0,
                         0,
                         {
-                            "partner_id": get_objects("res.users", filt=[("login", "karin")], login=['admin', 'admin']),
+                            "partner_id": get_objects(
+                                "res.users",
+                                filt=[("login", "karin")],
+                                login=['admin', 'admin'],
+                                as_list=False,
+                                verbose=True),
                             "res_model": "account.analytic.account",
                             "subtype_ids": [(6, 0, [1])],
                         },
@@ -811,7 +821,12 @@ sample_data = {
                         0,
                         0,
                         {
-                            "partner_id": get_objects("res.users", filt=[("login", "nicole")], login=['admin', 'admin']),
+                            "partner_id": get_objects(
+                                "res.users",
+                                filt=[("login", "nicole")],
+                                login=['admin', 'admin'],
+                                as_list=False,
+                                verbose=True),
                             "res_model": "account.analytic.account",
                             "subtype_ids": [(6, 0, [1])],
                         },
