@@ -71,6 +71,28 @@ STAFF = {
         # email
         "password": "Login$99",
     },
+    "1439": {
+        "login": "patrizia",
+        "last_name": "Reber-Parvex",
+        "name": "Patrizia",
+        "groups": [
+            "fsch_customer.group_fsch_manager",
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+        # email
+        "password": "Login$99",
+    },
+    "1553": {
+        "login": "sophie",
+        "last_name": "	Margaronis Eggen",
+        "name": "Sophie",
+        "groups": [
+            "fsch_customer.group_fsch_manager",
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+        # email
+        "password": "Login$99",
+    },
     "1558": {
         "login": "malin",
         "last_name": "De Boni",
@@ -643,19 +665,20 @@ class FunidInstaller(OdooHandler):
     # params = val['params']
     # globals()[v_name] = eval(e_str)(*params, self=self)
 
-    def create_objects(self, which=[], login=[], step="first_run", opts=None):
+    def create_objects(self, which=[], login=[], step="first_run", sample_data={}, opts=None):
         # create fernuni objects
         from sample_data import create_sequence, create_sequence_2
         # if we are in single object mode, we can not rely on the step
-        if opts and opts.single_object:
-            if opts.single_object in create_sequence_2:
-                step = "second_run"
-        if step == "first_run":
-            from sample_data import sample_data
-        elif step == "second_run":
-            from sample_data_second_run import sample_data
-        if opts and opts.single_object:
-            create_sequence = [opts.single_object]
+        if not sample_data:
+            if opts and opts.single_object:
+                if opts.single_object in create_sequence_2:
+                    step = "second_run"
+            if step == "first_run":
+                from sample_data import sample_data
+            elif step == "second_run":
+                from sample_data_second_run import sample_data
+            if opts and opts.single_object:
+                create_sequence = [opts.single_object]
         if login:
             odoo = self.get_odoo(login=login)
         else:
@@ -815,6 +838,34 @@ class FunidInstaller(OdooHandler):
                 cursor.execute(sql_insert)
                 connection.commit()
 
+    def handle_reports_data(self, opts):
+        """make sure that the data for a report exists
+
+        Arguments:
+            opts {object} -- namespace with selected option
+        """
+        reports_list = opts.reports.split(',')
+        if 'all' in reports_list:
+            reports = list_reports(with_details=True)
+            for r_name in list(reports.keys()):
+                # handling the import fully dynamically is too complicated
+                # so we do it hardcoded ..
+                sd = {}
+                if r_name == 'negzuga':
+                    from sample_data_negative_gast_zulassung import sample_data as sd_negzuga
+                    sd = sd_negzuga
+                print(bcolors.green)
+                print('producing data for:' +  reports[r_name]['name'])
+                print(bcolors.ENDC)
+                self.create_objects(opts=opts, sample_data=sd)
+
+
+
+def list_reports(with_details=False):
+    from reports import reports
+    if not with_details:
+        return ['l', 'all'] + list(reports.keys())
+    return reports
 
 def main(opts):
     steps = ["all"]
@@ -825,6 +876,8 @@ def main(opts):
         steps = ["modules", "lang"]
     if opts.single_object:
         steps = ["objects"]
+    if opts.reports:
+        steps = ["reports"]
 
     print(steps)
     installer = FunidInstaller()
@@ -854,6 +907,8 @@ def main(opts):
         installer.config_setter(login=["admin", "admin"])
     if "single_object" in steps:
         installer.config_setter(login=["admin", "admin"])
+    if "reports" in steps:
+        installer.handle_reports_data(opts=opts)
 
 
 USAGE = """install_test.py -h for help on usage
@@ -882,6 +937,14 @@ if __name__ == "__main__":
         dest="steps",
         default="all",
         help="what steps to process. steps are separated by comma, nospace!. Default all",
+    )
+    parser.add_argument(
+        "-r",
+        "--reports",
+        action="store",
+        dest="reports",
+        choices= list_reports(),
+        help="create data for the reports, name reports in comma separate list or l,all. l lists the reports available, all handles all",
     )
     parser.add_argument(
         "-ss",
