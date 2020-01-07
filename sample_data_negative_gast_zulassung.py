@@ -30,6 +30,7 @@ sample_data = {
         ],  # do not create, when object is found using these elements
         "vals_list": [
             {
+                "state_of_study" : 'student',
                 "abandon": False,
                 "accept_conditions": False,
                 "annee_academique": False,
@@ -44,7 +45,7 @@ sample_data = {
                 "date_envoi_diplome": False,
                 "date_reception_diplome": False,
                 "date_start": ("semester", [("short_name", "2018_25+")]),
-                "decision": False,
+                "decision": 'permitted',
                 "diplome": False,
                 "disqualification": False,
                 "einschreibestatus": False,
@@ -67,7 +68,7 @@ sample_data = {
                     "res.partner",
                     [("name", "Sébastien"), ("last_name", "Ruffieux")],
                 ),  # 70,
-                "permission_date": False,
+                "permission_date": '2020-10-10',
                 "permission_remark": False,
                 "pieces_manquantes_inscription": False,
                 "pieces_manquantes_validation": False,
@@ -84,7 +85,7 @@ sample_data = {
                 "second_matriculation_start_study": False,
                 "signature_for_study": False,
                 "signature_for_study_fname": False,
-                "study_course_id": False,
+                'study_course_id': ("study.course", [("certificate", "Admission 25+")]),
                 "total_ects_credits": 0,
                 "valid_information": False,
                 "validation_acquis": False,
@@ -241,7 +242,7 @@ sample_data = {
                 "study_goal": "Admission 25+",
                 "subject_study": "Psychologie",
                 "training_course": False,
-                "university_id": 1,
+                "university_id": ("university", [("name", "Universitäre Fernstudien Schweiz")]), 
                 "visible_online_registration": True,
                 "weiterbildung": False,
                 "workgroup_ids": [[6, False, []]],
