@@ -600,21 +600,7 @@ class FunidInstaller(OdooHandler):
                     group = odoo.env.ref(group_id)
                     group.write({"users": [(4, user_ids[0])]})
 
-    def fixup_partner(self):  # obsolete?
-        # fix up demo partner
-        # does not really work, odoorpc does not handle sudo or with_user correctly
-        # we probably need to use plain odoo RPC
-        odoo = self.get_odoo()
-        partner_o = odoo.env["res.partner"]
-        for partner_id in partner_o.search([]):
-            try:
-                partner = partner_o.browse([partner_id])
-                last = partner.last_name
-                email = partner.email
-                if not last:
-                    print(name, email)
-            except:
-                print("could not access partner with id: %s" % partner_id)
+        self.set_acounts()
 
     def set_passwords(self, password="login", admin="admin"):
         # wrong message!!
@@ -755,6 +741,20 @@ class FunidInstaller(OdooHandler):
 
                 if running_odoo:
                     odoo = running_odoo
+
+    def set_acounts(self):
+        """set the recieveabl and payable accounts
+        """
+        data = {
+            'property_account_payable_id': 13,
+            'property_account_receivable_id': 6,
+        }
+
+        odoo = self.get_odoo()
+        contacts_o = odoo.env['res_partner']
+        contacts = contacts_o.search([])
+        for oc in contacts:
+            contacts_o.browse(oc).write(data)
 
     def patch_fernuni(self):
         # create fernuni objects from sample_data.py

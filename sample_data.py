@@ -5,6 +5,11 @@ from odoo_handler import get_objects
 # sample sample_data
 # ------------------------------------
 
+# -----------------------
+# property_account_receivable_id 121000
+# property_account_payable_id 211000
+#------------------------
+
 # objects need to created in sequence as they migth refere to
 # formerly created ones
 create_sequence = [
