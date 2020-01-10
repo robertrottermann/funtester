@@ -627,6 +627,8 @@ class FunidInstaller(OdooHandler):
             group = odoo.env.ref(group_id)
             group.write({"users": [(4, admin[0])]})
 
+        self.set_acounts()
+
     def set_passwords(self, password="login", admin="admin"):
         # wrong message!!
         # this sets all password to admin
@@ -766,6 +768,20 @@ class FunidInstaller(OdooHandler):
 
                 if running_odoo:
                     odoo = running_odoo
+
+    def set_acounts(self):
+        """set the recieveabl and payable accounts
+        """
+        data = {
+            'property_account_payable_id': 13,
+            'property_account_receivable_id': 6,
+        }
+
+        odoo = self.get_odoo()
+        contacts_o = odoo.env['res_partner']
+        contacts = contacts_o.search([])
+        for oc in contacts:
+            contacts_o.browse(oc).write(data)
 
     def patch_fernuni(self):
         # create fernuni objects from sample_data.py
