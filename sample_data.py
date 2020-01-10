@@ -324,7 +324,7 @@ sample_data = {
         "vals_list": [
             {
                 "active": True,
-                "hide_online": False,
+                # "hide_online": False,
                 "lang": False,
                 "module_code": "EINF",
                 "module_number": "M01",
@@ -335,7 +335,7 @@ sample_data = {
             },
             {
                 "active": True,
-                "hide_online": False,
+                # "hide_online": False,
                 "lang": False,
                 "module_code": "STAAT",
                 "module_number": "M03",

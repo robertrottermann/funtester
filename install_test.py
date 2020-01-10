@@ -59,6 +59,26 @@ CONTACT_FLAGS = {
     # [['res_users_study_course', 'res_users_id','study_course_id'],
     #     ['res.partner','name', 'tutor'], ['function','name', 'Dozent/in']]
 }
+ADMINISTRATOR = {
+        "groups": [
+            "fsch_customer.group_fsch_student",
+            "fsch_customer.group_fsch_student_reinscription",
+            "fsch_customer.group_fsch_mentor_tutor",
+            "fsch_customer.group_fsch_assist_dozent",
+            "fsch_customer.group_fsch_dekan",
+            "fsch_customer.group_fsch_mitarbeiter",
+            "fsch_customer.group_fsch_sekretariat",
+            "fsch_customer.group_fsch_sk",
+            "fsch_customer.group_fsch_stz_leiter",
+            "fsch_customer.group_fsch_manager",
+            "fsch_customer.group_fsch_kst_leiter",
+            "fsch_customer.group_fsch_director",
+            "fsch_customer.group_fsch_kasse",
+            "fsch_customer.group_revision",
+            "fsch_customer.group_fsch_faculty_manager",
+            "fsch_customer.group_fsch_mentor_allowances_for_assist",
+        ],
+}
 STAFF = {
     "1142": {
         "login": "alexandra",
@@ -232,11 +252,12 @@ SITE_ADDONS = [
     # "bt_report_webkit",  # TODO: v13 migration
     "product",
     # "bt_todo", # TODO: v13 migration
-    "hr_payroll",
     "stock",
-    "hr_holidays",
     "survey",
+    "hr_payroll",
+    "hr_holidays",
     "hr_expense",
+    "hr_attendance",
     # "l10n_ch_base_bank",
     # -> "analytic",
     # "fsch_pre_migration",  # TODO: v13 migration
@@ -244,7 +265,7 @@ SITE_ADDONS = [
     # "bt_swissdec", # TODO: v13 migration
     # "sett_hr", # TODO: v13 migration
     "board",
-    "sale_management",
+    #"sale_management",
     "l10n_ch",
 ]
 # OWN_ADDONS are the modules that we handle our selfs in some
@@ -257,7 +278,7 @@ OWN_ADDONS = [
     "funid_report_base",
     "funid_customer",
     "funid_reporting",
-    "funid_registration",
+    # "funid_registration",
 ]
 # make sure we are in a virtualenv
 # robert: i usualy test in wingide
@@ -535,7 +556,7 @@ class FunidInstaller(OdooHandler):
             c.email = "%s@o2oo.ch" % n
 
     def create_users(self, force=False, strip_fields=[]):
-        odoo = self.get_odoo()
+        odoo = self.get_odoo(login=["admin", "admin"], simple=True)
         if not odoo:
             return
         users_o = odoo.env["res.users"]
@@ -599,22 +620,12 @@ class FunidInstaller(OdooHandler):
                 for group_id in u_groups:
                     group = odoo.env.ref(group_id)
                     group.write({"users": [(4, user_ids[0])]})
-
-    def fixup_partner(self):  # obsolete?
-        # fix up demo partner
-        # does not really work, odoorpc does not handle sudo or with_user correctly
-        # we probably need to use plain odoo RPC
-        odoo = self.get_odoo()
-        partner_o = odoo.env["res.partner"]
-        for partner_id in partner_o.search([]):
-            try:
-                partner = partner_o.browse([partner_id])
-                last = partner.last_name
-                email = partner.email
-                if not last:
-                    print(name, email)
-            except:
-                print("could not access partner with id: %s" % partner_id)
+        # do the assignment of groups to admin also
+        a_groups = ADMINISTRATOR['groups']
+        admin = users_o.search([("login", "=", "admin")])
+        for group_id in a_groups:
+            group = odoo.env.ref(group_id)
+            group.write({"users": [(4, admin[0])]})
 
     def set_passwords(self, password="login", admin="admin"):
         # wrong message!!
@@ -892,7 +903,6 @@ def main(opts):
     # installer.install_own_modules()
     if "all" in steps or "mail" in steps:
         installer.install_mail_handler()
-    # installer.fixup_partner()
     if "all" in steps or "passwd" in steps:
         installer.set_passwords()
     # if 'all' in steps or 'patches' in steps:
