@@ -200,7 +200,7 @@ STAFF = {
             "fsch_customer.group_fsch_manager",
             "fsch_customer.group_fsch_mitarbeiter",
         ],
-        # email
+         # email
         "password": "Login$99",
     },
 }
@@ -555,20 +555,28 @@ class FunidInstaller(OdooHandler):
             n = c.email.split("@")[0]
             c.email = "%s@o2oo.ch" % n
 
-    def create_users(self, force=False, strip_fields=[]):
+    def create_users(self, force=False, strip_fields=[], users={}):
         odoo = self.get_odoo(login=["admin", "admin"], simple=True)
         if not odoo:
             return
         users_o = odoo.env["res.users"]
         users_ox = users_o.with_user(odoo.env.context, 1)  # ???
-        users = self.users
-        groups = self.groups
+        if not users:
+            users = self.users
+            groups = self.groups
+        else:
+            groups = []
         # groups_o = odoo.env['res.groups']
         if users:
             for login, user_info in list(users.items()):
+                user_type = user_info
+                if isinstance(user_info,str):
+                    user_info = {}
+                else:
+                    user_type = user_info['user_type']
                 user_data = {}
-                user_data["name"] = login
-                user_data["last_name"] = login
+                user_data["name"] = user_info.get('first_name', login)
+                user_data["last_name"] = user_info.get('last_name', login)
                 user_data["email"] = "%s@o2oo.ch" % login
                 user_data["login"] = login
                 user_data["tz"] = "Europe/Zurich"
@@ -591,14 +599,23 @@ class FunidInstaller(OdooHandler):
                         user_ids = [user_id]
 
                 # get groups to be assigned
-                group_id = groups[user_info]
-                if group_id:
+                if'groups' in user_info.keys():
+                    group_ids = user_info['groups']
+                else:
+                    if not groups:
+                        groups = []
+                    group_ids = groups.get(user_type, groups) # if the groups are self.groups (bbb) then its a string
+                    if isinstance(group_ids, str):
+                        group_ids = [group_ids]
+                for group_id in group_ids:
+                    if not group_id:
+                        continue
                     group = odoo.env.ref(group_id)
                     group.write({"users": [(4, user_ids[0])]})
         staff = self.staff
         if staff:
             for login, user_info in list(staff.items()):
-                u_groups = user_info.pop("groups")
+                u_groups = user_info.pop("groups", [])
                 user_data = user_info
                 user_data["email"] = "%s@o2oo.ch" % login
                 user_data["tz"] = "Europe/Zurich"
@@ -614,6 +631,7 @@ class FunidInstaller(OdooHandler):
                         pass
                 else:
                     # user = odoo.env['res.users'].sudo().with_context().create(user_data)
+                    print(user_data)
                     user_id = users_o.create(user_data)
                     if user_id or isinstance(user_id, int):
                         user_ids = [user_id]
@@ -886,9 +904,17 @@ class FunidInstaller(OdooHandler):
                 # handling the import fully dynamically is too complicated
                 # so we do it hardcoded ..
                 sd = {}
-                if r_name == 'negzuga':
+                data_runner = None
+                if r_name == '1':
                     from sample_data_negative_gast_zulassung import sample_data as sd_negzuga
                     sd = sd_negzuga
+                elif r_name == '7':
+                     from sample_data_assistant_report import assistant_users, run_prepare_report
+                     data_runner = run_prepare_report
+
+                if data_runner:
+                    data_runner(self)
+
                 print(bcolors.green)
                 print('producing data for:' +  reports[r_name]['name'])
                 print(bcolors.ENDC)

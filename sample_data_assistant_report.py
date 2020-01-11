@@ -2,6 +2,52 @@
 # # -*- coding: utf-8 -*-
 from odoo_handler import get_objects
 
+assistant_users = {
+    'bartlomiej' : {
+        'user_type' : 'tutor',
+        'first_name' : 'Bartlomiej',
+        'last_name' : 'Chrobak',
+        'groups' : [
+            "fsch_customer.group_fsch_mitarbeiter",
+            "fsch_customer.group_fsch_assist_dozent",
+        ]
+    }
+}
+
+def run_prepare_report(handler):
+    """create links for assistant report
+
+    Arguments:
+        handler {object, odoo-handler instance} -- used to access odoo
+    """
+    # we want to link a teacher to a kohorte
+    # the report we want to create is
+    # Assistant
+
+    # ASSISTANT REPORT, 11.01.2020
+    # SEMESTER: FRÜHJAHRSSEMESTER 2018
+    # ASSISTENTEN           KOHORTEN    STUDIENGANG             NUM. OF STUDENTS    MODULDURCHFÜHRUNGEN
+    # Bartlomiej Chrobak      K21         Bachelor of Science     55                  Savoir-faire et savoir
+    #                                     in Psychology                               devenir
+    #                                     (bilingue, fr langue
+    #                                     principale) Bachelor
+    #                                     of Science in
+    #                                     Psychology
+    # ASSISTENTEN           KOHORTEN    STUDIENGANG             NUM. OF STUDENTS    MODULDURCHFÜHRUNGEN
+    # Olivia Piguet         K21         Bachelor of Science     53                  Introduction à la
+                                        # in Psychology                               psychologie : thématique
+                                        # (bilingue, fr langue                        et disciplines
+                                        # principale) Bachelor
+                                        # of Science in
+                                        # Psychology
+    # Kohorte K25:
+    #   Bachelor of Science in Psychology	k25	Spring term 2019
+    # Assitent
+    #
+    print('creating assistant users')
+    handler.create_users(users=assistant_users)
+
+
 # ------------------------------------
 # sample sample_data
 # ------------------------------------
@@ -23,14 +69,14 @@ sample_data = {
             },
         ]
     },
-    "studies": {
-        "module": "studies",
+    "assistant": {
+        "module": "res.users",
         "search": [
-            "partner_id"
+            "login"
         ],  # do not create, when object is found using these elements
         "vals_list": [
             {
-                "state_of_study" : 'student',
+                "login" : 'bartlomiej',
                 "abandon": False,
                 "accept_conditions": False,
                 "annee_academique": False,
