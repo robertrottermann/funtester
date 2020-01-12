@@ -1,6 +1,12 @@
 # https://realpython.com/python-requests/
 import requests
 
+"""
+in the registration form only departments are shown with the 
+ [('visibility_registration', '=', True)]
+ set
+"""
+
 base_url = "http://127.0.0.1:8069/registration_en"
 base_url = "http://localhost:8069/registration_en"
 base_url = "http://127.0.0.1:8069/registration/student"

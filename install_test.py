@@ -837,9 +837,10 @@ class FunidInstaller(OdooHandler):
                 print(MODULE_DATA_CHANGED % str(must_exit))
                 sys.exit()
 
-    def link_objects(self, login=[]):
+    def link_objects(self, login=[], object_links=[]):
         # link ojects
-        from sample_data.sample_data import object_links
+        if not object_links:
+            from sample_data.sample_data import object_links
 
         # a link is something like:
         #    database                 left field                        right field

@@ -16,8 +16,9 @@ Semester:
 
 
 
-
-
+spelling error:
+---------------
+funid_registration/controller/main.py: line 1730 +o ->to
 
 
 
