@@ -13,6 +13,15 @@ assistant_users = {
         ]
     }
 }
+assistant_object_links = [
+    # kohorte needs user and study course linked
+    # fields: res_user_id, study_course_id
+    [
+        ["res_users_study_course", "res_users_id", "study_course_id"],
+        ["res.users", "login", "bartlomiej"],
+        ["study.course", "certificate", "Bachelor of Science in Psychology"],
+    ]
+]
 
 def run_prepare_report(handler):
     """create links for assistant report
@@ -46,7 +55,7 @@ def run_prepare_report(handler):
     #
     print('creating assistant users')
     handler.create_users(users=assistant_users)
-
+    handler.link_objects(object_links=assistant_object_links)
 
 # ------------------------------------
 # sample sample_data
