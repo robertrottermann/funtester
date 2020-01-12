@@ -698,16 +698,16 @@ class FunidInstaller(OdooHandler):
 
     def create_objects(self, which=[], login=[], step="first_run", sample_data={}, opts=None):
         # create fernuni objects
-        from sample_data import create_sequence, create_sequence_2
+        from sample_data.sample_data import create_sequence, create_sequence_2
         # if we are in single object mode, we can not rely on the step
         if not sample_data:
             if opts and opts.single_object:
                 if opts.single_object in create_sequence_2:
                     step = "second_run"
             if step == "first_run":
-                from sample_data import sample_data
+                from sample_data.sample_data import sample_data as sample_data
             elif step == "second_run":
-                from sample_data_second_run import sample_data
+                from sample_data.sample_data_second_run import sample_data as sample_data
             if opts and opts.single_object:
                 create_sequence = [opts.single_object]
         if login:
@@ -839,7 +839,7 @@ class FunidInstaller(OdooHandler):
 
     def link_objects(self, login=[]):
         # link ojects
-        from sample_data import object_links
+        from sample_data.sample_data import object_links
 
         # a link is something like:
         #    database                 left field                        right field
@@ -897,24 +897,30 @@ class FunidInstaller(OdooHandler):
         Arguments:
             opts {object} -- namespace with selected option
         """
+        #import wingdbstub
         reports_list = opts.reports.split(',')
+        reports = list_reports(with_details=True)
         if 'all' in reports_list:
-            reports = list_reports(with_details=True)
-            for r_name in list(reports.keys()):
-                # handling the import fully dynamically is too complicated
-                # so we do it hardcoded ..
-                sd = {}
-                data_runner = None
-                if r_name == '1':
-                    from sample_data_negative_gast_zulassung import sample_data as sd_negzuga
-                    sd = sd_negzuga
-                elif r_name == '7':
-                     from sample_data_assistant_report import assistant_users, run_prepare_report
-                     data_runner = run_prepare_report
+            reports_list = list(reports.keys())
+        for r_name in reports_list:
+            # handling the import fully dynamically is too complicated
+            # so we do it hardcoded ..
+            sd = {}
+            data_runner = None
+            if r_name == '1':
+                from sample_data.sample_data_negative_gast_zulassung import sample_data as sd_negzuga
+                sd = sd_negzuga
+            elif r_name == '7':
+                from sample_data.sample_data_assistant_report import assistant_users, run_prepare_report
+                data_runner = run_prepare_report
 
-                if data_runner:
-                    data_runner(self)
+            if data_runner:
+                print(bcolors.green)
+                print('executing data-runner for:' +  reports[r_name]['name'])
+                print(bcolors.ENDC)
+                data_runner(self)
 
+            if sd:
                 print(bcolors.green)
                 print('producing data for:' +  reports[r_name]['name'])
                 print(bcolors.ENDC)

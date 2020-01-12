@@ -1,0 +1,75 @@
+#!/usr/bin/env python
+# # -*- coding: utf-8 -*-
+from odoo_handler import get_objects
+sample_data = {
+    # -------- Create: studies
+    "studies": {
+        "module": "studies",
+        "search": [
+            "partner_id"
+        ],  # do not create, when object is found using these elements
+        "vals_list": [
+            {
+                "abandon": False,
+                "accept_conditions": False,
+                "annee_academique": False,
+                "approval_exmatriculation": False,
+                "approve_first_section": False,
+                "continuing_education": False,
+                "created_email": False,
+                "created_moodle_account": False,
+                "credit_application_available": False,
+                "date": False,
+                "date_end": ("semester", [("short_name", "FS20")]),
+                "date_envoi_diplome": False,
+                "date_reception_diplome": False,
+                "date_start": ("semester", [("short_name", "FS19")]),
+                "decision": False,
+                "diplome": False,
+                "disqualification": False,
+                "einschreibestatus": False,
+                "envoi_va_uni_inscription": False,
+                "envoi_va_uni_validation": False,
+                "erstsemester": False,
+                "exams_failed": False,
+                "fachstudiensemester": 0,
+                "finished_immatriculations": False,
+                "geburtsort": False,
+                "guest": False,
+                "horerstatus": False,
+                "kohorte_id": False,
+                "missing_documents": False,
+                "modules_students": False,
+                "motif": False,
+                "nom_du_diplome": False,
+                "notes": False,
+                "part_time": False,
+                "partner_id": (
+                    "res.partner",
+                    [("name", "Student"), ("last_name", "Fleissig")],
+                ),  # 70,
+                "permission_date": False,
+                "permission_remark": False,
+                "pieces_manquantes_inscription": False,
+                "pieces_manquantes_validation": False,
+                "reason_exmatriculation": 1,
+                "remarks_credit_application": False,
+                "remarks_exmatriculation": False,
+                "remarques_inscription": False,
+                "remarques_validation": False,
+                "second_matriculation": False,
+                "second_matriculation_branch_study": False,
+                "second_matriculation_grade": False,
+                "second_matriculation_school_city": False,
+                "second_matriculation_school_name": False,
+                "second_matriculation_start_study": False,
+                "signature_for_study": False,
+                "signature_for_study_fname": False,
+                "study_course_id": False,
+                "total_ects_credits": 0,
+                "valid_information": False,
+                "validation_acquis": False,
+            }
+        ],
+    },
+}
