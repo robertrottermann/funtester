@@ -11,7 +11,7 @@ sample_data = {
             {
                 "active": True,
                 # "hide_online": False,
-                "lang": 'de_CH',
+                "lang": 'de_DE',
                 "module_code": "EINF",
                 "module_number": "M01",
                 "module_visible_report": False,
@@ -22,7 +22,7 @@ sample_data = {
             {
                 "active": True,
                 # "hide_online": False,
-                "lang": 'de_CH',
+                "lang": 'de_DE',
                 "module_code": "STAAT",
                 "module_number": "M03",
                 "module_visible_report": False,

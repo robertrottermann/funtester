@@ -162,11 +162,12 @@ sample_data = {
                 "sale_warn": "no-message",
                 "signature_for_reports": False,
                 "signature_for_reports_fname": False,
-                "state_id": False,
-                "street": False,
+                "country_id": 43,
+                "street": 'Ch. de la Fontaine 3',
                 "street2": False,
                 "title": 2,
                 "student": True,
+                "zip" : "1615"
             },
         ]
     },
