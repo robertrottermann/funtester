@@ -8,6 +8,7 @@ import psycopg2.extras
 from tools import BASE_PATH, MyNamespace, get_config_from_yaml
 import urllib.request, urllib.error, urllib.parse
 from bcolors import bcolors
+import base64
 
 def _construct_filter(filt):
     """construct a odoo search domain
@@ -45,7 +46,7 @@ def get_objects(module, what=["id"], filt=[], login=[], as_list=True, verbose=Fa
     handler = OdooHandler()
     #if login and login[0] == 'admin':
         #login[0] = 'superadmin'
-    
+
     odoo = handler.get_odoo(login=login)
     if not odoo:
         return
@@ -57,7 +58,7 @@ def get_objects(module, what=["id"], filt=[], login=[], as_list=True, verbose=Fa
     try:
         objs = m.search(filt)
         if what != ["id"]:
-             # if we need more then ids, we must collect   
+             # if we need more then ids, we must collect
             for obj in m.browse(objs):
                 res = ()
                 if len(what) > 1:
@@ -79,6 +80,23 @@ def get_objects(module, what=["id"], filt=[], login=[], as_list=True, verbose=Fa
         print(module, result)
     return result
 
+def read_image(path=''):
+    """read image from fs and make it json serializable
+
+    Keyword Arguments:
+        path {str} -- fs path to image (default: {''})
+
+    Returns:
+        [type] -- image as encoded string
+    """
+    data = ''
+    img_path = os.path.normpath('%s%s' % (BASE_PATH, path))
+    if os.path.exists(img_path):
+        with open(img_path, 'rb') as f:
+            data = f.read()
+    else:
+        print('image not found:%s' % img_path)
+    return base64.encodebytes(data).decode("utf-8")
 
 class OdooHandler(object):
     BASE_DEFAULTS = {}  # will be set when yaml was loaded
@@ -210,7 +228,7 @@ class OdooHandler(object):
                 print(bcolors.WARNING + "please install odoorpc")
                 print("execute pip install -r install/requirements.txt" + bcolors.ENDC)
                 return
-                    
+
             odoo = None
             try:
                 if verbose:

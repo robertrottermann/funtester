@@ -20,10 +20,10 @@ spelling error:
 ---------------
 funid_registration/controller/main.py: line 1730 +o ->to
 
-
-
-
-
+departement:
+------------
+when departmen has department_icon stored with it, it can only be deleted
+departement by department, not in batches
 
 
 

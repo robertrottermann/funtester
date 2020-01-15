@@ -52,7 +52,7 @@ CONTACT_FLAGS = {
     "prospect": ["prospect", "customer"],
     "mitarbeiter": ["employee", "customer"],
     "student": ["student", "customer"],
-    "tutor": ["teacher", "customer"],
+    "dozent": ["teacher", "customer"],
     "tutor": ["function_id", ("function", [("name", "Dozent/in")])],
     # # funktion teacher:
     # # this is a link of a funktion object ot a field function_1
@@ -278,7 +278,7 @@ OWN_ADDONS = [
     "funid_report_base",
     "funid_customer",
     "funid_reporting",
-    # "funid_registration",
+    "funid_registration",
 ]
 # make sure we are in a virtualenv
 # robert: i usualy test in wingide
@@ -560,7 +560,22 @@ class FunidInstaller(OdooHandler):
         if not odoo:
             return
         users_o = odoo.env["res.users"]
-        users_ox = users_o.with_user(odoo.env.context, 1)  # ???
+        # set flags for contacts belonging to a user
+        # partner_o = odoo.env["res.partner"]
+        # print(partner_o.search([('name', 'in',['dozent', 'tutor'])]))
+        # partners = partner_o.search([])
+        # for partner in partners:
+        #     try:
+        #         p=partner_o.browse([partner])
+        #     except Exception as e:
+        #         print(e)
+        #         continue
+        #     print(p.name)
+            # [['is_company', '=', True], ['customer', '=', True]]],
+        #     {'fields': ['name', 'country_id', 'comment'], 'limit': 5}
+        # )
+        # for id, name in partners:
+        #     print(id, name)
         if not users:
             users = self.users
             groups = self.groups
@@ -645,7 +660,8 @@ class FunidInstaller(OdooHandler):
             group = odoo.env.ref(group_id)
             group.write({"users": [(4, admin[0])]})
 
-        # self.set_acounts()
+
+
 
     def set_passwords(self, password="login", admin="admin"):
         # wrong message!!

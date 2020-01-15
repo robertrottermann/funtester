@@ -36,6 +36,7 @@ create_sequence = [
 create_sequence_2 = [
     "module_data",
     "kohorte",
+    "people",
 ]
 # object_links links are a list of object pairs that should be linked
 # structure of each entry:
