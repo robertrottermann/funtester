@@ -20,13 +20,22 @@ spelling error:
 ---------------
 funid_registration/controller/main.py: line 1730 +o ->to
 
+
 departement:
 ------------
 when departmen has department_icon stored with it, it can only be deleted
 departement by department, not in batches
 
+contacts:
+---------
+mobile is formated badly: 078/715.59.20
 
-
+copying a contact dies:
+-----------------------
+/home/robert/projects/fernuni13/fernuni13/fernuni/fsch_customer/models/res_partner_ext.py: line 904
+  File "/home/robert/projects/fernuni13/fernuni13/fernuni/fsch_customer/models/res_partner_ext.py", line 904, in copy
+    default.update({
+AttributeError: 'int' object has no attribute 'update'
 
 
 

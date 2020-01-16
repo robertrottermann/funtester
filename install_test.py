@@ -10,6 +10,16 @@ from bcolors import bcolors
 from odoo_handler import OdooHandler, get_objects
 from messages import *
 
+FUN_COMPANY = { 
+    'country_id': 43,
+    'phone': '044 77 88 920',
+    'street': 'Überlandstrasse 12',
+    'street2': 'Postfach 265',
+    'zip': '3900',
+    'city': 'Brig',
+}
+
+
 GROUPS = {
     "prospect": "",
     "Student": "fsch_customer.group_fsch_student",

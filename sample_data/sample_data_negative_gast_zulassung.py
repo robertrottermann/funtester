@@ -143,6 +143,7 @@ sample_data = {
             {
                 "__last_update": False,
                 "academic_title": False,
+                "customer" : True,
                 "active": True,
                 "additional_info": False,
                 "bfs_student_auth_id_code": False,
@@ -155,7 +156,7 @@ sample_data = {
                 "mobile": '078/715.59.20',
                 "name": "Sébastien",
                 "profession": 'Ai',
-                "prospect": False,
+                "prospect": True,
                 "ref": False,
                 "remarks_marketing": False,
                 "return_certificate": False,
