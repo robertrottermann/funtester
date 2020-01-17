@@ -19,7 +19,6 @@ FUN_COMPANY = {
     'city': 'Brig',
 }
 
-
 GROUPS = {
     "prospect": "",
     "Student": "fsch_customer.group_fsch_student",

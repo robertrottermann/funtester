@@ -29,6 +29,7 @@ departement by department, not in batches
 contacts:
 ---------
 mobile is formated badly: 078/715.59.20
+there is a customer rank instead of customer flag (tab roles)
 
 copying a contact dies:
 -----------------------
