@@ -10,7 +10,7 @@ from bcolors import bcolors
 from odoo_handler import OdooHandler, get_objects
 from messages import *
 
-FUN_COMPANY = { 
+FUN_COMPANY = {
     'country_id': 43,
     'phone': '044 77 88 920',
     'street': 'Überlandstrasse 12',
@@ -399,7 +399,7 @@ class FunidInstaller(OdooHandler):
         """
         install all languages in the target
         args:
-            languages: list of language codes like ['de_CH, 'fr_CH']
+            languages: list of language codes like ['de_DE, 'fr_CH']
 
         return:
             dictonary {code : id, ..}
@@ -813,6 +813,13 @@ class FunidInstaller(OdooHandler):
                 if running_odoo:
                     odoo = running_odoo
 
+    def set_company(self):
+        """set the address of the company
+        """
+        odoo = self.get_odoo(login=['admin', 'admin'], simple=True)
+        companies_o = odoo.env['res.company']
+        companies_o.browse(companies_o.search([])[0]).write(FUN_COMPANY)
+
     # def set_acounts(self):
     #     """set the recieveabl and payable accounts
     #     """
@@ -962,12 +969,17 @@ def list_reports(with_details=False):
     return reports
 
 def main(opts):
+    if opts.set_company:
+        installer = FunidInstaller()
+        installer.set_company()
+        return
+
     steps = ["all"]
     if opts.steps:
         if not opts.steps == "all":
             steps = opts.steps.split(",")
     if opts.simple:
-        steps = ["modules", "lang"]
+        steps = [ "lang", "modules"]
     if opts.single_object:
         steps = ["objects"]
     if opts.reports:
@@ -977,13 +989,14 @@ def main(opts):
     installer = FunidInstaller()
     if "all" in steps or "modules" in steps:
         installer.install_own_modules()  # what=['crm'])
+    if "all" in steps or "set_company" in steps:
+        installer.set_company()  # what=['crm'])
     if "all" in steps or "lang" in steps:
-        print(installer.install_languages(["de_CH", "de_DE", "fr_CH"]))
+        print(installer.install_languages(["de_DE", "fr_CH"]))
     if "all" in steps or "fernuni" in steps:
         installer.install_own_modules(what="own_addons")
     if "all" in steps or "users" in steps:
         installer.create_users()  # strip_fields = ['last_name'])
-    # installer.install_own_modules()
     if "all" in steps or "mail" in steps:
         installer.install_mail_handler()
     if "all" in steps or "passwd" in steps:
@@ -1038,6 +1051,13 @@ if __name__ == "__main__":
         dest="reports",
         choices= list_reports(),
         help="create data for the reports, name reports in comma separate list or l,all. l lists the reports available, all handles all",
+    )
+    parser.add_argument(
+        "-sc",
+        "--set_company",
+        action="store_true",
+        dest="set_company",
+        help="set the company data",
     )
     parser.add_argument(
         "-ss",

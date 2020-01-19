@@ -29,6 +29,7 @@ departement by department, not in batches
 contacts:
 ---------
 mobile is formated badly: 078/715.59.20
+no is_customer any more -> customer_rank
 
 copying a contact dies:
 -----------------------

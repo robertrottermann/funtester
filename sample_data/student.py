@@ -60,7 +60,7 @@ sample_data = {
                 "invoice_warn": "no-message",
                 "invoice_with_post": False,
                 "is_company": False,
-                "lang": "de_CH",
+                "lang": "de_DE",
                 "last_name": "Fleissig",
                 "last_name_for_reports": False,
                 "link_cv": False,
