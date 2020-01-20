@@ -149,16 +149,21 @@ STAFF = {
         # email
         "password": "Login$99",
     },
-    "1147": {
-        "login": "evelyn",
-        "last_name": "Winter",
-        "name": "Evelyn",
+    "1118": {
+        "login": "laurence",
+        "last_name": "Gagnière",
+        "name": "Laurence⁣",
         "groups": [
-            "fsch_customer.group_fsch_manager",
+            "fsch_customer.group_fsch_assist_dozent",
             "fsch_customer.group_fsch_mitarbeiter",
         ],
+        'employee' : True,
+        'teacher' : True,
         # email
         "password": "Login$99",
+        "academic_title": "Dr",
+        'birthdate': '1978-04-03',
+        "email": "laurence.gagniere@xunidistance.ch",
     },
     "1128": {
         "login": "karin",
@@ -166,6 +171,17 @@ STAFF = {
         "name": "Karin",
         "groups": [
             "fsch_customer.group_fsch_sekretariat",
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+        # email
+        "password": "Login$99",
+    },
+    "1147": {
+        "login": "evelyn",
+        "last_name": "Winter",
+        "name": "Evelyn",
+        "groups": [
+            "fsch_customer.group_fsch_manager",
             "fsch_customer.group_fsch_mitarbeiter",
         ],
         # email
@@ -201,6 +217,24 @@ STAFF = {
         ],
         # email
         "password": "Login$99",
+    },
+    '1861' : {
+        "login": "sophie_c",
+        'name' : 'Sophie',
+        'last_name' : 'Cottagnoud',
+        'lang': 'fr_CH',
+        #'gender': 2, # wieso geht 2 nicht?
+        'birthdate': '1992-09-09',
+        'groups' : [
+            "fsch_customer.group_fsch_mitarbeiter",
+            "fsch_customer.group_fsch_manager",
+        ],
+        'employee' : True,
+        'teacher' : False,
+        # 'function_id': ("function", [("name", "Faculty Manager")]),
+        'customer_rank': 1,
+        "ahv_number": "756.0534.0155.27",
+        "mobile": "+41 79 580 97 37",
     },
     "1533": {
         "login": "pedro",
@@ -570,6 +604,7 @@ class FunidInstaller(OdooHandler):
         if not odoo:
             return
         users_o = odoo.env["res.users"]
+        partner_o = odoo.env["res.partner"]
         # set flags for contacts belonging to a user
         # partner_o = odoo.env["res.partner"]
         # print(partner_o.search([('name', 'in',['dozent', 'tutor'])]))
@@ -606,6 +641,7 @@ class FunidInstaller(OdooHandler):
                 user_data["login"] = login
                 user_data["tz"] = "Europe/Zurich"
                 user_data["new_password"] = "login"
+
                 # check if user exists
                 user_ids = users_o.search([("login", "=", login)])
                 for field in strip_fields:
@@ -637,6 +673,16 @@ class FunidInstaller(OdooHandler):
                         continue
                     group = odoo.env.ref(group_id)
                     group.write({"users": [(4, user_ids[0])]})
+                if user_ids:
+                    for key in list(user_info.keys()):
+                        if key in ["name", "last_name", "email", "login", "tz", "new_password", "user_type"]:
+                            continue
+                        user_data[key] = user_info[key]
+                    try:
+                         partner = partner_o.browse([('parent_id', '=', user_ids[0])])
+                         partner.write(user_data)
+                    except:
+                        pass
         staff = self.staff
         if staff:
             for login, user_info in list(staff.items()):

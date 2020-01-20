@@ -7,10 +7,17 @@ assistant_users = {
         'user_type' : 'tutor',
         'first_name' : 'Bartlomiej',
         'last_name' : 'Chrobak',
+        'lang': 'fr_CH',
+        'gender': 1,
+        'birthdate': '1985-13-08',
         'groups' : [
             "fsch_customer.group_fsch_mitarbeiter",
             "fsch_customer.group_fsch_assist_dozent",
-        ]
+        ],
+        'email': "bartlomiej.chrobak@xunidistance.ch";
+        'teacher' : True,
+        'function_id': ("function", [("name", "Assistent/in")]),
+        'customer_rank': 1,
     }
 }
 assistant_object_links = [

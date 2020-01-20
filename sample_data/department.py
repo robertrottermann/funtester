@@ -33,6 +33,18 @@ sample_data = {
             },
             {
                 "active": True,
+                "faculty_manager_id": ("res.users", [("login", "sophie_c")]),
+                "french": True,
+                "german": False,
+                "name": "Psychologie f",
+                "short_name": "PSYf	",
+                "visibility_registration": True,
+                "website_color": "#9a007b",
+                "department_icon": read_image('/sample_data/static/psychology_f.png'),
+                #"registration_name": "Recht",
+            },
+            {
+                "active": True,
                 #"faculty_manager_id": ("res.users", [("login", "nicole")]),
                 "french": True,
                 "german": False,

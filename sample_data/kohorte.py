@@ -12,11 +12,11 @@ sample_data = {
         ],  # do not create, when object is found using these elements
         "vals_list": [
             {
-                "name": "K28",
-                "semester_id": ("semester", [("short_name", "HS20")]),
+                "name": "k21",
+                "semester_id": ("semester", [("short_name", "FS18")]),
                 "study_course_id": (
                     "study.course",
-                    [("certificate", "Bachelor of Science in Psychology")],
+                    [("study_course_code", "BSCPSYbf")],
                 ),
             },
             {
@@ -24,7 +24,15 @@ sample_data = {
                 "semester_id": ("semester", [("short_name", "FS19")]),
                 "study_course_id": (
                     "study.course",
-                    [("certificate", "Bachelor of Science in Psychology")],
+                    [("study_course_code", "BSCPSYd")],
+                ),
+            },
+            {
+                "name": "K28",
+                "semester_id": ("semester", [("short_name", "HS20")]),
+                "study_course_id": (
+                    "study.course",
+                    [("study_course_code", "BSCPSYd")],
                 ),
             },
         ],
