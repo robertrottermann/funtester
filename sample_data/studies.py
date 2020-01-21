@@ -10,6 +10,7 @@ sample_data = {
         ],  # do not create, when object is found using these elements
         "vals_list": [
             {
+                "regular_student": True,
                 "abandon": False,
                 "accept_conditions": False,
                 "annee_academique": False,

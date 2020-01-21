@@ -12,6 +12,34 @@ sample_data = {
         "vals_list": [
             {
                 "active": True,
+                "name": "Spring term 2018",
+                "short_name": "FS18",
+                "type": "1", # spring
+                "year": 2018,
+            },
+            {
+                "active": True,
+                "name": "Summer term 2018",
+                "short_name": "SS18",
+                "type": "2", # summer
+                "year": 2018,
+            },
+            {
+                "active": True,
+                "name": "Herbst term 2018",
+                "short_name": "HS18",
+                "type": "3", # autum
+                "year": 2018,
+            },
+            {
+                "active": True,
+                "name": "Winter term 2018",
+                "short_name": "WS18",
+                "type": "4", # winter
+                "year": 2018,
+            },
+            {
+                "active": True,
                 "name": "Spring term 2019",
                 "short_name": "FS19",
                 "type": "1", # spring
@@ -37,9 +65,6 @@ sample_data = {
                 "short_name": "HS20",
                 "type": "2",  # summer
                 "year": 2020,
-            },
-            {
-                "active": True,
                 "name": "Herbstsemester 2019",
                 "short_name": "HS19",
                 "type": "3",  # autumn
