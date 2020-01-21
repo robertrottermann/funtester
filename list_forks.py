@@ -3,8 +3,7 @@ from github import Github
 from datetime import datetime, timedelta
 from pprint import pprint
 
-#token = '4d7b188397667dcd05d6d945b5f2e25ba0fe9ae7'
-token = '25ef6409334a6272036f147b9b4d1012bbca6db6'
+token = 'xx'
 
 g = Github(token)
 
