@@ -716,9 +716,6 @@ class FunidInstaller(OdooHandler):
             group = odoo.env.ref(group_id)
             group.write({"users": [(4, admin[0])]})
 
-
-
-
     def set_passwords(self, password="login", admin="admin"):
         # wrong message!!
         # this sets all password to admin

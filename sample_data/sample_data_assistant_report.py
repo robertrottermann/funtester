@@ -14,7 +14,7 @@ assistant_users = {
             "fsch_customer.group_fsch_mitarbeiter",
             "fsch_customer.group_fsch_assist_dozent",
         ],
-        'email': "bartlomiej.chrobak@xunidistance.ch";
+        #'email': "bartlomiej.chrobak@xunidistance.ch",
         'teacher' : True,
         'function_id': ("function", [("name", "Assistent/in")]),
         'customer_rank': 1,
