@@ -28,7 +28,7 @@ sample_data = {
             {
                 'date_from': False,
                 'date_to': False,
-                'module_data_id': ("module.data", [("short_name", "Allgemeine Staatslehre")]),
+                'module_data_id': ("module.data", [("short_name", "SF & SD")]),
                 'percent': 0,
                 'teacher_asisstant_id': ("res.partner", [("email", "1118@o2oo.ch")]),
                 'type': '1', # teacher
@@ -38,7 +38,7 @@ sample_data = {
             {
                 'date_from': False,
                 'date_to': False,
-                'module_data_id': ("module.data", [("short_name", "Allgemeine Staatslehre")]),
+                'module_data_id': ("module.data", [("short_name", "SF & SD")]),
                 'percent': 0,
                 'teacher_asisstant_id': ("res.partner", [("email", "bartlomiej@o2oo.ch")]),
                 'type': '2', # assistand
