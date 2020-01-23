@@ -13,6 +13,15 @@ sample_data = {
                 'name': '1. Teil',
                 'to_semester': 2,
                 'number': 1,
+                'study_course_id': ("study.course", [("study_course_code", "BLAWd")]),
+            },
+            {
+                'active': True,
+                'ects_credits': 40,
+                'from_semester': 1,
+                'name': '1. Teil',
+                'to_semester': 2,
+                'number': 1,
                 'study_course_id': ("study.course", [("study_course_code", "BSCPSYd")]),
             },
             {

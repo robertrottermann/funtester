@@ -40,7 +40,7 @@ sample_data = {
                 "study_course_ids": [
                     [6, False, get_objects("study.course", login=["matthias", "login"])]
                 ],
-                "study_section_id": ("study.section", [("name", "1. Teil")]), #1, # SUCHEN!!
+                "study_section_id": ("study.section", [("name", "1. Teil"),('study_course_id': ("study.course", [("study_course_code", "BLAWd")]))]), #1, # SUCHEN!!
                 "survey_cas_question_ids": [[6, False, []]],
                 "survey_specific_question_ids": [[6, False, []]],
                 "teaching_material": False,
