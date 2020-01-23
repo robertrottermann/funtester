@@ -44,6 +44,16 @@ sample_data = {
                 'type': '2', # assistand
                 'type_is_mentor_wiwi': False,
                 'semester_id' : ("semester", [("short_name", "FS18")])
+            },
+            {
+                'date_from': False,
+                'date_to': False,
+                'module_data_id': ("module.data", [("module_code", 'Travail de Bachelor')]),
+                'percent': 0,
+                'teacher_asisstant_id': ("res.partner", [("email", "1029@o2oo.ch")]), # simon
+                'type': '1', # teacher
+                'type_is_mentor_wiwi': False,
+                'semester_id' : ("semester", [("short_name", "FS18")])
             }
         ]
     },

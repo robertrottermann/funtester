@@ -26,17 +26,21 @@ create_sequence = [
     "study_section",
     "studies",
     "function",
+    "works",
     "module",
     "module_data",
     "kohorte",
     "location",
     "room",
+    "people",
 ]
 # modules handled in second run
 create_sequence_2 = [
     "module_data",
     "kohorte",
     "people",
+    "works",
+    "student_semester",
 ]
 # object_links links are a list of object pairs that should be linked
 # structure of each entry:
@@ -53,6 +57,26 @@ object_links = [
         ["res_users_study_course", "res_users_id", "study_course_id"],
         ["res.users", "login", "matthias"],
         ["study.course", "study_course_code", "BSCPSYbf"],
+    ],
+    [
+        ["res_users_study_course", "res_users_id", "study_course_id"],
+        ["res.users", "login", "matthias"],
+        ["study.course", "study_course_code", "BSCECOMf"],
+    ],
+    [
+        ["res_users_study_course", "res_users_id", "study_course_id"],
+        ["res.users", "login", "jean_paul"],
+        ["study.course", "study_course_code", "BSCECOMf"],
+    ],
+    [
+        ["res_users_study_course", "res_users_id", "study_course_id"],
+        ["res.users", "login", "thierry"],
+        ["study.course", "study_course_code", "BSCECOf"],
+    ],
+    [
+        ["res_users_study_course", "res_users_id", "study_course_id"],
+        ["res.users", "login", "thierry"],
+        ["study.course", "study_course_code", "BSCECOMf"],
     ]
 ]
 from sample_data.first_run import sample_data

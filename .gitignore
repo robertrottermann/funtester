@@ -12,11 +12,17 @@ config/*.yaml
 docker/docker-odoo-project/
 help/source/_build/
 *.wp*
+wingdbstub.py
 dumper/Dockerfile
 bin/pip
 bin/python
 
-
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

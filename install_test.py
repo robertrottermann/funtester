@@ -9,6 +9,7 @@ from argparse import ArgumentParser
 from bcolors import bcolors
 from odoo_handler import OdooHandler, get_objects
 from messages import *
+from sample_data.staff import STAFF, ADMINISTRATOR
 
 FUN_COMPANY = {
     'country_id': 43,
@@ -67,185 +68,6 @@ CONTACT_FLAGS = {
     # # this is a link of a funktion object ot a field function_1
     # [['res_users_study_course', 'res_users_id','study_course_id'],
     #     ['res.partner','name', 'tutor'], ['function','name', 'Dozent/in']]
-}
-ADMINISTRATOR = {
-        "groups": [
-            "fsch_customer.group_fsch_student",
-            "fsch_customer.group_fsch_student_reinscription",
-            "fsch_customer.group_fsch_mentor_tutor",
-            "fsch_customer.group_fsch_assist_dozent",
-            "fsch_customer.group_fsch_dekan",
-            "fsch_customer.group_fsch_mitarbeiter",
-            "fsch_customer.group_fsch_sekretariat",
-            "fsch_customer.group_fsch_sk",
-            "fsch_customer.group_fsch_stz_leiter",
-            "fsch_customer.group_fsch_manager",
-            "fsch_customer.group_fsch_kst_leiter",
-            "fsch_customer.group_fsch_director",
-            "fsch_customer.group_fsch_kasse",
-            "fsch_customer.group_revision",
-            "fsch_customer.group_fsch_faculty_manager",
-            "fsch_customer.group_fsch_mentor_allowances_for_assist",
-        ],
-}
-STAFF = {
-    "1142": {
-        "login": "alexandra",
-        "last_name": "Steiner",
-        "name": "Alexandra",
-        "groups": [
-            "fsch_customer.group_fsch_kasse",
-            "fsch_customer.group_fsch_kst_leiter",
-        ],
-        # email
-        "password": "Login$99",
-    },
-    "1439": {
-        "login": "patrizia",
-        "last_name": "Reber-Parvex",
-        "name": "Patrizia",
-        "groups": [
-            "fsch_customer.group_fsch_manager",
-            "fsch_customer.group_fsch_mitarbeiter",
-        ],
-        # email
-        "password": "Login$99",
-    },
-    "1553": {
-        "login": "sophie",
-        "last_name": "	Margaronis Eggen",
-        "name": "Sophie",
-        "groups": [
-            "fsch_customer.group_fsch_manager",
-            "fsch_customer.group_fsch_mitarbeiter",
-        ],
-        # email
-        "password": "Login$99",
-    },
-    "1558": {
-        "login": "malin",
-        "last_name": "De Boni",
-        "name": "Malin",
-        "groups": [
-            "fsch_customer.group_fsch_sekretariat",
-            # "fsch_customer.group_fsch_student",
-            "fsch_customer.group_fsch_mitarbeiter",
-        ],
-        # email
-        "password": "Login$99",
-    },
-    "1140": {
-        "login": "matthias",
-        "last_name": "Kubat",
-        "name": "Matthias",
-        "groups": [
-            "fsch_customer.group_fsch_manager",
-            "fsch_customer.group_fsch_faculty_manager",
-            "fsch_customer.group_fsch_kst_leiter",
-            # "fsch_customer.group_fsch_student",
-            "fsch_customer.group_fsch_mitarbeiter",
-        ],
-        # email
-        "password": "Login$99",
-    },
-    "1118": {
-        "login": "laurence",
-        "last_name": "Gagnière",
-        "name": "Laurence⁣",
-        "groups": [
-            "fsch_customer.group_fsch_assist_dozent",
-            "fsch_customer.group_fsch_mitarbeiter",
-        ],
-        'employee' : True,
-        'teacher' : True,
-        # email
-        "password": "Login$99",
-        "academic_title": "Dr",
-        'birthdate': '1978-04-03',
-        "email": "laurence.gagniere@xunidistance.ch",
-    },
-    "1128": {
-        "login": "karin",
-        "last_name": "Zedan-Saxer",
-        "name": "Karin",
-        "groups": [
-            "fsch_customer.group_fsch_sekretariat",
-            "fsch_customer.group_fsch_mitarbeiter",
-        ],
-        # email
-        "password": "Login$99",
-    },
-    "1147": {
-        "login": "evelyn",
-        "last_name": "Winter",
-        "name": "Evelyn",
-        "groups": [
-            "fsch_customer.group_fsch_manager",
-            "fsch_customer.group_fsch_mitarbeiter",
-        ],
-        # email
-        "password": "Login$99",
-    },
-    "1153": {
-        "login": "nicole",
-        "last_name": "Ruffieux",
-        "name": "Nicole",
-        "groups": [
-            "fsch_customer.group_fsch_sekretariat",
-            "fsch_customer.group_fsch_mitarbeiter",
-            "fsch_customer.group_fsch_assist_dozent",
-        ],
-        # email
-        "password": "Login$99",
-    },
-    "1195": {
-        "login": "manuela",
-        "last_name": "Kummer",
-        "name": "Manuela",
-        "groups": ["fsch_customer.group_fsch_mitarbeiter"],
-        # email
-        "password": "Login$99",
-    },
-    "1699": {
-        "login": "celine",
-        "last_name": "Pellissier",
-        "name": "Céline",
-        "groups": [
-            "fsch_customer.group_fsch_manager",
-            "fsch_customer.group_fsch_mitarbeiter",
-        ],
-        # email
-        "password": "Login$99",
-    },
-    '1861' : {
-        "login": "sophie_c",
-        'name' : 'Sophie',
-        'last_name' : 'Cottagnoud',
-        'lang': 'fr_CH',
-        #'gender': 2, # wieso geht 2 nicht?
-        'birthdate': '1992-09-09',
-        'groups' : [
-            "fsch_customer.group_fsch_mitarbeiter",
-            "fsch_customer.group_fsch_manager",
-        ],
-        'employee' : True,
-        'teacher' : False,
-        # 'function_id': ("function", [("name", "Faculty Manager")]),
-        'customer_rank': 1,
-        "ahv_number": "756.0534.0155.27",
-        "mobile": "+41 79 580 97 37",
-    },
-    "1533": {
-        "login": "pedro",
-        "last_name": "Gonzalez Sanchez",
-        "name": "Pedro Evaristo",
-        "groups": [
-            "fsch_customer.group_fsch_manager",
-            "fsch_customer.group_fsch_mitarbeiter",
-        ],
-         # email
-        "password": "Login$99",
-    },
 }
 MAIL_OUTGOING = {
     u"active": True,
@@ -984,10 +806,13 @@ class FunidInstaller(OdooHandler):
             sd = {}
             data_runner = None
             if r_name == '1':
-                from sample_data.sample_data_negative_gast_zulassung import sample_data as sd_negzuga
+                from sample_data.r1_sample_data_negative_gast_zulassung import sample_data as sd_negzuga
                 sd = sd_negzuga
+            if r_name == '2':
+                from sample_data.r2_sample_data_abschlussbestatigung_erster_studienabschnitt import sample_data as sd_abschl_first
+                sd = sd_abschl_first
             elif r_name == '7':
-                from sample_data.sample_data_assistant_report import assistant_users, run_prepare_report
+                from sample_data.r7_sample_data_assistant_report import assistant_users, run_prepare_report
                 data_runner = run_prepare_report
 
             if data_runner:

@@ -10,6 +10,31 @@ sample_data = {
         "vals_list": [
             {
                 "active": True,
+                "code": "BECOf",
+                "company_id": 1,
+                "group_id": False,
+                "message_attachment_count": 0,
+                "message_follower_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "partner_id": get_objects(
+                                "res.users",
+                                filt=[("login", "celine")],
+                                login=['admin', 'admin'],
+                                as_list=False,
+                                verbose=True),
+                            "res_model": "account.analytic.account",
+                            "subtype_ids": [(6, 0, [1])],
+                        },
+                    )
+                ],
+                "name": "Bachelor Sciences Economiques f",
+                "partner_id": False,
+            },
+            {
+                "active": True,
                 "code": "BPSYd",
                 "company_id": 1,
                 "group_id": False,

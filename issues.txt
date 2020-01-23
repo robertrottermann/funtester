@@ -1,3 +1,7 @@
+general:
+--------
+when I create a new user in odoo13tst it has far to many permissions
+
 department:
 -----------
 Missing fields:
@@ -9,6 +13,9 @@ studies:
 when creating new studies from dropdown menu:
     student semester -> new -> studies
     AttributeError: 'studies' object has no attribute 'rebuild_name'
+
+when creating studies:
+    selecting student -> first name is shown
 
 Semester:
 ---------

@@ -30,6 +30,18 @@ sample_data = {
                 "short_name": "Allgemeine Staatslehre",
                 "study_course_ids": [[6, False, get_objects("study.course", login=["matthias", "login"])]],
             },
+            {
+                "active": True,
+                "hide_online": True,
+                "lang": 'fr_CH',
+                "module_code": "",
+                "module_number": "M18",
+                "module_visible_report": False,
+                "name": "Travail de Bachelor",
+                "short_name": "Travail de Bachelor",
+                "study_course_ids": [[6, False,
+                    get_objects("study.course", filt=[("study_course_code", '=', "BSCECOMf")], login=["matthias", "login"])]],
+            },
         ],
     },
 }
