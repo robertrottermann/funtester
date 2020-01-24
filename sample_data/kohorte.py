@@ -20,11 +20,27 @@ sample_data = {
                 ),
             },
             {
+                "name": "K12",
+                "semester_id": ("semester", [("short_name", "FS19")]),
+                "study_course_id": (
+                    "study.course",
+                    [("study_course_code", "BSCECOd")],
+                ),
+            },
+            {
                 "name": "K21",
                 "semester_id": ("semester", [("short_name", "FS18")]),
                 "study_course_id": (
                     "study.course",
                     [("study_course_code", "BSCPSYbf")],
+                ),
+            },
+            {
+                "name": "K24",
+                "semester_id": ("semester", [("short_name", "FS16")]),
+                "study_course_id": (
+                    "study.course",
+                    [("study_course_code", "BLAWd")],
                 ),
             },
             {

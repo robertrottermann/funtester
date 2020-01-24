@@ -26,6 +26,13 @@ sample_data = {
             },
             {
                 "active": True,
+                "name": "Spring term 2016",
+                "short_name": "FS16",
+                "type": "1", # spring
+                "year": 2016,
+            },
+            {
+                "active": True,
                 "name": "Spring term 2018",
                 "short_name": "FS18",
                 "type": "1", # spring

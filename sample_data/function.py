@@ -11,6 +11,7 @@ sample_data = {
             {"active": True, "name": "Faculty Manager"},
             {"active": True, "name": "Leiter/in Student Services"},
             {"active": True, "name": "MA Student Services"},
+            {"active": True, "name": "Projektleiter/in"},
         ],
     },
 }

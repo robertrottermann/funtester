@@ -15,7 +15,6 @@ from . study_center import sample_data as study_center_data
 from . department import sample_data as department_data
 from . grade import sample_data as grade_data
 from . reason_exmatriculation import sample_data as reason_exmatriculation_data
-from . studies import sample_data as studies_data
 from . account_analytic_account import sample_data as account_analytic_account_data
 
 
@@ -36,7 +35,6 @@ for s_data in [
         department_data,
         grade_data,
         reason_exmatriculation_data,
-        studies_data,
         account_analytic_account_data,
 
     ]:

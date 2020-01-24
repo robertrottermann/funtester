@@ -29,6 +29,7 @@ create_sequence = [
     "works",
     "module",
     "module_data",
+    "credit",
     "kohorte",
     "location",
     "room",
@@ -39,6 +40,8 @@ create_sequence_2 = [
     "module_data",
     "kohorte",
     "people",
+    "studies",
+    "credit",
     "works",
     "student_semester",
 ]
@@ -56,7 +59,17 @@ object_links = [
     [
         ["res_users_study_course", "res_users_id", "study_course_id"],
         ["res.users", "login", "matthias"],
+        ["study.course", "study_course_code", "BLAWd"],
+    ],
+    [
+        ["res_users_study_course", "res_users_id", "study_course_id"],
+        ["res.users", "login", "matthias"],
         ["study.course", "study_course_code", "BSCPSYbf"],
+    ],
+    [
+        ["res_users_study_course", "res_users_id", "study_course_id"],
+        ["res.users", "login", "matthias"],
+        ["study.course", "study_course_code", "BSCECOd"],
     ],
     [
         ["res_users_study_course", "res_users_id", "study_course_id"],

@@ -32,7 +32,7 @@ STAFF = {
         # email
         "password": "Login$99",
     },
-     "1029": {
+    "1029": {
         "login": "simon",
         "last_name": "Schnyder",
         "name": "Simon⁣",
@@ -46,7 +46,22 @@ STAFF = {
         "gender": "male",
         #'function_id': ("function", [("name", "Dozent/in")]),
         'customer_rank': 1,
-},
+    },
+    "1058": {
+        "login": "rodrigo",
+        "last_name": "Rodriguez",
+        "name": "Rodrigo",
+        "groups": [
+            "fsch_customer.group_fsch_assist_dozent",
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+        # email
+        "password": "Login$99",
+        'teacher' : True,
+        "gender": "male",
+        #'function_id': ("function", [("name", "Dozent/in")]),
+        'customer_rank': 1,
+    },
     "1142": {
         "login": "alexandra",
         "last_name": "Steiner",
@@ -81,6 +96,18 @@ STAFF = {
         ],
         # email
         "password": "Login$99",
+    },
+    "1546": {
+        "login": "1546",
+        "last_name": "Student Manager",
+        "name": "DE",
+        "groups": [
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+        # email
+        "password": "Login$99",
+        "gender": "female",
+        "email": "studentservices@unidistance.ch",
     },
     "1552": {
         "login": "1552",
@@ -158,6 +185,20 @@ STAFF = {
         # email
         "password": "Login$99",
     },
+    "1146": {
+        "login": "petra",
+        "last_name": "Köhler-Sauer",
+        "name": "Petra",
+        "groups": [
+            "fsch_customer.group_fsch_sekretariat",
+            "fsch_customer.group_fsch_mitarbeiter",
+        ],
+        # email
+        "password": "Login$99",
+        "assistant": True,
+        #'function_id': ("function", [("name", "Projektleiter/in")]),
+        #'function2_id': ("function", [("name", "Faculty Manager")]),
+    },
     "1147": {
         "login": "evelyn",
         "last_name": "Winter",
@@ -180,6 +221,19 @@ STAFF = {
         ],
         # email
         "password": "Login$99",
+    },
+    "1153": {
+        "login": "renate",
+        "last_name": "Schubert",
+        "name": "Renate",
+        "groups": [
+            "fsch_customer.group_fsch_dekan",
+            "fsch_customer.group_fsch_mitarbeiter",
+            "fsch_customer.group_fsch_assist_dozent",
+        ],
+        # email
+        "password": "Login$99",
+        "teacher": True,
     },
     "1195": {
         "login": "manuela",
@@ -229,4 +283,21 @@ STAFF = {
          # email
         "password": "Login$99",
     },
+    'bartlomiej' : {
+        "login": "bartlomiej",
+        #'user_type' : 'tutor',
+        'name' : 'Bartlomiej',
+        'last_name' : 'Chrobak',
+        'lang': 'fr_CH',
+        'gender': "male",
+        'birthdate': '1985-08-13',
+        'groups' : [
+            "fsch_customer.group_fsch_mitarbeiter",
+            "fsch_customer.group_fsch_assist_dozent",
+        ],
+        #'email': "bartlomiej.chrobak@xunidistance.ch",
+        'teacher' : True,
+        # 'function_id': ("function", [("name", "Assistent/in")]),
+        'customer_rank': 1,
+    }
 }

@@ -2,14 +2,13 @@
 # # -*- coding: utf-8 -*-
 from odoo_handler import get_objects, read_image
 sample_data = {
-    # -------->>>>>>>>>>> Create: Create: Department
     "department": {
         "module": "department",
         "search": ["name"],  # do not create, when object is found using these elements
         "vals_list": [
             {
                 "active": True,
-                "faculty_manager_id": ("res.users", [("login", "malin")]),  # 62,
+                "faculty_manager_id": ("res.users", [("login", "malin")]),
                 "french": False,
                 "german": True,
                 "name": "Economie",
@@ -78,6 +77,18 @@ sample_data = {
                 "website_color": "#FFFFFF",
                 "department_icon": read_image('/sample_data/static/admission25_pluss.png'),
                 #"registration_name": "Recht",
+            },
+            {
+                "active": True,
+                "faculty_manager_id": ("res.users", [("login", "petra")]),
+                "french": False,
+                "german": True,
+                "name": "Wirtschaftswissenschaften",
+                "short_name": "ECOd",
+                "visibility_registration": True,
+                "website_color": "#5d9619",
+                "department_icon": read_image('/sample_data/static/droit.png'),
+                "registration_name": "Wirtschaft",
             },
         ],
     },

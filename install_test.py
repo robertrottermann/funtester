@@ -567,7 +567,10 @@ class FunidInstaller(OdooHandler):
         oobjs = odoo.env[domain_info[0]]
         filt = []
         for s_item in domain_info[1]:
-            filt.append((s_item[0], "=", s_item[1]))
+            param = s_item[1]
+            if isinstance(param, tuple):
+                param = self._get_object(odoo, param)
+            filt.append((s_item[0], "=", param))
         result = oobjs.search(filt)
         if result:
             result = result[0]
@@ -673,6 +676,7 @@ class FunidInstaller(OdooHandler):
                         print("--------> could not create object:", object_name)
                         if opts and opts.verbose:
                             print(HOPPALA_AN_ERROR % str(e))
+                            print(vals_list)
 
                 if running_odoo:
                     odoo = running_odoo
@@ -810,6 +814,12 @@ class FunidInstaller(OdooHandler):
                 sd = sd_negzuga
             if r_name == '2':
                 from sample_data.r2_sample_data_abschlussbestatigung_erster_studienabschnitt import sample_data as sd_abschl_first
+                sd = sd_abschl_first
+            if r_name == '5':
+                from sample_data.r5_negativer_anrechnungsentscheid import sample_data as sd_abschl_first
+                sd = sd_abschl_first
+            if r_name == '6':
+                from sample_data.r6_positiver_anrechnungsentscheid import sample_data as sd_abschl_first
                 sd = sd_abschl_first
             elif r_name == '7':
                 from sample_data.r7_sample_data_assistant_report import assistant_users, run_prepare_report
