@@ -211,18 +211,6 @@ STAFF = {
         "password": "Login$99",
     },
     "1153": {
-        "login": "nicole",
-        "last_name": "Ruffieux",
-        "name": "Nicole",
-        "groups": [
-            "fsch_customer.group_fsch_sekretariat",
-            "fsch_customer.group_fsch_mitarbeiter",
-            "fsch_customer.group_fsch_assist_dozent",
-        ],
-        # email
-        "password": "Login$99",
-    },
-    "1153": {
         "login": "renate",
         "last_name": "Schubert",
         "name": "Renate",
@@ -240,6 +228,18 @@ STAFF = {
         "last_name": "Kummer",
         "name": "Manuela",
         "groups": ["fsch_customer.group_fsch_mitarbeiter"],
+        # email
+        "password": "Login$99",
+    },
+    "1453": {
+        "login": "nicole",
+        "last_name": "Ruffieux",
+        "name": "Nicole",
+        "groups": [
+            "fsch_customer.group_fsch_sekretariat",
+            "fsch_customer.group_fsch_mitarbeiter",
+            "fsch_customer.group_fsch_assist_dozent",
+        ],
         # email
         "password": "Login$99",
     },

@@ -11,7 +11,7 @@ sample_data = {
             {
                 "active": True,
                 # "hide_online": False,
-                "lang": 'de_DE',
+                "lang": "de_DE",
                 "module_code": "EINF",
                 "module_number": "M01",
                 "module_visible_report": False,

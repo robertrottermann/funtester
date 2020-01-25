@@ -4,7 +4,7 @@ from odoo_handler import get_objects, read_image
 sample_data = {
     "department": {
         "module": "department",
-        "search": ["name"],  # do not create, when object is found using these elements
+        "search": ["short_name"],  # do not create, when object is found using these elements
         "vals_list": [
             {
                 "active": True,
@@ -48,7 +48,7 @@ sample_data = {
                 "french": True,
                 "german": False,
                 "name": "Psychologie f",
-                "short_name": "PSYf	",
+                "short_name": "PSYf",
                 "visibility_registration": True,
                 "website_color": "#9a007b",
                 "department_icon": read_image('/sample_data/static/psychology_f.png'),

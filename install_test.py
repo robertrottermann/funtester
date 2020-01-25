@@ -590,8 +590,12 @@ class FunidInstaller(OdooHandler):
     # globals()[v_name] = eval(e_str)(*params, self=self)
 
     def create_objects(self, which=[], login=[], step="first_run", sample_data={}, opts=None):
+        single_step = None
+        if opts and opts.single_step:
+            single_step = True
         # create fernuni objects
         from sample_data.sample_data import create_sequence, create_sequence_2
+        
         # if we are in single object mode, we can not rely on the step
         if not sample_data:
             if opts and opts.single_object:
@@ -601,6 +605,7 @@ class FunidInstaller(OdooHandler):
                 from sample_data.sample_data import sample_data as sample_data
             elif step == "second_run":
                 from sample_data.sample_data_second_run import sample_data as sample_data
+                create_sequence = create_sequence_2
             if opts and opts.single_object:
                 create_sequence = [opts.single_object]
         if login:
@@ -670,13 +675,23 @@ class FunidInstaller(OdooHandler):
                         new_vals_list.append(c_item)
                     vals_list = new_vals_list
                 if vals_list:
-                    try:
-                        oobjs.create(vals_list)
-                    except Exception as e:
-                        print("--------> could not create object:", object_name)
-                        if opts and opts.verbose:
-                            print(HOPPALA_AN_ERROR % str(e))
-                            print(vals_list)
+                    all_vals = vals_list
+                    if single_step:
+                        for vals_list_dic in all_vals:
+                            try:
+                                oobjs.create([vals_list_dic])
+                            except Exception as e:
+                                print("--------> could not create object:", object_name)
+                                print(HOPPALA_AN_ERROR % str(e))
+                                print(vals_list_dic)
+                    else:                            
+                        try:
+                            oobjs.create(vals_list)
+                        except Exception as e:
+                            print("--------> could not create object:", object_name)
+                            if opts and opts.verbose:
+                                print(HOPPALA_AN_ERROR % str(e))
+                                print(vals_list)
 
                 if running_odoo:
                     odoo = running_odoo
@@ -950,6 +965,14 @@ if __name__ == "__main__":
         dest="simple",
         default=False,
         help="Simple install. Only install odoo-Modules and languages",
+    )
+    parser.add_argument(
+        "-SS",
+        "--single_step",
+        action="store_true",
+        dest="single_step",
+        default=False,
+        help="Install objects one by one, so that an error in one object does not fail all of them",
     )
     parser.add_argument(
         "-v",

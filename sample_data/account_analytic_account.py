@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
+"""[summary]
+analytic accounts can be access via:
+accounting (main selection)->config->analytic accounts-> analytic accounts
+"""
 from odoo_handler import get_objects
 sample_data = {
     # create account.analytic.account
@@ -133,31 +137,34 @@ sample_data = {
                 "name": "Bachelor Psychologie f",
                 "partner_id": False,
             },
-            {
-                "active": True,
-                "code": "BLAWd",
-                "company_id": 1,
-                "group_id": False,
-                "message_attachment_count": 0,
-                "message_follower_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "partner_id": get_objects(
-                                "res.users",
-                                filt=[("login", "nicole")],
-                                login=['admin', 'admin'],
-                                as_list=False,
-                                verbose=True),
-                            "res_model": "account.analytic.account",
-                            "subtype_ids": [(6, 0, [1])],
-                        },
-                    )
-                ],
-                "name": "Bachelor Law d",
-                "partner_id": False,
-            }
+            # when no account exists, and code is used twice
+            # we get an error and no account is created
+            # or maybe this happens when the user is not yet created ??
+            # {
+            #     "active": True,
+            #     "code": "BLAWd",
+            #     "company_id": 1,
+            #     "group_id": False,
+            #     "message_attachment_count": 0,
+            #     "message_follower_ids": [
+            #         (
+            #             0,
+            #             0,
+            #             {
+            #                 "partner_id": get_objects(
+            #                     "res.users",
+            #                     filt=[("login", "nicole")],
+            #                     login=['admin', 'admin'],
+            #                     as_list=False,
+            #                     verbose=True),
+            #                 "res_model": "account.analytic.account",
+            #                 "subtype_ids": [(6, 0, [1])],
+            #             },
+            #         )
+            #     ],
+            #     "name": "Bachelor Law d",
+            #     "partner_id": False,
+            # }
         ],
     },
 }
