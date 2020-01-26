@@ -888,8 +888,11 @@ class FunidInstaller(OdooHandler):
             if r_name == '6':
                 from sample_data.r6_positiver_anrechnungsentscheid import sample_data as sd_abschl_first
                 sd = sd_abschl_first
-            elif r_name == '7':
+            if r_name == '7':
                 from sample_data.r7_sample_data_assistant_report import assistant_users, run_prepare_report
+                data_runner = run_prepare_report
+            if r_name == '11':
+                from sample_data.r11_diploma_supplement_report import assistant_users, run_prepare_report
                 data_runner = run_prepare_report
 
             if data_runner:

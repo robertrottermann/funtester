@@ -7,11 +7,11 @@ assistant_users = {
 assistant_object_links = [
     # kohorte needs user and study course linked
     # fields: res_user_id, study_course_id
-    [
-        ["res_users_study_course", "res_users_id", "study_course_id"],
-        ["res.users", "login", "bartlomiej"],
-        ["study.course", "certificate", "Bachelor of Science in Psychology"],
-    ]
+    # [
+    #     ["res_users_study_course", "res_users_id", "study_course_id"],
+    #     ["res.users", "login", "bartlomiej"],
+    #     ["study.course", "code", "BPSYd"],
+    # ]
 ]
 
 def run_prepare_report(handler):

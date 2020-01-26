@@ -25,6 +25,7 @@ create_sequence = [
     "study_course",
     "study_section",
     "studies",
+    "student_semester",
     "function",
     "works",
     "module",

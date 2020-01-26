@@ -18,7 +18,11 @@ reports = {
         'data' : 'yyy abschlussbestaetigung_first_section',
     },
     '7' : {
-        'name' :'Assistant report',
+        'name' :'Assistents report',
         'data' : 'sample_data_assistant_report',
+    },
+    '11' : {
+        'name' :'Diploma Supplement',
+        'data' : 'r11_diploma_supplement_report',
     },
 }
