@@ -11,6 +11,21 @@ sample_data = {
             {
                 "active": True,
                 # "hide_online": False,
+                "lang": "fr_CH",
+                "module_code": "SFSD",
+                "module_number": "M00",
+                "module_visible_report": False,
+                "name": "Savoir-faire et savoir devenir",
+                "short_name": "Savoir-faire et savoir devenir",
+                "study_course_ids": [[6, False, get_objects(
+                    "study.course",
+                    login=["matthias", "login"],
+                    filt=[("study_course_code", "BSCPSYf")]
+                )]],
+            },
+            {
+                "active": True,
+                # "hide_online": False,
                 "lang": "de_DE",
                 "module_code": "EINF",
                 "module_number": "M01",

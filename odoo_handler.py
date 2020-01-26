@@ -28,6 +28,22 @@ def _construct_filter(filt):
 
     return new_filt
 
+def get_students(names_list):
+    """return list of ids of students
+
+    Arguments:
+        names_list {list} -- list of tuples((last_name, first_name)..)
+    """
+    handler = OdooHandler()
+    odoo = handler.get_odoo(login=["admin", "admin"])
+    env = odoo.env
+    m = env['res.partner']
+    result = []
+    for last_name, first_name in names_list:
+        conact_ids = m.search([("name", "=", first_name), ("last_name", "=", last_name)])
+        if conact_ids:
+            result.append(conact_ids[0])
+    return result
 
 def get_objects(module, what=["id"], filt=[], login=[], as_list=True, verbose=False):
     """get list of objects of a given type
@@ -150,7 +166,8 @@ class OdooHandler(object):
     def postgres_port(self):
         return self.BASE_DEFAULTS.get("postgres_port", 5432)
 
-    def __init__(self):
+    def __init__(self, be_loud=False):
+        self.be_loud = be_loud
         result_dic = {}
         must_restart = get_config_from_yaml(
             result_dic=result_dic
@@ -243,7 +260,7 @@ class OdooHandler(object):
                     return
                 odoo = odoorpc.ODOO(rpchost, port=rpcport, timeout=1200)
                 if not no_db:
-                    if verbose:
+                    if verbose or self.be_loud:
                         print("about to login:")
                         print(
                             "dbname:%s, rpcuser:%s, rpcpw: %s"

@@ -39,6 +39,9 @@ GROUPS = {
     "Faculty Manager": "fsch_customer.group_fsch_faculty_manager",
     "Mentorenabrechnungen für Assistenten": "fsch_customer.group_fsch_mentor_allowances_for_assist",
 }
+STUDENT_GROUPS = [
+    "fsch_customer.group_fsch_student",
+]
 USERS = {
     "prospect": "prospect",
     "student": "Student",
@@ -595,7 +598,7 @@ class FunidInstaller(OdooHandler):
             single_step = True
         # create fernuni objects
         from sample_data.sample_data import create_sequence, create_sequence_2
-        
+
         # if we are in single object mode, we can not rely on the step
         if not sample_data:
             if opts and opts.single_object:
@@ -684,7 +687,7 @@ class FunidInstaller(OdooHandler):
                                 print("--------> could not create object:", object_name)
                                 print(HOPPALA_AN_ERROR % str(e))
                                 print(vals_list_dic)
-                    else:                            
+                    else:
                         try:
                             oobjs.create(vals_list)
                         except Exception as e:
@@ -695,6 +698,55 @@ class FunidInstaller(OdooHandler):
 
                 if running_odoo:
                     odoo = running_odoo
+            if object_name == 'student':
+                self.create_student_users(data = object_data)
+
+    def create_student_users(self, data):
+        """crete the users  belonging to the students
+
+        Arguments:
+            data {list of dics} -- each entry is a student
+
+        find login and and name from data
+        get the contact, and create user that points to it
+        """
+        odoo = self.get_odoo(login=["admin", "admin"])
+        partner_o = odoo.env['res.partner']
+        users_o = odoo.env['res.users']
+        for student_data in data['vals_list']:
+            login = student_data.get("login") or student_data.get("matriculation_number") or student_data.get("name")
+            if not login:
+                login = student_data.get("matriculation_number") or student_data.get("name")
+            name = student_data.get("name")
+            last_name = student_data.get("last_name")
+            vals_u = {
+                "login": login,
+                "name": student_data.get("name")
+            }
+            contact = partner_o.search([("name", "=", name), ("last_name", "=", last_name)])
+            if not contact:
+                continue
+
+            # do we have a user
+            c_user = users_o.search([('login', '=', login)])
+            # if we have a user, check it it is linked to the
+            if not c_user:
+                vals_u["partner_id"] = contact[0]
+                c_user = users_o.create(vals_u)
+                c_user =[c_user]
+            res = odoo.execute_kw(
+                'res.partner', 'search_read',
+                [[('id', '=', contact[0])]],
+                {'fields': ["user_id"]})
+            # res is something like:
+            # [{'id': 9, 'user_id': False}]
+            if not res or not res[0].get('user_id'):
+                odoo.execute_kw('res.partner', 'write', [[contact[0]], {"user_id" : c_user[0]}])
+
+            for group_id in STUDENT_GROUPS:
+                group = odoo.env.ref(group_id)
+                group.write({"users": [(4, c_user[0])]})
+
 
     def set_company(self):
         """set the address of the company

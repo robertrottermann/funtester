@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
-from odoo_handler import get_objects
+from odoo_handler import get_objects, get_students
 sample_data = {
     "module_data": {
         "module": "module.data",
@@ -79,7 +79,7 @@ sample_data = {
                 "learning_outcomes": False,
                 "message_attachment_count": 0,
                 "module_code": 'SFSD',
-                "module_id": ("module", [("module_code", "STAAT")]), #1,
+                "module_id": ("module", [("module_code", "SFSD")]), #1,
                 "module_number": 'M00',
                 "modules_students": True,
                 "moodle_id": 0,
@@ -101,6 +101,9 @@ sample_data = {
                 "type_of_exam": "activity",
                 "validation_state": "not_validated",
                 "number_of_events_to_visit": "3",
+                "student_ids": [
+                    [6, False, get_students([("Tsiroulnikov⁣", "Eric"), ("Beer", "Jürgen")])]
+                ],
                 # "main_cost_accounts_ids": [
                 #     [6, False, get_objects(
                 #         "account.analytic.account",

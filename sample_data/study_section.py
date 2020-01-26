@@ -40,6 +40,15 @@ sample_data = {
                 'to_semester': 9,
                 'name': '2ème cycle',
                 'number': 2,
+                'study_course_id': ("study.course", [("study_course_code", "BSCPSYf")]),
+            },
+            {
+                'active': True,
+                'ects_credits': 140,
+                'from_semester': 3,
+                'to_semester': 9,
+                'name': '2ème cycle',
+                'number': 2,
                 'study_course_id': ("study.course", [("study_course_code", "BSCECOMf")]),
             }
         ]
