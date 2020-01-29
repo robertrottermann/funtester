@@ -1,5 +1,15 @@
 #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
+"""
+Winter Evelyn
+1147
+
+Phone private 	+41 44 9­26 45 43
+Phone mobile 	+41 79 3­18 64 94
+Fax
+Edu-ID 	c6bd791d-0345-4ecf-9ea7-c921d29a588a
+extAzureADImmutableID 	XCHoqqXSfEWWVrp5PDjvxQ==
+"""
 ADMINISTRATOR = {
         "groups": [
             "fsch_customer.group_fsch_student",

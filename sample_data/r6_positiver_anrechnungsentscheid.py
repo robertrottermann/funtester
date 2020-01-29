@@ -7,7 +7,29 @@ studies:
     credit_application_available: True
     remarks_credit_application: "Die zur Anrechnung vorgelegten Leistungen wurden vor mehr als 5 Jahren erarbeitet und entsprechen somit nicht den Voraussetzungen zu einer Anrechnung gemäss Artikel 21 des Studienreglements."
 
-credit object linked to the studies. See credit.py
+NEEDS:  credit object linked to the studies. See credit.py
+        student_semester
+        student_module with note credited set
+
+update studies set state_of_study = 'student'  where partner_id=(select id from res_partner where name='Jürgen')
+state_of_study:student->registered_1
+permission_date:2019-01-23-> ''
+decision:permitted->[null]
+reason_exmatrikulation:1->[null]
+created_email:true->false
+created_moodle_account:true->false
+guest:[null]->false
+remarks_credit_application:''->'hallo velo'
+date_remarks_credit_application:[null]->2020-01-28
+approval_exmatriculation:true->false
+approve_first_section:[null]->false
+date_done_credit_module:[null]->2020-01-28
+valid_information:true->false
+accept_conditions:true->false
+approval_exmatriculation_date:2020-01-27->''
+kohorte_id:4->[null]
+date_start, date_end ??
+total_ects_credits:180->0
 """
 
 # ------------------------------------

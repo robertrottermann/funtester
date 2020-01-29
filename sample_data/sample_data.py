@@ -26,6 +26,7 @@ create_sequence = [
     "study_section",
     "studies",
     "student_semester",
+    "student_module",
     "function",
     "works",
     "module",
@@ -45,6 +46,7 @@ create_sequence_2 = [
     "credit",
     "works",
     "student_semester",
+    "student_module",
 ]
 # object_links links are a list of object pairs that should be linked
 # structure of each entry:

@@ -2,7 +2,8 @@
 # # -*- coding: utf-8 -*-
 from odoo_handler import get_objects
 sample_data = {
-    "room" : {
+    "student_semester" : {
+        "step": "second_run",
         "module" : "student.semester",
         "search": ['studies_id', 'semester_id'],
         "vals_list": [
@@ -14,10 +15,11 @@ sample_data = {
                 'part_time': False,
                 'remark_dispensation': False,
                 'remarks_immatriculation': False,
-                'semester_id': 4,xx
+                'semester_id': ("semester", [("short_name", "FS20")]),
                 'state_student_semester': '1',
                 'student_module_by_wizard': False,
-                'studies_id': 5,xx
+#                'studies_id': ("studies", 'partner_id', ("res.partner", [("name", "Jürgen"), ("last_name", "Beer")])
+                "studies_id": ("studies", [("partner_id", ("res.partner", [("name", "Jürgen"), ("last_name", "Beer")]))]), #1, # SUCHEN!!
                 'regular_student': True
             },
         ]
