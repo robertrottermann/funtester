@@ -32,6 +32,18 @@ sample_data = {
             },
             {
                 "active": True,
+                "faculty_manager_id": ("res.users", [("login", "malin")]),  # 	Balet Tara
+                "french": False,
+                "german": True,
+                "name": "Droit",
+                "short_name": "LAWf",
+                "visibility_registration": True,
+                "website_color": "#e80513",
+                "department_icon": read_image('/sample_data/static/droit.png'),
+                "registration_name": "",
+            },
+            {
+                "active": True,
                 "faculty_manager_id": ("res.users", [("login", "nicole")]),
                 "french": False,
                 "german": True,

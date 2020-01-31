@@ -21,6 +21,18 @@ reports = {
         'name' :'Assistents report',
         'data' : 'sample_data_assistant_report',
     },
+    '8' : {
+        'name' :'Beurlaubungsbestätigun',
+        #'data' : 'r11_diploma_supplement_report',
+    },
+    '9' : {
+        'name' :'Definitive Zulassung',
+        #'data' : 'r11_diploma_supplement_report',
+        # -----------------------------------
+        # date_definitely_allowed has to be set:
+        # update studies set "date_definitely_allowed"= '2016-04-03';
+        # -----------------------------------
+    },
     '11' : {
         'name' :'Diploma Supplement',
         'data' : 'r11_diploma_supplement_report',

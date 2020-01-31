@@ -72,6 +72,11 @@ object_links = [
     [
         ["res_users_study_course", "res_users_id", "study_course_id"],
         ["res.users", "login", "matthias"],
+        ["study.course", "study_course_code", "BLAWf"],
+    ],
+    [
+        ["res_users_study_course", "res_users_id", "study_course_id"],
+        ["res.users", "login", "matthias"],
         ["study.course", "study_course_code", "BSCECOd"],
     ],
     [
@@ -94,5 +99,9 @@ object_links = [
         ["res.users", "login", "thierry"],
         ["study.course", "study_course_code", "BSCECOMf"],
     ]
+]
+student_state_settings = [
+    ('Beer', 'Jürgen', 'exmatriculated'),
+    ('Fellay', 'Martina', 'exmatriculated'),
 ]
 from sample_data.first_run import sample_data

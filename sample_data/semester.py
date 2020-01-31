@@ -12,9 +12,30 @@ sample_data = {
         "vals_list": [
             {
                 "active": True,
+                "name": "Spring term 2013",
+                "short_name": "FS13",
+                "type": "1", #
+                "year": 2013,
+            },
+            {
+                "active": True,
+                "name": "Summer term 2013",
+                "short_name": "SS13",
+                "type": "2", # autum
+                "year": 2013,
+            },
+            {
+                "active": True,
                 "name": "Herbst term 2013",
                 "short_name": "HS13",
                 "type": "3", # autum
+                "year": 2013,
+            },
+            {
+                "active": True,
+                "name": "Winter term 2013",
+                "short_name": "WS13",
+                "type": "4", # autum
                 "year": 2013,
             },
             {
@@ -29,6 +50,27 @@ sample_data = {
                 "name": "Spring term 2016",
                 "short_name": "FS16",
                 "type": "1", # spring
+                "year": 2016,
+            },
+            {
+                "active": True,
+                "name": "Summer term 2016",
+                "short_name": "SS16",
+                "type": "2", # summer
+                "year": 2016,
+            },
+            {
+                "active": True,
+                "name": "Herbst term 2016",
+                "short_name": "HS16",
+                "type": "3", # autumn
+                "year": 2016,
+            },
+            {
+                "active": True,
+                "name": "Winter term 2016",
+                "short_name": "WS16",
+                "type": "4", # winter
                 "year": 2016,
             },
             {

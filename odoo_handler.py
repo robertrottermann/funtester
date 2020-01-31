@@ -28,6 +28,18 @@ def _construct_filter(filt):
 
     return new_filt
 
+def set_exmatriculated(odoo, user_info):
+    """set users to status exmatriculated
+
+    Arguments:
+        odoo: running odoo
+        user_info {list of name info} -- [(last-name, first-name)]
+
+    Returns:
+
+    """
+    pass
+
 def get_students(names_list):
     """return list of ids of students
 

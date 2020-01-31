@@ -7,7 +7,7 @@ import os, sys
 import urllib.request, urllib.error, urllib.parse
 from argparse import ArgumentParser
 from bcolors import bcolors
-from odoo_handler import OdooHandler, get_objects
+from odoo_handler import OdooHandler, get_objects, set_exmatriculated
 from messages import *
 from sample_data.staff import STAFF, ADMINISTRATOR
 
@@ -700,6 +700,10 @@ class FunidInstaller(OdooHandler):
                     odoo = running_odoo
             if object_name == 'student':
                 self.create_student_users(data = object_data)
+
+        # we have to set users to the correct state
+        # from
+        # set_exmatriculated(odoo, student_state_settings)
 
     def create_student_users(self, data):
         """crete the users  belonging to the students

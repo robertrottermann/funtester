@@ -13,6 +13,14 @@ sample_data = {
         "vals_list": [
             {
                 "name": "K03",
+                "semester_id": ("semester", [("short_name", "FS13")]),
+                "study_course_id": (
+                    "study.course",
+                    [("study_course_code", "BLAWf")],
+                ),
+            },
+            {
+                "name": "K06",
                 "semester_id": ("semester", [("short_name", "HS14")]),
                 "study_course_id": (
                     "study.course",
