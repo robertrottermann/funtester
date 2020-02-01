@@ -12,6 +12,34 @@ sample_data = {
         "vals_list": [
             {
                 "active": True,
+                "name": "Spring term 2012",
+                "short_name": "FS12",
+                "type": "1", #
+                "year": 2012,
+            },
+            {
+                "active": True,
+                "name": "Summer term 2012",
+                "short_name": "SS12",
+                "type": "2", # autum
+                "year": 2012,
+            },
+            {
+                "active": True,
+                "name": "Herbst term 2012",
+                "short_name": "HS12",
+                "type": "3", # autum
+                "year": 2012,
+            },
+            {
+                "active": True,
+                "name": "Winter term 2012",
+                "short_name": "WS12",
+                "type": "4", # autum
+                "year": 2012,
+            },
+            {
+                "active": True,
                 "name": "Spring term 2013",
                 "short_name": "FS13",
                 "type": "1", #
@@ -74,6 +102,33 @@ sample_data = {
                 "year": 2016,
             },
             {
+                "active": True,
+                "name": "Spring term 2017",
+                "short_name": "FS17",
+                "type": "1", #
+                "year": 2017,
+            },
+            {
+                "active": True,
+                "name": "Summer term 2017",
+                "short_name": "SS17",
+                "type": "2", # autum
+                "year": 2017,
+            },
+            {
+                "active": True,
+                "name": "Herbst term 2017",
+                "short_name": "HS17",
+                "type": "3", # autum
+                "year": 2017,
+            },
+            {
+                "active": True,
+                "name": "Winter term 2017",
+                "short_name": "WS17",
+                "type": "4", # autum
+                "year": 2017,
+            },            {
                 "active": True,
                 "name": "Spring term 2018",
                 "short_name": "FS18",

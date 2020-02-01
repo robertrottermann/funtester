@@ -28,6 +28,14 @@ sample_data = {
                 ),
             },
             {
+                "name": "K11",
+                "semester_id": ("semester", [("short_name", "FS12")]),
+                "study_course_id": (
+                    "study.course",
+                    [("study_course_code", "BSCPSYd")],
+                ),
+            },
+            {
                 "name": "K12",
                 "semester_id": ("semester", [("short_name", "FS19")]),
                 "study_course_id": (

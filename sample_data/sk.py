@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
-from odoo_handler import get_objects
+from odoo_handler import read_image
 
 sample_data = {
     "sk": {
+        "step": "dekan_sk",
         "module": "sk",
         "search": ["study_course_id"],
         "vals_list": [
@@ -12,14 +13,11 @@ sample_data = {
                 "date_to": False,
                 "function": "Student Coordinator",
                 "name": "BartSK",
-                "partner_id": ("partner_id", ("res.partner", [("name", "Bartlomiej"), ("last_name", "Chrobak")])),
-                "signature": "",
-                "signature_fname": "signature_rodrigo_rodriguez.png",
-                "study_course_id": 2,
+                "partner_id": ("res.partner", [("name", "Bartlomiej"), ("last_name", "Chrobak")]),
+                "signature": read_image('/sample_data/static/signature_marion_hug.jpeg'),
+                "signature_fname": "signature_marion_hug.jpeg",
+                "study_course_id": '$xx$', # to be rplaced for each study course id
             }
         ],
     }
 }
-[(
-                        "studies_id", ("studies", [("partner_id", ("res.partner", [("name", "Jürgen"), ("last_name", "Beer")]))])
-                    )]

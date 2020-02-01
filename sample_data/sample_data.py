@@ -36,6 +36,9 @@ create_sequence = [
     "location",
     "room",
     "people",
+    "sk",
+    "dekan",
+    "event",
 ]
 # modules handled in second run
 create_sequence_2 = [
@@ -48,6 +51,10 @@ create_sequence_2 = [
     "student_semester",
     "student_module",
 ]
+create_sequence_3 = [
+    "event_presence",
+]
+# create_dekan_sk is done in the first run
 # object_links links are a list of object pairs that should be linked
 # structure of each entry:
 # [database, left_side, right_side]
