@@ -16,8 +16,9 @@ from . department import sample_data as department_data
 from . grade import sample_data as grade_data
 from . reason_exmatriculation import sample_data as reason_exmatriculation_data
 from . account_analytic_account import sample_data as account_analytic_account_data
-
-
+from . sk import sample_data as sk_data
+from . dekan import sample_data as dekan_data
+from . event import sample_data as event_data
 
 sample_data = {}
 for s_data in [
@@ -36,6 +37,8 @@ for s_data in [
         grade_data,
         reason_exmatriculation_data,
         account_analytic_account_data,
-
+        sk_data,
+        dekan_data,
+        event_data,
     ]:
     sample_data.update(s_data)

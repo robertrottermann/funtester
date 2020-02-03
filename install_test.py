@@ -630,7 +630,7 @@ class FunidInstaller(OdooHandler):
                 continue
             if not which or object_name in which:
                 # only create objects according to running step
-                if object_data.get("step", "first_run") != step:
+                if object_data.get("step", "first_run") != step and object_data.get("step") not in ('dekan_sk', 'event_list'):
                     continue
                 print(step, object_name)
                 module = object_data["module"]
@@ -647,6 +647,16 @@ class FunidInstaller(OdooHandler):
                 vals_list = object_data["vals_list"]
                 # loock up linked ids
                 counter = -1
+                # if its sk or dekan we construct a vals_lst entry for each study-course
+                if object_data.get("step") == 'dekan_sk':
+                    study_course_ids = odoo.env['study.course'].search([])
+                    vals_list_temp = []
+                    for study_course_id in study_course_ids:
+                        vv = {}
+                        vv.update(vals_list[0])
+                        vv["study_course_id"] = study_course_id
+                        vals_list_temp.append(vv)
+                    vals_list = vals_list_temp
                 for vals_dic in vals_list:
                     counter += 1
                     for k, v in vals_dic.items():
