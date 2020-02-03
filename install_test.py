@@ -4,6 +4,7 @@
 A script, that installs odoo 13 with some fernuni modules
 """
 import os, sys
+import copy
 import urllib.request, urllib.error, urllib.parse
 from argparse import ArgumentParser
 from bcolors import bcolors
@@ -12,12 +13,12 @@ from messages import *
 from sample_data.staff import STAFF, ADMINISTRATOR
 
 FUN_COMPANY = {
-    'country_id': 43,
-    'phone': '044 77 88 920',
-    'street': 'Überlandstrasse 12',
-    'street2': 'Postfach 265',
-    'zip': '3900',
-    'city': 'Brig',
+    "country_id": 43,
+    "phone": "044 77 88 920",
+    "street": "Überlandstrasse 12",
+    "street2": "Postfach 265",
+    "zip": "3900",
+    "city": "Brig",
 }
 
 GROUPS = {
@@ -39,9 +40,7 @@ GROUPS = {
     "Faculty Manager": "fsch_customer.group_fsch_faculty_manager",
     "Mentorenabrechnungen für Assistenten": "fsch_customer.group_fsch_mentor_allowances_for_assist",
 }
-STUDENT_GROUPS = [
-    "fsch_customer.group_fsch_student",
-]
+STUDENT_GROUPS = ["fsch_customer.group_fsch_student"]
 USERS = {
     "prospect": "prospect",
     "student": "Student",
@@ -133,7 +132,7 @@ SITE_ADDONS = [
     # "bt_swissdec", # TODO: v13 migration
     # "sett_hr", # TODO: v13 migration
     "board",
-    #"sale_management",
+    # "sale_management",
     "l10n_ch",
 ]
 # OWN_ADDONS are the modules that we handle our selfs in some
@@ -440,7 +439,7 @@ class FunidInstaller(OdooHandler):
         #         print(e)
         #         continue
         #     print(p.name)
-            # [['is_company', '=', True], ['customer', '=', True]]],
+        # [['is_company', '=', True], ['customer', '=', True]]],
         #     {'fields': ['name', 'country_id', 'comment'], 'limit': 5}
         # )
         # for id, name in partners:
@@ -454,13 +453,13 @@ class FunidInstaller(OdooHandler):
         if users:
             for login, user_info in list(users.items()):
                 user_type = user_info
-                if isinstance(user_info,str):
+                if isinstance(user_info, str):
                     user_info = {}
                 else:
-                    user_type = user_info['user_type']
+                    user_type = user_info["user_type"]
                 user_data = {}
-                user_data["name"] = user_info.get('first_name', login)
-                user_data["last_name"] = user_info.get('last_name', login)
+                user_data["name"] = user_info.get("first_name", login)
+                user_data["last_name"] = user_info.get("last_name", login)
                 user_data["email"] = "%s@o2oo.ch" % login
                 user_data["login"] = login
                 user_data["tz"] = "Europe/Zurich"
@@ -484,12 +483,14 @@ class FunidInstaller(OdooHandler):
                         user_ids = [user_id]
 
                 # get groups to be assigned
-                if'groups' in user_info.keys():
-                    group_ids = user_info['groups']
+                if "groups" in user_info.keys():
+                    group_ids = user_info["groups"]
                 else:
                     if not groups:
                         groups = []
-                    group_ids = groups.get(user_type, groups) # if the groups are self.groups (bbb) then its a string
+                    group_ids = groups.get(
+                        user_type, groups
+                    )  # if the groups are self.groups (bbb) then its a string
                     if isinstance(group_ids, str):
                         group_ids = [group_ids]
                 for group_id in group_ids:
@@ -499,12 +500,20 @@ class FunidInstaller(OdooHandler):
                     group.write({"users": [(4, user_ids[0])]})
                 if user_ids:
                     for key in list(user_info.keys()):
-                        if key in ["name", "last_name", "email", "login", "tz", "new_password", "user_type"]:
+                        if key in [
+                            "name",
+                            "last_name",
+                            "email",
+                            "login",
+                            "tz",
+                            "new_password",
+                            "user_type",
+                        ]:
                             continue
                         user_data[key] = user_info[key]
                     try:
-                         partner = partner_o.browse([('parent_id', '=', user_ids[0])])
-                         partner.write(user_data)
+                        partner = partner_o.browse([("parent_id", "=", user_ids[0])])
+                        partner.write(user_data)
                     except:
                         pass
         staff = self.staff
@@ -534,7 +543,7 @@ class FunidInstaller(OdooHandler):
                     group = odoo.env.ref(group_id)
                     group.write({"users": [(4, user_ids[0])]})
         # do the assignment of groups to admin also
-        a_groups = ADMINISTRATOR['groups']
+        a_groups = ADMINISTRATOR["groups"]
         admin = users_o.search([("login", "=", "admin")])
         for group_id in a_groups:
             group = odoo.env.ref(group_id)
@@ -592,7 +601,9 @@ class FunidInstaller(OdooHandler):
     # params = val['params']
     # globals()[v_name] = eval(e_str)(*params, self=self)
 
-    def create_objects(self, which=[], login=[], step="first_run", sample_data={}, opts=None):
+    def create_objects(
+        self, which=[], login=[], step="first_run", sample_data={}, opts=None
+    ):
         single_step = None
         if opts and opts.single_step:
             single_step = True
@@ -607,7 +618,10 @@ class FunidInstaller(OdooHandler):
             if step == "first_run":
                 from sample_data.sample_data import sample_data as sample_data
             elif step == "second_run":
-                from sample_data.sample_data_second_run import sample_data as sample_data
+                from sample_data.sample_data_second_run import (
+                    sample_data as sample_data,
+                )
+
                 create_sequence = create_sequence_2
             if opts and opts.single_object:
                 create_sequence = [opts.single_object]
@@ -630,7 +644,9 @@ class FunidInstaller(OdooHandler):
                 continue
             if not which or object_name in which:
                 # only create objects according to running step
-                if object_data.get("step", "first_run") != step and object_data.get("step") not in ('dekan_sk', 'event_list'):
+                if object_data.get("step", "first_run") != step and object_data.get(
+                    "step"
+                ) not in ("dekan_sk", "event_list"):
                     continue
                 print(step, object_name)
                 module = object_data["module"]
@@ -648,8 +664,8 @@ class FunidInstaller(OdooHandler):
                 # loock up linked ids
                 counter = -1
                 # if its sk or dekan we construct a vals_lst entry for each study-course
-                if object_data.get("step") == 'dekan_sk':
-                    study_course_ids = odoo.env['study.course'].search([])
+                if object_data.get("step") == "dekan_sk":
+                    study_course_ids = odoo.env["study.course"].search([])
                     vals_list_temp = []
                     for study_course_id in study_course_ids:
                         vv = {}
@@ -657,6 +673,47 @@ class FunidInstaller(OdooHandler):
                         vv["study_course_id"] = study_course_id
                         vals_list_temp.append(vv)
                     vals_list = vals_list_temp
+                # for events we get more event data
+                if object_data.get("step") == "event_list":
+                    vals_list_data = object_data.get("vals_list_events")
+                    dates = vals_list_data['dates']
+                    modules = vals_list_data['modules']
+                    study_course_ids = odoo.env["study.course"].search([])
+                    vals_list_temp = []
+                    module_o = odoo.env['module']
+                    module_data_o = odoo.env['module.data']
+                    for study_course_id in study_course_ids:
+                        m_counter = 0
+                        for module_number, kohorte in modules:
+                            for name, date, time_from, time_to, room_id in dates:
+                                m_counter += 1
+                                # we need to assign the module data to the event
+                                module_id = module_o.search([('module_number', '=', module_number)])[0]
+                                module_data_id = module_data_o.search([('module_id', '=', module_id)])[0]
+                                vv = {}
+                                vv.update(vals_list[0])
+                                vv['name'] = name
+                                vv['date'] = date
+                                vv['time_from'] = time_from
+                                vv['time_to'] = time_to
+                                vv['room_id'] = room_id
+                                vv['module_data_id'] = module_data_id
+                                vv["study_course_ids"] = [[6, False, [study_course_id]]]
+                                vals_list_temp.append(vv)
+                    vals_list = vals_list_temp
+                # do we have a vals_list_data?
+                # then vals_list is only a template from which we build the
+                # the populated vals_list
+                vals_list_data = object_data.get("vals_list_data")
+                if vals_list_data:
+                    vals_list_temp = []
+                    for data_dic in vals_list_data:
+                        vv = copy.deepcopy(vals_list[0])
+                        vv.update(data_dic)
+                        vals_list_temp.append(vv)
+                    vals_list = vals_list_temp
+                # now we have collected the vals_list
+                # create the odoo objects
                 for vals_dic in vals_list:
                     counter += 1
                     for k, v in vals_dic.items():
@@ -708,8 +765,8 @@ class FunidInstaller(OdooHandler):
 
                 if running_odoo:
                     odoo = running_odoo
-            if object_name == 'student':
-                self.create_student_users(data = object_data)
+            if object_name == "student":
+                self.create_student_users(data=object_data)
 
         # we have to set users to the correct state
         # from
@@ -725,48 +782,56 @@ class FunidInstaller(OdooHandler):
         get the contact, and create user that points to it
         """
         odoo = self.get_odoo(login=["admin", "admin"])
-        partner_o = odoo.env['res.partner']
-        users_o = odoo.env['res.users']
-        for student_data in data['vals_list']:
-            login = student_data.get("login") or student_data.get("matriculation_number") or student_data.get("name")
+        partner_o = odoo.env["res.partner"]
+        users_o = odoo.env["res.users"]
+        for student_data in data["vals_list"]:
+            login = (
+                student_data.get("login")
+                or student_data.get("matriculation_number")
+                or student_data.get("name")
+            )
             if not login:
-                login = student_data.get("matriculation_number") or student_data.get("name")
+                login = student_data.get("matriculation_number") or student_data.get(
+                    "name"
+                )
             name = student_data.get("name")
             last_name = student_data.get("last_name")
-            vals_u = {
-                "login": login,
-                "name": student_data.get("name")
-            }
-            contact = partner_o.search([("name", "=", name), ("last_name", "=", last_name)])
+            vals_u = {"login": login, "name": student_data.get("name")}
+            contact = partner_o.search(
+                [("name", "=", name), ("last_name", "=", last_name)]
+            )
             if not contact:
                 continue
 
             # do we have a user
-            c_user = users_o.search([('login', '=', login)])
+            c_user = users_o.search([("login", "=", login)])
             # if we have a user, check it it is linked to the
             if not c_user:
                 vals_u["partner_id"] = contact[0]
                 c_user = users_o.create(vals_u)
-                c_user =[c_user]
+                c_user = [c_user]
             res = odoo.execute_kw(
-                'res.partner', 'search_read',
-                [[('id', '=', contact[0])]],
-                {'fields': ["user_id"]})
+                "res.partner",
+                "search_read",
+                [[("id", "=", contact[0])]],
+                {"fields": ["user_id"]},
+            )
             # res is something like:
             # [{'id': 9, 'user_id': False}]
-            if not res or not res[0].get('user_id'):
-                odoo.execute_kw('res.partner', 'write', [[contact[0]], {"user_id" : c_user[0]}])
+            if not res or not res[0].get("user_id"):
+                odoo.execute_kw(
+                    "res.partner", "write", [[contact[0]], {"user_id": c_user[0]}]
+                )
 
             for group_id in STUDENT_GROUPS:
                 group = odoo.env.ref(group_id)
                 group.write({"users": [(4, c_user[0])]})
 
-
     def set_company(self):
         """set the address of the company
         """
-        odoo = self.get_odoo(login=['admin', 'admin'], simple=True)
-        companies_o = odoo.env['res.company']
+        odoo = self.get_odoo(login=["admin", "admin"], simple=True)
+        companies_o = odoo.env["res.company"]
         companies_o.browse(companies_o.search([])[0]).write(FUN_COMPANY)
 
     # def set_acounts(self):
@@ -880,54 +945,75 @@ class FunidInstaller(OdooHandler):
         Arguments:
             opts {object} -- namespace with selected option
         """
-        #import wingdbstub
-        reports_list = opts.reports.split(',')
+        # import wingdbstub
+        reports_list = opts.reports.split(",")
         reports = list_reports(with_details=True)
-        if 'all' in reports_list:
+        if "all" in reports_list:
             reports_list = list(reports.keys())
         for r_name in reports_list:
             # handling the import fully dynamically is too complicated
             # so we do it hardcoded ..
             sd = {}
             data_runner = None
-            if r_name == '1':
-                from sample_data.r1_sample_data_negative_gast_zulassung import sample_data as sd_negzuga
+            if r_name == "1":
+                from sample_data.r1_sample_data_negative_gast_zulassung import (
+                    sample_data as sd_negzuga,
+                )
+
                 sd = sd_negzuga
-            if r_name == '2':
-                from sample_data.r2_sample_data_abschlussbestatigung_erster_studienabschnitt import sample_data as sd_abschl_first
+            if r_name == "2":
+                from sample_data.r2_sample_data_abschlussbestatigung_erster_studienabschnitt import (
+                    sample_data as sd_abschl_first,
+                )
+
                 sd = sd_abschl_first
-            if r_name == '5':
-                from sample_data.r5_negativer_anrechnungsentscheid import sample_data as sd_abschl_first
+            if r_name == "5":
+                from sample_data.r5_negativer_anrechnungsentscheid import (
+                    sample_data as sd_abschl_first,
+                )
+
                 sd = sd_abschl_first
-            if r_name == '6':
-                from sample_data.r6_positiver_anrechnungsentscheid import sample_data as sd_abschl_first
+            if r_name == "6":
+                from sample_data.r6_positiver_anrechnungsentscheid import (
+                    sample_data as sd_abschl_first,
+                )
+
                 sd = sd_abschl_first
-            if r_name == '7':
-                from sample_data.r7_sample_data_assistant_report import assistant_users, run_prepare_report
+            if r_name == "7":
+                from sample_data.r7_sample_data_assistant_report import (
+                    assistant_users,
+                    run_prepare_report,
+                )
+
                 data_runner = run_prepare_report
-            if r_name == '11':
-                from sample_data.r11_diploma_supplement_report import assistant_users, run_prepare_report
+            if r_name == "11":
+                from sample_data.r11_diploma_supplement_report import (
+                    assistant_users,
+                    run_prepare_report,
+                )
+
                 data_runner = run_prepare_report
 
             if data_runner:
                 print(bcolors.green)
-                print('executing data-runner for:' +  reports[r_name]['name'])
+                print("executing data-runner for:" + reports[r_name]["name"])
                 print(bcolors.ENDC)
                 data_runner(self)
 
             if sd:
                 print(bcolors.green)
-                print('producing data for:' +  reports[r_name]['name'])
+                print("producing data for:" + reports[r_name]["name"])
                 print(bcolors.ENDC)
                 self.create_objects(opts=opts, sample_data=sd)
 
 
-
 def list_reports(with_details=False):
     from reports import reports
+
     if not with_details:
-        return ['l', 'all'] + list(reports.keys())
+        return ["l", "all"] + list(reports.keys())
     return reports
+
 
 def main(opts):
     if opts.set_company:
@@ -940,7 +1026,7 @@ def main(opts):
         if not opts.steps == "all":
             steps = opts.steps.split(",")
     if opts.simple:
-        steps = [ "lang", "modules"]
+        steps = ["lang", "modules"]
     if opts.single_object:
         steps = ["objects"]
     if opts.reports:
@@ -969,7 +1055,9 @@ def main(opts):
     if "all" in steps or "links" in steps:
         installer.link_objects(login=["matthias", "login"])
     if "all" in steps or "second_run" in steps:
-        installer.create_objects(login=["matthias", "login"], step="second_run", opts=opts)
+        installer.create_objects(
+            login=["matthias", "login"], step="second_run", opts=opts
+        )
     if "config" in steps:
         installer.config_setter(login=["admin", "admin"])
     if "single_object" in steps:
@@ -1010,7 +1098,7 @@ if __name__ == "__main__":
         "--reports",
         action="store",
         dest="reports",
-        choices= list_reports(),
+        choices=list_reports(),
         help="create data for the reports, name reports in comma separate list or l,all. l lists the reports available, all handles all",
     )
     parser.add_argument(

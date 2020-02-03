@@ -51,23 +51,6 @@ create_sequence_2 = [
     "student_semester",
     "student_module",
 ]
-event_data = {
-    'dates' : [
-        # title                    date         start   end room-no
-        ['Präsentvaeranstaltung1', '2019-02-16', 10.25, 13, 1],
-        ['Präsentvaeranstaltung2', '2019-03-09', 10.25, 13, 1],
-        ['Präsentvaeranstaltung3', '2019-03-30', 10.25, 13, 1],
-        ['Präsentvaeranstaltung4', '2019-04-27', 10.25, 13, 1],
-        ['Präsentvaeranstaltung5', '2019-05-18', 10.25, 13, 1],
-        ['Prüfung',                '2019-06-15', 11.25, 13, 1],
-    ],
-    'modules' : [
-        ['M01', 'K25'],
-        ['M02', 'K25'],
-        ['M03', 'K24'],
-        ['M04', 'K24'],
-    ]
-}
 # create_dekan_sk is done in the first run
 # object_links links are a list of object pairs that should be linked
 # structure of each entry:
