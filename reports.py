@@ -24,6 +24,10 @@ reports = {
     '8' : {
         'name' :'Beurlaubungsbestätigun',
         #'data' : 'r11_diploma_supplement_report',
+        # invoice must be paid
+        # status holiday
+        # to show button:
+        # open student_semester -> bebug mode -> Edit View: Form -> create_beurlaubungsbestatigung -> remove invisible
     },
     '9' : {
         'name' :'Definitive Zulassung',

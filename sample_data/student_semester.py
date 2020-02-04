@@ -30,6 +30,7 @@ sample_data = {
                 'choose_student_module_finished': True,
                 'date_card_transmitted': '2019-12-30',
                 'invoice_id': False,
+                'invoice_paid': True,
                 'iuv': 'I',
                 'part_time': False,
                 'remark_dispensation': False,
