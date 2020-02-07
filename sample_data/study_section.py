@@ -8,6 +8,15 @@ sample_data = {
         "vals_list": [
             {
                 'active': True,
+                'ects_credits': 60,
+                'from_semester': 1,
+                'name': '1. Teil',
+                'to_semester': 3,
+                'number': 1,
+                'study_course_id': ("study.course", [("study_course_code", "BSCECOd")]),
+            },
+            {
+                'active': True,
                 'ects_credits': 40,
                 'from_semester': 1,
                 'name': '1. Teil',
@@ -31,6 +40,15 @@ sample_data = {
                 'name': '1. Teil',
                 'to_semester': 2,
                 'number': 1,
+                'study_course_id': ("study.course", [("study_course_code", "BSCPSYd")]),
+            },
+            {
+                'active': True,
+                'ects_credits': 140,
+                'from_semester': 3,
+                'name': '2. Studienabschnitt',
+                'to_semester': 9,
+                'number': 2,
                 'study_course_id': ("study.course", [("study_course_code", "BSCPSYd")]),
             },
             {

@@ -11,6 +11,21 @@ sample_data = {
             {
                 "active": True,
                 # "hide_online": False,
+                "lang": "de_DE",
+                "module_code": "ARB",
+                "module_number": "M17",
+                "module_visible_report": False,
+                "name": "Arbeitspsychologie – Organisationspsychologie",
+                "short_name": "Arbeitspsychologie – Organisationspsychologie",
+                "study_course_ids": [[6, False, get_objects(
+                    "study.course",
+                    login=["matthias", "login"],
+                    filt=[("study_course_code", "BSCPSYd")]
+                )]],
+            },
+            {
+                "active": True,
+                # "hide_online": False,
                 "lang": "fr_CH",
                 "module_code": "SFSD",
                 "module_number": "M00",

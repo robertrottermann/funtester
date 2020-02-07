@@ -582,7 +582,12 @@ class FunidInstaller(OdooHandler):
             param = s_item[1]
             if isinstance(param, tuple):
                 param = self._get_object(odoo, param)
-            filt.append((s_item[0], "=", param))
+            if len(s_item) == 3 and s_item[2] =='%':
+                filt.append((s_item[0], "like", param+'%'))
+            elif len(s_item) == 3 and s_item[2] =='%%':
+                filt.append((s_item[0], "like", '%'+param+'%'))
+            else:
+                filt.append((s_item[0], "=", param))
         result = oobjs.search(filt)
         if result:
             result = result[0]
