@@ -680,6 +680,7 @@ class FunidInstaller(OdooHandler):
                     vals_list = vals_list_temp
                 # for events we get more event data
                 if object_data.get("step") == "event_list":
+                    # -----> HANDLE EVENT_PRECECE
                     vals_list_data = object_data.get("vals_list_events")
                     dates = vals_list_data['dates']
                     modules = vals_list_data['modules']
@@ -689,13 +690,13 @@ class FunidInstaller(OdooHandler):
                     module_data_o = odoo.env['module.data']
                     for study_course_id in study_course_ids:
                         m_counter = 0
-                        for module_number, kohorte in modules:
+                        for module_number, kohorte, module_code in modules:
                             for name, date, time_from, time_to, room_id in dates:
                                 try:
                                     m_counter += 1
                                     print(m_counter, module_number, kohorte ,name, date, time_from, time_to, room_id)
                                     # we need to assign the module data to the event
-                                    m_tmp = module_o.search([('module_number', 'like', module_number + '%')])
+                                    m_tmp = module_o.search([('module_number', 'like', module_number + '%'), ('module_code', '=', module_code)])
                                     if m_tmp:
                                         module_id = m_tmp[0]
                                     else:
@@ -716,6 +717,8 @@ class FunidInstaller(OdooHandler):
                                     vv['room_id'] = room_id
                                     vv['module_data_id'] = module_data_id
                                     vv["study_course_ids"] = [[6, False, [study_course_id]]]
+                                    if name == 'Prüfung':
+                                        vv['type'] = 'test'
                                     vals_list_temp.append(vv)
                                 except Exception as e:
                                     print(HOPPALA_AN_ERROR % str(e))

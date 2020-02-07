@@ -40,6 +40,7 @@ sample_data = {
                 # 'user_id': 2
             },
         ],
+
         "vals_list_events":  {
             'dates' : [
                 # title                    date         start   end room_id
@@ -59,3 +60,35 @@ sample_data = {
         }
     },
 }
+"""
+[{'date': '2020-01-28',
+  'date_to': '2020-01-28',
+  'description': False,
+  'event_absagetext': False,
+  'group': False,
+  'literature': False,
+  'message_attachment_count': 0,
+  'message_follower_ids': [(0,
+                            0,
+                            {'partner_id': 3,
+                             'res_model': 'event',
+                             'subtype_ids': [(6, 0, [1])]})],
+  'module': False,
+  'module_data_id': 10,
+  'name': 'Test Event',
+  'publish_on_website': True,
+  'registration_possible': False,
+  'remarks': 'keine remarks',
+  'room_id': 1,
+  'semester_id': 6,
+  'semester_pud_id': False,
+  'speaker_ids': [[6, False, []]],
+  'state': 'draft',
+  'state2': False,
+  'study_center_id': False,
+  'study_course_ids': [[6, False, []]],
+  'time_from': 13,
+  'time_to': 15,
+  'type': 'test',
+  'user_id': 2}]
+"""

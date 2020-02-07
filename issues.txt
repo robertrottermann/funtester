@@ -22,7 +22,6 @@ Semester:
     when editing existing semester year 2020 is displayed as   2,020
 
 
-
 spelling error:
 ---------------
 funid_registration/controller/main.py: line 1730 +o ->to
