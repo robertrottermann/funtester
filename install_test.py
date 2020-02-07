@@ -691,20 +691,35 @@ class FunidInstaller(OdooHandler):
                         m_counter = 0
                         for module_number, kohorte in modules:
                             for name, date, time_from, time_to, room_id in dates:
-                                m_counter += 1
-                                # we need to assign the module data to the event
-                                module_id = module_o.search([('module_number', '=', module_number)])[0]
-                                module_data_id = module_data_o.search([('module_id', '=', module_id)])[0]
-                                vv = {}
-                                vv.update(vals_list[0])
-                                vv['name'] = name
-                                vv['date'] = date
-                                vv['time_from'] = time_from
-                                vv['time_to'] = time_to
-                                vv['room_id'] = room_id
-                                vv['module_data_id'] = module_data_id
-                                vv["study_course_ids"] = [[6, False, [study_course_id]]]
-                                vals_list_temp.append(vv)
+                                try:
+                                    m_counter += 1
+                                    print(m_counter, module_number, kohorte ,name, date, time_from, time_to, room_id)
+                                    # we need to assign the module data to the event
+                                    m_tmp = module_o.search([('module_number', 'like', module_number + '%')])
+                                    if m_tmp:
+                                        module_id = m_tmp[0]
+                                    else:
+                                        continue
+                                    m_tmp = module_data_o.search([('module_id', '=', module_id)])
+                                    if m_tmp:
+                                        module_data_id = m_tmp[0]
+                                        print(module_data_id, module_number, module_id)
+                                    else:
+                                        print(module_number, module_id, "not found")
+                                        continue
+                                    vv = {}
+                                    vv.update(vals_list[0])
+                                    vv['name'] = name
+                                    vv['date'] = date
+                                    vv['time_from'] = time_from
+                                    vv['time_to'] = time_to
+                                    vv['room_id'] = room_id
+                                    vv['module_data_id'] = module_data_id
+                                    vv["study_course_ids"] = [[6, False, [study_course_id]]]
+                                    vals_list_temp.append(vv)
+                                except Exception as e:
+                                    print(HOPPALA_AN_ERROR % str(e))
+                                    raise
                     vals_list = vals_list_temp
                 # do we have a vals_list_data?
                 # then vals_list is only a template from which we build the
