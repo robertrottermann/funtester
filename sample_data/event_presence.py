@@ -20,14 +20,13 @@ sample_data = {
                 #                             'subtype_ids': [(6, 0, [1])]})],
                 'not_attended': False,
                 'password': False,
-                'studen_module_id': 5,
-                # 'student_semester_id': (
-                #     "student.semester", [(
-                #         "studies_id", ("studies", [("partner_id", ("res.partner", [("name", "Patrizia"), ("last_name", "Bardola")]))])
-                #     )]
-                # )
+                'studen_module_id': ('student_semester_id', [
+                    "student.semester", [(
+                        "studies_id", ("studies", [("partner_id", ("res.partner", [("name", "Patrizia"), ("last_name", "Bardola")]))])
+                    )]
+                ]),
 
-                'students_id': 52
+                'students_id': ("partner_id", ("res.partner", [("name", "Patrizia"), ("last_name", "Bardola")])), #52
             }
         ]
     },

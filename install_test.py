@@ -613,7 +613,7 @@ class FunidInstaller(OdooHandler):
         if opts and opts.single_step:
             single_step = True
         # create fernuni objects
-        from sample_data.sample_data import create_sequence, create_sequence_2
+        from sample_data.sample_data import create_sequence, create_sequence_2, create_sequence_3
 
         # if we are in single object mode, we can not rely on the step
         if not sample_data:
@@ -626,8 +626,12 @@ class FunidInstaller(OdooHandler):
                 from sample_data.sample_data_second_run import (
                     sample_data as sample_data,
                 )
-
                 create_sequence = create_sequence_2
+            elif step == "third_run":
+                from sample_data.sample_data_third_run import (
+                    sample_data as sample_data,
+                )
+                create_sequence = create_sequence_3
             if opts and opts.single_object:
                 create_sequence = [opts.single_object]
         if login:
@@ -647,6 +651,7 @@ class FunidInstaller(OdooHandler):
             if not object_data:
                 # in the second run most elements of sequence are allready handeled
                 continue
+            # which tells us what object type we want to create, default all
             if not which or object_name in which:
                 # only create objects according to running step
                 if object_data.get("step", "first_run") != step and object_data.get(
@@ -680,7 +685,6 @@ class FunidInstaller(OdooHandler):
                     vals_list = vals_list_temp
                 # for events we get more event data
                 if object_data.get("step") == "event_list":
-                    # -----> HANDLE EVENT_PRECECE
                     vals_list_data = object_data.get("vals_list_events")
                     dates = vals_list_data['dates']
                     modules = vals_list_data['modules']
@@ -1080,6 +1084,10 @@ def main(opts):
     if "all" in steps or "second_run" in steps:
         installer.create_objects(
             login=["matthias", "login"], step="second_run", opts=opts
+        )
+    if "all" in steps or "third_run" in steps:
+        installer.create_objects(
+            login=["matthias", "login"], step="third_run", opts=opts
         )
     if "config" in steps:
         installer.config_setter(login=["admin", "admin"])
