@@ -2,9 +2,9 @@
 # # -*- coding: utf-8 -*-
 from odoo_handler import get_objects
 
-assistant_users = {
+diploma_supplement_users = {
 }
-assistant_object_links = [
+diploma_supplement_links = [
     # kohorte needs user and study course linked
     # fields: res_user_id, study_course_id
 ]
@@ -21,6 +21,6 @@ def run_prepare_report(handler):
 
     """
     print('diploma supplement stuff')
-    handler.create_users(users=assistant_users)
-    handler.link_objects(object_links=assistant_object_links)
+    handler.create_users(users=diploma_supplement_users)
+    handler.link_objects(object_links=diploma_supplement_links)
 

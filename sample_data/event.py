@@ -27,7 +27,7 @@ sample_data = {
                 'registration_possible': True,
                 'remarks': False,
                 'room_id': 1,
-                'semester_id': ("semester", [("short_name", "FS19")],),
+                #'semester_id': ("semester", [("short_name", "FS19")],), ---> gibts nicht
                 'semester_pud_id': False,
                 #'speaker_ids': [[6, False, []]],
                 'state': 'closed',
@@ -54,7 +54,7 @@ sample_data = {
             'modules' : [
                 ['M01', 'K25', 'EINF'],
                 ['M02', 'K25', 'STAT1'],
-                ['M03', 'K24', 'ENTW'],
+                ['M03', 'K24', 'STAAT'],
                 ['M04', 'K24', 'STAT2'],
             ]
         }

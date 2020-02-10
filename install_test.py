@@ -710,7 +710,7 @@ class FunidInstaller(OdooHandler):
                                         module_data_id = m_tmp[0]
                                         print(module_data_id, module_number, module_id)
                                     else:
-                                        print(module_number, module_id, "not found")
+                                        print('module_data:', module_number, module_id, "not found")
                                         continue
                                     vv = {}
                                     vv.update(vals_list[0])

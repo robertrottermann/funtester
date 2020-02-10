@@ -53,6 +53,7 @@ STAFF = {
         # email
         "password": "Login$99",
         'teacher' : True,
+        'assistant' : True,
         "gender": "male",
         #'function_id': ("function", [("name", "Dozent/in")]),
         'customer_rank': 1,
@@ -178,6 +179,7 @@ STAFF = {
         ],
         'employee' : True,
         'teacher' : True,
+        'assistant' : True,
         # email
         "password": "Login$99",
         "academic_title": "Dr",

@@ -5,19 +5,24 @@ sample_data = {
     "student_module" : {
         "step": "second_run",
         "module" : "student.module",
-        "search": ['name', 'student_semester_id'],
+        "search": ['module_data_id', 'student_semester_id'],
         "vals_list": [
             {
                 'compensation': False,
                 'dispensation': False,
                 'ignore_asbos': False,
                 'message_attachment_count': 0,
-                'message_follower_ids': [(0,
-                            0,
-                            {'partner_id': 2,
-                             'res_model': 'student.module',
-                             'subtype_ids': [(6, 0, [1])]})],
-                'module_data_id': 1,
+                # 'message_follower_ids': [(0,
+                #             0,
+                #             {'partner_id': 2,
+                #              'res_model': 'student.module',
+                #              'subtype_ids': [(6, 0, [1])]})],
+                'module_data_id': (
+                    "module.data", [
+                        ("module_code", 'ARB'),
+                        ("module_number", 'M17'),
+                    ]
+                ),
                 'module_without_note': False,
                 'moodle_enrollment_created': False,
                 'note_credited': True,

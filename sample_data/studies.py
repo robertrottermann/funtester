@@ -520,7 +520,7 @@ sample_data = {
                 "semester": 9,
                 "signature_for_study": False,
                 "signature_for_study_fname": False,
-                'study_course_id': ("study.course", [("study_course_code", "BSCPSYd")]),
+                'study_course_id': ("study.course", [("study_course_code", "BSCPSYd")]), #Bachelor of Science in Psychology
                 "study_section_id": ("study.section", [("name", "2. Studienabschnitt"),('study_course_id', ("study.course", [("study_course_code", "BSCPSYd")]))]),
                 "total_ects_credits": 20,
                 "valid_information": True,
