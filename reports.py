@@ -53,4 +53,14 @@ reports = {
         'name' :'Diploma Supplement',
         'data' : 'r11_diploma_supplement_report',
     },
+    '15' : {
+        'name' :'Diploma Supplement',
+        'data' : 'r11_diploma_supplement_report',
+        "condition": """
+        <button colspan="4" icon="fa-print" name="create_exmatrikulationsverfugung" string="Exmatrikulationsverfügung" type="object" attrs="{'invisible':
+            ['|','|','|','|',('manual_signature','=',False),('guest','=',True),('date_end','=',False),
+            ('approval_exmatriculation','=',False),'|',
+            ('university_pud','=',True),('university_puf','=',True)]}"/>"""
+    },
+
 }
