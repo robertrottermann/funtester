@@ -60,15 +60,6 @@ sample_data = {
                 'number': 1,
                 'study_course_id': ("study.course", [("study_course_code", "BSCPSYf")]),
             },
-            # {
-            #     'active': True,
-            #     'ects_credits': 40,
-            #     'from_semester': 1,
-            #     'to_semester': 2,
-            #     'name': 'Propädeutikum',
-            #     'number': 1,
-            #     'study_course_id': ("study.course", [("study_course_code", "BSCPSYd")]),
-            # },
             {
                 'active': True,
                 'ects_credits': 140,
@@ -86,7 +77,16 @@ sample_data = {
                 'name': '2ème cycle',
                 'number': 2,
                 'study_course_id': ("study.course", [("study_course_code", "BSCECOMf")]),
+            },
+            {
+                'active': True,
+                'ects_credits': 0,
+                'from_semester': 1,
+                'to_semester': 1,
+                'name': 'Weiterbildung Kooperation PH Thurgau',
+                'number': 1,
+                'study_course_id': ("study.course", [("study_course_code", "BLAWdPHTG")]),
             }
-        ]
-    },
+        ],
+    }
 }

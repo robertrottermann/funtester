@@ -698,7 +698,7 @@ class FunidInstaller(OdooHandler):
                             for name, date, time_from, time_to, room_id in dates:
                                 try:
                                     m_counter += 1
-                                    print(m_counter, module_number, kohorte ,name, date, time_from, time_to, room_id)
+                                    # print(m_counter, module_number, kohorte ,name, date, time_from, time_to, room_id)
                                     # we need to assign the module data to the event
                                     m_tmp = module_o.search([('module_number', 'like', module_number + '%'), ('module_code', '=', module_code)])
                                     if m_tmp:
@@ -708,9 +708,9 @@ class FunidInstaller(OdooHandler):
                                     m_tmp = module_data_o.search([('module_id', '=', module_id)])
                                     if m_tmp:
                                         module_data_id = m_tmp[0]
-                                        print(module_data_id, module_number, module_id)
+                                        # print(module_data_id, module_number, module_id)
                                     else:
-                                        print('module_data:', module_number, module_id, "not found")
+                                        # print('module_data:', module_number, module_id, "not found")
                                         continue
                                     vv = {}
                                     vv.update(vals_list[0])

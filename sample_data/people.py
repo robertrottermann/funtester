@@ -19,6 +19,15 @@ sample_data = {
             {
                 'date_from': False,
                 'date_to': False,
+                'module_data_id': ("module.data", [("short_name", "SF & SD")]),
+                'percent': 50,
+                'teacher_asisstant_id': ("res.partner", [("last_name", 'Chrobak'), ("name", "Bartlomiej")]),
+                'type': '1', # 1 teacher, 2 assistent
+                'type_is_mentor_wiwi': False
+            },
+            {
+                'date_from': False,
+                'date_to': False,
                 'module_data_id': ("module.data", [("short_name", "Allgemeine Staatslehre"), ("module_number", 'M03')]),
                 'percent': 50,
                 'teacher_asisstant_id': ("res.partner", [("name", 'Laurence⁣'), ("last_name", 'Gagnière')]),

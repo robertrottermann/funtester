@@ -21,6 +21,13 @@ sample_data = {
                 "text": "Exmatrikulation bei erfolgreichem Abschluss",
                 "text_report": "Exmatrikulation bei erfolgreichem Abschluss",
             },
+            {
+                "calc_predicate_final_grade": False,
+                "manual_signature": False,
+                "name": "Exmatrikulation auf studentisches Begehren",
+                "text": "Exmatrikulation auf studentisches Begehren",
+                "text_report": "Exmatrikulation auf studentisches Begehren",
+            },
         ],
     },
 }

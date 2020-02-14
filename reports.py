@@ -55,12 +55,19 @@ reports = {
     },
     '15' : {
         'name' :'Diploma Supplement',
-        'data' : 'r11_diploma_supplement_report',
+        'data' : '',
         "condition": """
         <button colspan="4" icon="fa-print" name="create_exmatrikulationsverfugung" string="Exmatrikulationsverfügung" type="object" attrs="{'invisible':
             ['|','|','|','|',('manual_signature','=',False),('guest','=',True),('date_end','=',False),
             ('approval_exmatriculation','=',False),'|',
             ('university_pud','=',True),('university_puf','=',True)]}"/>"""
+    },
+    '16' : {
+        'name' :'Gasthörerzertifikat',
+        'data' : '',
+        "condition": """
+        <button icon="gtk-print" name="create_gasthorerzertifikat" string="Gasthörerzertifikat" type="object" attrs="{'invisible':['|','|','|',('guest','=',False),('state_student_module','!=','done'),('date_2_approve','=',False),('module_visible_report','=',True) ]}"/>
+        """
     },
 
 }

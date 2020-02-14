@@ -75,6 +75,34 @@ sample_data = {
             },
             {
                 "active": True,
+                "name": "Spring term 2015",
+                "short_name": "FS15",
+                "type": "1", #
+                "year": 2015,
+            },
+            {
+                "active": True,
+                "name": "Summer term 2015",
+                "short_name": "SS15",
+                "type": "2", # autum
+                "year": 2015,
+            },
+            {
+                "active": True,
+                "name": "Herbst term 2015",
+                "short_name": "HS15",
+                "type": "3", # autum
+                "year": 2015,
+            },
+            {
+                "active": True,
+                "name": "Winter term 2015",
+                "short_name": "WS15",
+                "type": "4", # autum
+                "year": 2015,
+            },
+            {
+                "active": True,
                 "name": "Spring term 2016",
                 "short_name": "FS16",
                 "type": "1", # spring
