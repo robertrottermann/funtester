@@ -66,8 +66,19 @@ reports = {
         'name' :'Gasthörerzertifikat',
         'data' : '',
         "condition": """
+        object: student-module
         <button icon="gtk-print" name="create_gasthorerzertifikat" string="Gasthörerzertifikat" type="object" attrs="{'invisible':['|','|','|',('guest','=',False),('state_student_module','!=','done'),('date_2_approve','=',False),('module_visible_report','=',True) ]}"/>
+        """
+    },
+    '16' : {
+        'name' :'Immatrikulationsbestätigung',
+        'data' : '',
+        "condition": """
+        object: student-semester
+        <button icon="gtk-print" name="create_immatrikulationsbestatigung" string="Immatrikulationsbestätigung" type="object" attrs="{'invisible':['|','|','|',('puf_university', '!=', False),('guest','=', True),('invoice_paid','=', False),('state_student_semester','!=', '1')]}"/>
         """
     },
 
 }
+
+                                <button colspan="4" icon="fa-print" name="create_exmatrikulationsverfugung" string="Exmatrikulationsverfügung" type="object" attrs="{'invisible':['|','|','|','|',('manual_signature','=',False),('guest','=',True),('date_end','=',False),('approval_exmatriculation','=',False),'|',('university_pud','=',True),('university_puf','=',True)]}"/>
