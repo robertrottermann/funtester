@@ -72,11 +72,45 @@ reports = {
     },
     '17' : {
         'name' :'Immatrikulationsbestätigung',
+        'old': 'https://odootst.fernuni.ch/web#id=18525&view_type=form&model=res.partner&menu_id=3167&action=236',
         'data' : '',
         "condition": """
         object: Student semester
         --> Semester University has to be set for the relative semester
         <button icon="gtk-print" name="create_immatrikulationsbestatigung" string="Immatrikulationsbestätigung" type="object" attrs="{'invisible':['|','|','|',('puf_university', '!=', False),('guest','=', True),('invoice_paid','=', False),('state_student_semester','!=', '1')]}"/>
+        """
+    },
+    '18' : {
+        'name' :'Leistungsbestätigung',
+        'old' : 'https://odootst.fernuni.ch/web/?debug=#id=35480&view_type=form&model=student.module&menu_id=',
+        'data' : '',
+        "condition": """
+        object: student.module
+        --> ..
+        """
+    },
+    '19' : {
+        'name' :'Leistungsbestätigung-Work',
+        'old' : 'https://odootst.fernuni.ch/web/?debug=#id=35480&view_type=page&title=Student+Module&model=student.module&action_id=438',
+        'data' : '',
+        "condition": """
+        object:
+        --> ..
+        """
+    },
+    '20' : {
+        'name' :'Timetable',
+        'data': """
+        kohorte can be added when editing module data
+        """,
+    },
+    '21' : {
+        'name' :'Notenblatt',
+        'old' : 'https://odootst.fernuni.ch/web/?debug=#id=17120&view_type=form&model=res.partner&menu_id=3167&action=236',
+        'data' : '',
+        "condition": """
+        object:
+        --> ..
         """
     },
 
