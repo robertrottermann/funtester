@@ -95,6 +95,7 @@ reports = {
         'data' : '',
         "condition": """
         object:
+                                    <button icon="gtk-print" name="create_leistungbestatigung_work" string="Leistungsbestätigung" type="object" attrs="{'invisible':['|', '|', '|', ('type_of_exam', '!=', 'activity'), ('approved_date', '=', False), ('new_exams','=',False), ('guest','=',True)]}"/>
         --> ..
         """
     },

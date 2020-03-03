@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
 from odoo_handler import get_objects
+# can be created from study_course-> tab study section
 sample_data = {
     "study_section" : {
         "module" : "study.section",

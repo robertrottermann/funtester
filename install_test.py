@@ -100,52 +100,43 @@ MAIL_INCOMMING = {
 }
 # SITE_ADDONS are the modules that we get from odoo core
 SITE_ADDONS = [
-    # "crm",
-    # "stock",
-    # "account",
-    # "hr_payroll",
-    # "hr",
-    # "hr_expense",
-    # "board",
-    # "contacts",
-    # "hr_holidays",
-    # "mail",
-    # "survey",
-    # "calendar",
-    # "l10n_ch",
+    "account_accountant",
+    "account",
     "base",
+    "board",
+    "calendar",
+    "contacts",
     "crm",
-    # "crm_voip",  # TODO: v13 migration
-    # "bt_report_webkit",  # TODO: v13 migration
+    "funid_evaluation",
+    "hr_attendance",
+    "hr_expense",
+    "hr_holidays",
+    "hr_payroll",
+    "hr",
+    "l10n_ch",
+    "mail",
+    "mass_mailing",
     "product",
-    # "bt_todo", # TODO: v13 migration
     "stock",
     "survey",
-    "hr_payroll",
-    "hr_holidays",
-    "hr_expense",
-    "hr_attendance",
-    # "l10n_ch_base_bank",
-    # -> "analytic",
-    # "fsch_pre_migration",  # TODO: v13 migration
-    # "account_payment_order",  # TODO: v13 migration
-    # "bt_swissdec", # TODO: v13 migration
-    # "sett_hr", # TODO: v13 migration
-    "board",
-    # "sale_management",
-    "l10n_ch",
+    "website",
 ]
 # OWN_ADDONS are the modules that we handle our selfs in some
 # own (non odoo) repos
 OWN_ADDONS = [
     "fsch_customer",
-    "fsch_sso",
     "fsch_accounting",
+    "fsch_sso",
     "fsch_survey_edudl",
+    "fsch_survey_edudl",
+    "funid_accounting",
+    "funid_customer",
+    "funid_invoice_followup",
     "funid_report_base",
     "funid_customer",
-    "funid_reporting",
     "funid_registration",
+    "funid_report_base",
+    "funid_reporting",
 ]
 # make sure we are in a virtualenv
 # robert: i usualy test in wingide
