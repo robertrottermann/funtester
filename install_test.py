@@ -989,28 +989,33 @@ class FunidInstaller(OdooHandler):
                 from sample_data.r5_negativer_anrechnungsentscheid import (
                     sample_data as sd_abschl_first,
                 )
-
                 sd = sd_abschl_first
+
             if r_name == "6":
                 from sample_data.r6_positiver_anrechnungsentscheid import (
                     sample_data as sd_abschl_first,
                 )
-
                 sd = sd_abschl_first
+
             if r_name == "7":
                 from sample_data.r7_sample_data_assistant_report import (
-                    assistant_users,
-                    run_prepare_report,
+                    run_prepare_report as assistant_report_rpr,
                 )
+                data_runner = assistant_report_rpr
 
-                data_runner = run_prepare_report
             if r_name == "11":
                 from sample_data.r11_diploma_supplement_report import (
-                    assistant_users,
-                    run_prepare_report,
+                    run_prepare_report as diploma_supplement_rpr,
                 )
+                data_runner = diploma_supplement_rpr
 
-                data_runner = run_prepare_report
+            if r_name == "26":
+                from sample_data.r26_sample_data_presence_list import (
+                    sample_data as sd_presence_li,
+                    run_prepare_report as sd_presence_li_rpr,
+                )
+                data_runner = sd_presence_li_rpr
+                sd = sd_presence_li
 
             if data_runner:
                 print(bcolors.green)

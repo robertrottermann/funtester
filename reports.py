@@ -108,6 +108,57 @@ reports = {
     '21' : {
         'name' :'Notenblatt',
         'old' : 'https://odootst.fernuni.ch/web/?debug=#id=17120&view_type=form&model=res.partner&menu_id=3167&action=236',
+        'data' : 'studies',
+        "condition": """
+                                <button colspan="4" icon="fa-print" name="create_notenblatt_transcript_records" string="Notenblatt" type="object" attrs="{'invisible':['|','|',('guest','=',True),'|',('total_ects_credits','=',False),('total_ects_credits','&lt;=',0),'|',('university_pud','=',True),('university_puf','=',True)]}"/>
+
+        object:
+        --> ..
+        """
+    },
+    '26' : {
+        'name' :'Praesenzliste',
+        'old' : 'https://odootst.fernuni.ch/web/?debug=#id=17120&view_type=form&model=res.partner&menu_id=3167&action=236',
+        'data' : 'studies',
+        'path' : '/home/robert/projects/fernuni13/fernuni13/fernuni/funid_reporting/report/report_prasenzliste_html.py',
+        "condition": """
+                                <button colspan="4" icon="fa-print" name="create_notenblatt_transcript_records" string="Notenblatt" type="object" attrs="{'invisible':['|','|',('guest','=',True),'|',('total_ects_credits','=',False),('total_ects_credits','&lt;=',0),'|',('university_pud','=',True),('university_puf','=',True)]}"/>
+
+        object:
+        --> ..
+        """
+    },
+    '33' : {
+        'name' :'Teilnahmebestätigung Gasthörer',
+        'old': 'https://odootst.fernuni.ch/web/?debug=#id=14571&view_type=page&title=Student+Module&model=student.module&action_id=438',
+        'data' : '',
+        "condition": """
+        object:
+        --> ..
+        """
+    },
+    '34' : {
+        'name' :'Negativer Zulassungsentscheid',
+        'old': 'https://odootst.fernuni.ch/web/?debug=#id=26112&view_type=page&title=Studies&model=studies&action_id=234',
+        'data' : '',
+        "condition": """
+        object:
+        --> ..
+        """
+    },
+    '35' : {
+        'name' :'zahlungsbestaetigung',
+        'old': 'https://odootst.fernuni.ch/web/?debug=#id=14571&view_type=page&title=Student+Module&model=student.module&action_id=438',
+        'data' : '',
+        "condition": """
+        object: student_semester
+        --> ..
+        http://erp-dev.fernuni.ch:8069/web/webclient/home?debug=#id=34943&view_type=page&title=Student+Semester&model=student.semester&action_id=443
+        """
+    },
+    '36' : {
+        'name' :'zulassung_puf',
+        'old': 'https://odootst.fernuni.ch/web/?debug=#id=34859&view_type=page&title=Student+Semester&model=student.semester&action_id=443',
         'data' : '',
         "condition": """
         object:
