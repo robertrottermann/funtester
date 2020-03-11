@@ -142,6 +142,7 @@ reports = {
         'old': 'https://odootst.fernuni.ch/web/?debug=#id=26112&view_type=page&title=Studies&model=studies&action_id=234',
         'data' : '',
         "condition": """
+<button colspan="4" icon="gtk-print" name="create_unzureichende_zulassungsvoraussetzungen" string="Negativer Zulassungsentscheid" type="object" attrs="{'invisible':['|','|','|','|',('guest','=',True),('permission_date','=',False),('decision','!=','not_permitted'),('missing_documents','=',False),'|',('university_pud','=',True),('university_puf','=',True)]}"/>
         object:
         --> ..
         """
@@ -151,6 +152,7 @@ reports = {
         'old': 'https://odootst.fernuni.ch/web/?debug=#id=14571&view_type=page&title=Student+Module&model=student.module&action_id=438',
         'data' : '',
         "condition": """
+        <button icon="gtk-print" name="create_zahlungsbestaetigung" string="Zahlungsbestätigung" type="object" attrs="{'invisible':['|','|','|',('puf_university', '!=', False),('guest','=', True),('invoice_really_paid','=', False),('state_student_semester','!=', '1')]}"/>
         object: student_semester
         --> ..
         http://erp-dev.fernuni.ch:8069/web/webclient/home?debug=#id=34943&view_type=page&title=Student+Semester&model=student.semester&action_id=443
