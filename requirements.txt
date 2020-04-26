@@ -1,4 +1,5 @@
 #selenium
 psycopg2
 odoorpc
+python-docx
 
